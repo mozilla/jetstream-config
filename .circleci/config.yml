@@ -25,7 +25,7 @@ jobs:
     - run:
         name: Authorize gcloud CLI
         command: |
-          echo $GCLOUD_SERVICE_KEY | base64 --decode | gcloud auth activate-service-account --key-file=-
+          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
     - run:
         name: Trigger pensieve re-run
         command: |
