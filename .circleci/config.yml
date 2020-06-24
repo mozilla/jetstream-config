@@ -25,11 +25,13 @@ jobs:
     - run:
         name: Authorize gcloud CLI
         command: |
-          echo $GCLOUD_SERVICE_KEY | base64 --decode | gcloud auth activate-service-account --key-file=-
+          export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
+          echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
+          gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
     - run:
         name: Trigger pensieve re-run
         command: |
-          gcloud functions call trigger-pensieve
+          gcloud functions call trigger-pensieve --project="$GCLOUD_PROJECT"
 workflows:
   build-and-deploy:
     jobs:
