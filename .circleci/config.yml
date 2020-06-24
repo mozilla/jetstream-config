@@ -1,0 +1,37 @@
+version: 2.1
+
+jobs:
+  validate:
+    docker:
+    - image: gcr.io/moz-fx-data-experiments/pensieve:latest
+    steps:
+    - checkout
+    - run:
+        name: Validate config files
+        command: echo "TODO validate configs" # todo
+  rerun:
+    docker:
+    - image: google/cloud-sdk
+    steps:
+    - checkout
+    - &skip_forked_pr
+      run:
+        name: Early return if this build is from a forked PR
+        command: |
+          if [ -n "$CIRCLE_PR_NUMBER" ]; then
+            echo "Do not re-run analysis on forked PRs, so marking this step successful"
+            circleci step halt
+          fi
+    - run:
+        name: Authorize gcloud CLI
+        command: |
+          echo $GCLOUD_SERVICE_KEY | base64 --decode | gcloud auth activate-service-account --key-file=-
+    - run:
+        name: Trigger pensieve re-run
+        command: |
+          gcloud functions call trigger-pensieve
+workflows:
+  build-and-deploy:
+    jobs:
+      - validate
+      - rerun
