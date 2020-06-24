@@ -31,8 +31,8 @@ jobs:
     - run:
         name: Trigger pensieve re-run
         command: |
-          gcloud functions call trigger-pensieve --project="$GCLOUD_PROJECT"
-workflows:
+          gcloud config set project $GCLOUD_PROJECT
+          gcloud functions call trigger-pensieve
   build-and-deploy:
     jobs:
       - validate
