@@ -27,12 +27,13 @@ jobs:
         command: |
           export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
           echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
-          gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
+          gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
     - run:
         name: Trigger pensieve re-run
         command: |
           gcloud config set project $GCLOUD_PROJECT
           gcloud functions call trigger-pensieve
+workflows:
   build-and-deploy:
     jobs:
       - validate
