@@ -1,6 +1,6 @@
-# pensieve-config
+# jetstream-config
 
-Custom configs for experiments analyzed in [pensieve](https://github.com/mozilla/pensieve). 
+Custom configs for experiments analyzed in [jetstream](https://github.com/mozilla/jetstream). 
 
 ## Adding Custom Configurations
 
@@ -9,4 +9,4 @@ The name of the configuration file must match the **Normandy slug** of the exper
 
 A new pull-request needs to be opened for new or updated configuration files. The pull-request can be merged after CI checks verify that the provided configuration files are valid.
 
-Once new config files are pushed, pensieve will automatically re-run the analysis for affected experiments.
+Once new config files are pushed, jetstream will automatically re-run the analysis for affected experiments.
