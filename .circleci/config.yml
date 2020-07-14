@@ -28,11 +28,28 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
           echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
           gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-    - run:
-        name: Trigger pensieve re-run
-        command: |
           gcloud config set project $GCLOUD_PROJECT
-          gcloud functions call trigger-pensieve
+          gcloud container clusters get-credentials jetstream --zone us-central1-a --project $GCLOUD_PROJECT
+    - run:
+        name: Rerun jetstream
+        command: |
+          kubectl run jetstream --image=gcr.io/moz-fx-data-experiments/pensieve -l app=jetstream --command -- bin/entrypoint rerun
+          kubectl logs -l app=jetstream -f
+          exitCode=`kubectl get pod -l app=jetstream --output="jsonpath={.items[].status.containerStatuses[].lastState.terminated.exitCode}"`
+          if [ "$exitCode" -ge 1 ]; then
+            echo "Error when running jetstream"
+            circleci step halt
+          fi
+    - run:
+        name: Export data as JSON
+        command: |
+          kubectl run jetstream-export --image=gcr.io/moz-fx-data-experiments/pensieve -l app=jetstream-export --command -- bin/entrypoint export_data_as_json
+          kubectl logs -l app=jetstream-export -f
+          exitCode=`kubectl get pod -l app=jetstream-export --output="jsonpath={.items[].status.containerStatuses[].lastState.terminated.exitCode}"`
+          if [ "$exitCode" -ge 1 ]; then
+            echo "Error when exporting data as JSON"
+            circleci step halt
+          fi
 workflows:
   build-and-deploy:
     jobs:
