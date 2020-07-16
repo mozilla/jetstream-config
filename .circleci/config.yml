@@ -30,6 +30,7 @@ jobs:
           gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
           gcloud config set project $GCLOUD_PROJECT
           gcloud container clusters get-credentials jetstream --zone us-central1-a --project $GCLOUD_PROJECT
+          sudo apt-get install jq
     - run:
         name: Rerun jetstream
         timeout: 600    # stop task after 10 minutes
@@ -71,6 +72,7 @@ jobs:
           fi
     - run:
         name: Export data as JSON
+        timeout: 600    # stop task after 10 minutes
         command: |
           # stop running instances so that they do not interfere
           kubectl delete pod -l app=jetstream-export
