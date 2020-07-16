@@ -32,22 +32,79 @@ jobs:
           gcloud container clusters get-credentials jetstream --zone us-central1-a --project $GCLOUD_PROJECT
     - run:
         name: Rerun jetstream
+        timeout: 600    # stop task after 10 minutes
         command: |
-          kubectl run jetstream --image=gcr.io/moz-fx-data-experiments/pensieve -l app=jetstream --command -- bin/entrypoint rerun
-          kubectl logs -l app=jetstream -f
-          exitCode=`kubectl get pod -l app=jetstream --output="jsonpath={.items[].status.containerStatuses[].lastState.terminated.exitCode}"`
-          if [ "$exitCode" -ge 1 ]; then
-            echo "Error when running jetstream"
+          # stop running instances so that they do not interfere
+          kubectl delete pod -l app=jetstream
+
+          # start a new instance
+          kubectl run jetstream --image=gcr.io/moz-fx-data-experiments/pensieve -l app=jetstream --restart=Never --command -- bin/entrypoint rerun_config_changed
+          
+          # link to logs
+          cur_date=`date -u +%FT%TZ`
+          echo "Logs: https://console.cloud.google.com/logs/viewer?project=moz-fx-data-experiments&timestamp=$cur_date&advancedFilter=resource.type%3D%22k8s_container%22%0Aresource.labels.project_id%3D%22moz-fx-data-experiments%22%0Aresource.labels.location%3D%22us-central1-a%22%0Aresource.labels.cluster_name%3D%22jetstream%22%0Aresource.labels.namespace_name%3D%22default%22%0Alabels.k8s-pod%2Fapp%3D%22jetstream%22&scrollTimestamp=$cur_date"
+
+          # wait for pod to finish and check status
+          active_pods=`kubectl get pod -l app=jetstream --output json | jq -j '.items | length'`
+          failed_pods=0
+          completed_pods=0
+
+          while [ $active_pods -lt 0 -a $failed_pods == 0 -a $completed_pods == 0]
+          do
+            echo "Wait for jetstream to finish"
+            failed_pods=`kubectl get pod -l app=jetstream --field-selector=status.phase=Failed --output json | jq -j '.items | length'`
+            completed_pods=`kubectl get pod -l app=jetstream --field-selector=status.phase=Succeeded --output json | jq -j '.items | length'`
+            sleep 20
+          done
+
+          # delete pod
+          kubectl delete pod -l app=jetstream
+
+          if [ "$failed_pods" -ge 1 ]; then
+            echo "Error when running jetstream. Check the logs for more information."
+            circleci step halt
+          elif [ "$completed_pods" -ge 1 ]; then
+            echo "Jetstream successfully completed."
+          else
+            echo "Jetstream completed in unknown status. Please check the logs."
             circleci step halt
           fi
     - run:
         name: Export data as JSON
         command: |
-          kubectl run jetstream-export --image=gcr.io/moz-fx-data-experiments/pensieve -l app=jetstream-export --command -- bin/entrypoint export_data_as_json
-          kubectl logs -l app=jetstream-export -f
-          exitCode=`kubectl get pod -l app=jetstream-export --output="jsonpath={.items[].status.containerStatuses[].lastState.terminated.exitCode}"`
-          if [ "$exitCode" -ge 1 ]; then
-            echo "Error when exporting data as JSON"
+          # stop running instances so that they do not interfere
+          kubectl delete pod -l app=jetstream-export
+
+          # start a new instance
+          kubectl run jetstream --image=gcr.io/moz-fx-data-experiments/pensieve -l app=jetstream-export --restart=Never --command -- bin/entrypoint export_data_as_json
+          
+          # link to logs
+          cur_date=`date -u +%FT%TZ`
+          echo "Logs: https://console.cloud.google.com/logs/viewer?project=moz-fx-data-experiments&timestamp=$cur_date&advancedFilter=resource.type%3D%22k8s_container%22%0Aresource.labels.project_id%3D%22moz-fx-data-experiments%22%0Aresource.labels.location%3D%22us-central1-a%22%0Aresource.labels.cluster_name%3D%22jetstream%22%0Aresource.labels.namespace_name%3D%22default%22%0Alabels.k8s-pod%2Fapp%3D%22jetstream-export%22&scrollTimestamp=$cur_date"
+
+          # wait for pod to finish and check status
+          active_pods=`kubectl get pod -l app=jetstream-export --output json | jq -j '.items | length'`
+          failed_pods=0
+          completed_pods=0
+
+          while [ $active_pods -lt 0 -a $failed_pods == 0 -a $completed_pods == 0]
+          do
+            echo "Wait for jetstream to finish"
+            failed_pods=`kubectl get pod -l app=jetstream-export --field-selector=status.phase=Failed --output json | jq -j '.items | length'`
+            completed_pods=`kubectl get pod -l app=jetstream-export --field-selector=status.phase=Succeeded --output json | jq -j '.items | length'`
+            sleep 20
+          done
+
+          # delete pod
+          kubectl delete pod -l app=jetstream-export
+
+          if [ "$failed_pods" -ge 1 ]; then
+            echo "Error when running jetstream export. Check the logs for more information."
+            circleci step halt
+          elif [ "$completed_pods" -ge 1 ]; then
+            echo "Jetstream export successfully completed."
+          else
+            echo "Jetstream export completed in unknown status. Please check the logs."
             circleci step halt
           fi
 workflows:
