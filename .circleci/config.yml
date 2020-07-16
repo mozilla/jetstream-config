@@ -25,6 +25,7 @@ jobs:
     - run:
         name: Authorize gcloud CLI
         command: |
+          apt-get install jq -y
           export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
           echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
           gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
