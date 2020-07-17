@@ -1,5 +1,5 @@
 # This is an example config file for providing custom metric and statistic configurations
-# when analysing the experiment with the Normandy slug 'example_config'.
+# when analysing the experiment with the Experimenter slug 'example_config'.
 
 [metrics]
 daily = ["retained", "unenroll"]
