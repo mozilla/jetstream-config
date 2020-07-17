@@ -115,4 +115,7 @@ workflows:
   build-and-deploy:
     jobs:
       - validate
-      - rerun
+      - rerun:
+        filters:
+            branches:
+              only: master
