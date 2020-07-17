@@ -118,4 +118,4 @@ workflows:
       - rerun:
         filters:
             branches:
-              only: master
+              only: main
