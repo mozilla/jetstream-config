@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   validate:
     docker:
-    - image: gcr.io/moz-fx-data-experiments/pensieve:latest
+    - image: gcr.io/moz-fx-data-experiments/jetstream:latest
     steps:
     - checkout
     - run:
@@ -41,7 +41,7 @@ jobs:
           kubectl delete pod -l app=jetstream
 
           # start a new instance
-          kubectl run jetstream --image=gcr.io/moz-fx-data-experiments/pensieve -l app=jetstream --restart=Never --command -- bin/entrypoint rerun_config_changed
+          kubectl run jetstream --image=gcr.io/moz-fx-data-experiments/jetstream -l app=jetstream --restart=Never --command -- bin/entrypoint rerun_config_changed
           
           # link to logs
           cur_date=`date -u +%FT%TZ`
@@ -80,7 +80,7 @@ jobs:
           kubectl delete pod -l app=jetstreamexport
 
           # start a new instance
-          kubectl run jetstream --image=gcr.io/moz-fx-data-experiments/pensieve -l app=jetstreamexport --restart=Never --command -- bin/entrypoint export_statistics_to_json
+          kubectl run jetstream --image=gcr.io/moz-fx-data-experiments/jetstream -l app=jetstreamexport --restart=Never --command -- bin/entrypoint export_statistics_to_json
           
           # link to logs
           cur_date=`date -u +%FT%TZ`
