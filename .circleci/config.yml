@@ -4,11 +4,21 @@ jobs:
   validate:
     docker:
     - image: gcr.io/moz-fx-data-experiments/jetstream:latest
+    environment:
+      BASE_COMMIT: << pipeline.git.base_revision >>
+      REVISION_COMMIT: <<pipeline.git.revision>>
     steps:
     - checkout
     - run:
         name: Validate config files
-        command: echo "TODO validate configs" # todo
+        command: |
+          apt-get update && apt-get install -y git
+          changed_files=$(git diff --name-only $BASE_COMMIT..$REVISION_COMMIT -- '*.toml')
+
+          echo "Run validation on changed files: "
+          echo $changed_files
+
+          jetstream validate_config $changed_files
   rerun:
     docker:
     - image: google/cloud-sdk
