@@ -62,7 +62,7 @@ enrollment_query = """
 
 The metrics section allows you to specify and define the metrics that you're collecting,
 the statistical summaries that you'd like applied to them, and any filters that you need.
-See DTMO for more details on the analysis window concept.
+See the [Jetstream docmentation at DTMO][jetstream-dtmo] for more details on the analysis window concept.
 
 You can use the names of metrics defined in mozanalysis without redefining them.
 
@@ -80,6 +80,8 @@ weekly = ["uri_count", "retained"]
 # Metrics to compute only for the overall analysis window.
 overall = ["uri_count", "search_count"]
 ```
+
+[jetstream-dtmo]: https://docs.telemetry.mozilla.org/datasets/jetstream.html
 
 ### Defining metrics
 
@@ -108,7 +110,7 @@ data_source = "main"
 You should also add some sections to describe how your new metrics should be summarized for reporting.
 You can do this by adding a statistics section to the metric for the statistic you want.
 
-There is a list of statistics in the Jetstream wiki.
+There is a [list of statistics][stats-wiki] in the Jetstream wiki.
 
 This looks like:
 
@@ -135,6 +137,8 @@ data_source = "main"
 
 [metrics.ever_clicked_cows.statistics.binomial]
 ```
+
+[stats-wiki]: https://github.com/mozilla/jetstream/wiki/Statistics
 
 ### Defining data sources
 
