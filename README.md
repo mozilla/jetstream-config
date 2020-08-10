@@ -21,7 +21,7 @@ Jetstream will take values from Experimenter
 and combine them with a reasonable set of defaults.
 
 You should name the file according to the experiment's Normandy slug,
-like bug_12345_my_cool_experiment.toml.
+like `bug_12345_my_cool_experiment.toml`.
 
 Lines starting with a `#` are comments and have no effect.
 
@@ -40,7 +40,7 @@ enrollment_period = 7
 # To compare all branches to each other pairwise, use the value `nan`.
 reference_branch = "control"
 
-# Override the "enrollment query" the mozanalysis will use.
+# Override the "enrollment query" mozanalysis will use.
 # See https://github.com/mozilla/mozanalysis/issues/93 for more details about
 # what the query needs to contain.
 # Jetstream interprets this as a Jinja2 template; an `experiment` object is provided
@@ -96,7 +96,7 @@ For example, you could define a new metric based on a scalar named
 # The expression is evaluated with `GROUP BY client_id, branch` over an analysis window.
 # Interpreted as a Jinja2 template. The mozanalysis helper functions are available,
 # so you could equivalently write the expression below like:
-# select_expression = "{{agg_sum("payload.processes.parent.scalars.browser_engagment_cows_clicked")} > 0"
+# select_expression = "{{agg_sum("payload.processes.parent.scalars.browser_engagment_cows_clicked")}} > 0"
 # See https://mozilla.github.io/mozanalysis/api/metrics.html for details.
 select_expression = "SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_cows_clicked)) > 0"
 
