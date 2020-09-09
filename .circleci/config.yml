@@ -122,10 +122,11 @@ jobs:
             exit 1
           fi
 workflows:
+  version: 2
   build-and-deploy:
     jobs:
       - validate
       - rerun:
-        filters:
+          filters:
             branches:
               only: main
