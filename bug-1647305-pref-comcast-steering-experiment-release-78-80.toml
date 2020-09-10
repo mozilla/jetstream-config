@@ -9,14 +9,20 @@ select_expression = '{{agg_histogram_mean("payload.histograms.fx_page_load_ms_2"
 data_source = 'main'
 
 [metrics.mean_page_load_time.statistics.bootstrap_mean]
+pre_treatments = ["remove_nulls"]
+
 [metrics.mean_page_load_time.statistics.deciles]
+pre_treatments = ["remove_nulls"]
 
 [metrics.mean_first_paint_time]
 select_expression = '{{agg_histogram_mean("payload.histograms.time_to_first_contentful_paint_ms")}}'
 data_source = 'main'
 
 [metrics.mean_first_paint_time.statistics.bootstrap_mean]
+pre_treatments = ["remove_nulls"]
+
 [metrics.mean_first_paint_time.statistics.deciles]
+pre_treatments = ["remove_nulls"]
 
 [metrics.mean_trr_lookup_time]
 select_expression = """\
@@ -28,4 +34,7 @@ select_expression = """\
 data_source = 'main'
 
 [metrics.mean_trr_lookup_time.statistics.bootstrap_mean]
+pre_treatments = ["remove_nulls"]
+
 [metrics.mean_trr_lookup_time.statistics.deciles]
+pre_treatments = ["remove_nulls"]
