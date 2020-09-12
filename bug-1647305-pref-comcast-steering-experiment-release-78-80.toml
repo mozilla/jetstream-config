@@ -1,7 +1,7 @@
 [experiment]
 end_date = '2020-09-08'
 
-segments = ["comcast_users", "regular_users_v3", "new_or_resurrected_v3"]
+segments = ["comcast_users", "non_comcast_users", "regular_users_v3", "new_or_resurrected_v3"]
 
 [metrics]
 overall = ['mean_page_load_time', 'mean_first_paint_time', 'mean_trr_lookup_time']
@@ -66,6 +66,10 @@ log_space = true
 
 [segments.comcast_users]
 select_expression = '{{agg_any("comcast_user")}}'
+data_source = "annotated_enrollments"
+
+[segments.non_comcast_users]
+select_expression = '{{agg_any("comcast_user")}} = FALSE'
 data_source = "annotated_enrollments"
 
 [segments.data_sources.annotated_enrollments]
