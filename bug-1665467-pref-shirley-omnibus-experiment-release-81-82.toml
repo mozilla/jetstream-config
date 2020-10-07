@@ -10,11 +10,11 @@ select_expression = "LOGICAL_OR(is_default_browser)"
 data_source = "clients_daily"
 
 [metrics.was_ever_default_browser.statistics.binomial]
-pre_treatments = ["drop_nulls"]
+pre_treatments = ["remove_nulls"]
 
 [metrics.was_never_default_browser]
 select_expression = "LOGICAL_OR(NOT is_default_browser)"
 data_source = "clients_daily"
 
 [metrics.was_never_default_browser.statistics.binomial]
-pre_treatments = ["drop_nulls"]
+pre_treatments = ["remove_nulls"]
