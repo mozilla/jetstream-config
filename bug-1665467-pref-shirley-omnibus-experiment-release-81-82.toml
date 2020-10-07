@@ -6,7 +6,7 @@ weekly = ["is_default_browser"]
 overall = ["is_default_browser"]
 
 [metrics.is_default_browser]
-select_expression = "ANY_VALUE( LAST_VALUE(is_default_browser) OVER (PARTITION BY client_id ORDER BY submission_date) )"
+select_expression = "ANY_VALUE( LAST_VALUE(is_default_browser) OVER (PARTITION BY clients_daily.client_id ORDER BY clients_daily.submission_date) )"
 data_source = "clients_daily"
 
 [metrics.is_default_browser.statistics.binomial]
