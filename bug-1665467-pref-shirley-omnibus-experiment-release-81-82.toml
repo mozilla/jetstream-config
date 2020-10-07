@@ -1,0 +1,12 @@
+[experiment]
+segments = ["is_regular_user_v3", "new_or_resurrected_v3"]
+
+[metrics]
+weekly = ["is_default_browser"]
+overall = ["is_default_browser"]
+
+[metrics.is_default_browser]
+select_expression = "ANY_VALUE( LAST_VALUE(is_default_browser) OVER (PARTITION BY client_id ORDER BY submission_date) )"
+data_source = "clients_daily"
+
+[metrics.is_default_browser.statistics.binomial]
