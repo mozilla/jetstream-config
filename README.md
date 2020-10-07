@@ -12,8 +12,8 @@ Once CI completes, you may merge the pull request, which will trigger Jetstream 
 
 ## Example configuration and syntax
 
-Configuration files have three main sections:
-`[experiment]`, `[metrics]`, and `[data_sources]`.
+Configuration files have four main sections:
+`[experiment]`, `[metrics]`, `[data_sources]`, and `[segments]`.
 
 Examples of every value you can specify in each section are given below.
 You do not need to specify everything!
@@ -27,11 +27,22 @@ Lines starting with a `#` are comments and have no effect.
 
 ### Experiment section
 
-This part of the configuration file lets you override the values in Experimenter.
-Most of the time, you will not have to specify anything here.
+This part of the configuration file lets you specify the segments you wish to analyze.
+Segments are subsets of your enrolled population,
+and depend on some factor that could be observed about the client
+before they enrolled in the experiment.
+Some segments [are described in DTMO](https://docs.telemetry.mozilla.org/concepts/segments.html).
+
+You can also override some values from Experimenter in the experiment section.
 
 ```toml
 [experiment]
+# The segments that you wish to compute metrics for.
+# You can define your own later in the configuration,
+# or (more commonly) use a value from mozanalysis.
+# The segment of all users is always computed.
+segments = ["is_regular_user_v3", "new_or_resurrected_v3"]
+
 # Nominal length of the enrollment period in days.
 # Mozanalysis will consider enrollment_period + 1 "dates" of enrollments.
 enrollment_period = 7
@@ -157,3 +168,18 @@ experiments_column_type = "native"
 ```
 
 Then, your new metric can refer to it like `data_source = "my_cool_data_source"`.
+
+### Defining segments
+
+You can define new segments, just like you can define new metrics.
+
+This looks like:
+
+```toml
+[segments.my_segment]
+select_expression = '{{agg_any("is_default_browser")}}'
+data_source = "my_data_source"
+
+[segments.data_sources.my_data_source]
+from_expression = '(SELECT submission_date, client_id, is_default_browser FROM my_cool_table)'
+```
