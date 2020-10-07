@@ -2,11 +2,19 @@
 segments = ["regular_users_v3", "new_or_resurrected_v3"]
 
 [metrics]
-weekly = ["is_default_browser"]
-overall = ["is_default_browser"]
+weekly = ["was_ever_default_browser", "was_never_default_browser"]
+overall = ["was_ever_default_browser", "was_never_default_browser"]
 
-[metrics.is_default_browser]
-select_expression = "ANY_VALUE( LAST_VALUE(is_default_browser) OVER (PARTITION BY clients_daily.client_id ORDER BY clients_daily.submission_date) )"
+[metrics.was_ever_default_browser]
+select_expression = "LOGICAL_OR(is_default_browser)"
 data_source = "clients_daily"
 
-[metrics.is_default_browser.statistics.binomial]
+[metrics.was_ever_default_browser.statistics.binomial]
+pre_treatments = ["drop_nulls"]
+
+[metrics.was_never_default_browser]
+select_expression = "LOGICAL_OR(NOT is_default_browser)"
+data_source = "clients_daily"
+
+[metrics.was_never_default_browser.statistics.binomial]
+pre_treatments = ["drop_nulls"]
