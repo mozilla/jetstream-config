@@ -1,0 +1,201 @@
+[experiment]
+end_date = '2020-11-10'
+
+segments = [
+    'regular_users_v3', 'new_or_resurrected_v3',
+    'fast_dns', 'med_dns', 'slow_dns', 'other_dns'
+]
+
+[metrics]
+overall = [
+    'time_to_load_event_start_preload_ms', 'time_to_load_event_start_no_preload_ms',
+    'time_to_load_event_end_preload_ms', 'time_to_load_event_end_no_preload_ms',
+    'mean_preload_load_input_event_response', 'load_input_event_response_no_preload_ms',
+    'time_to_first_interaction_preload_ms', 'time_to_first_interaction_no_preload_ms'
+]
+    ## Mean Time to Load Event Start (Preload)
+
+    [metrics.time_to_load_event_start_preload_ms]
+    select_expression = '{{agg_histogram_mean("payload.histograms.time_to_load_event_start_preload_ms")}}'
+    data_source = 'main'
+
+        [metrics.time_to_load_event_start_preload_ms.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_start_preload_ms.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_start_preload_ms.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_start_preload_ms.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    ## Mean Time to Load Event Start (No Preload)
+
+    [metrics.time_to_load_event_start_no_preload_ms]
+    select_expression = '{{agg_histogram_mean("payload.histograms.time_to_load_event_start_no_preload_ms")}}'
+    data_source = 'main'
+
+        [metrics.time_to_load_event_start_no_preload_ms.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_start_no_preload_ms.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_start_no_preload_ms.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_start_no_preload_ms.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+    ## Mean Time to Load Event End (Preload)
+
+    [metrics.time_to_load_event_end_preload_ms]
+    select_expression = '{{agg_histogram_mean("payload.histograms.time_to_load_event_end_preload_ms")}}'
+    data_source = 'main'
+
+        [metrics.time_to_load_event_end_preload_ms.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_end_preload_ms.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_end_preload_ms.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_end_preload_ms.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    ## Mean Time to Load Event End (No Preload)
+
+    [metrics.time_to_load_event_end_no_preload_ms]
+    select_expression = '{{agg_histogram_mean("payload.histograms.time_to_load_event_end_no_preload_ms")}}'
+    data_source = 'main'
+
+        [metrics.time_to_load_event_end_no_preload_ms.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_end_no_preload_ms.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_end_no_preload_ms.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_load_event_end_no_preload_ms.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    ## Mean Load Input Event Response (Preload)
+
+    [metrics.load_input_event_response_preload_ms]
+    select_expression = '{{agg_histogram_mean("payload.histograms.load_input_event_response_preload_ms")}}'
+    data_source = 'main'
+
+        [metrics.load_input_event_response_preload_ms.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.load_input_event_response_preload_ms.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.load_input_event_response_preload_ms.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.load_input_event_response_preload_ms.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    ## Mean Load Input Event Response (No Preload)
+
+    [metrics.load_input_event_response_no_preload_ms]
+    select_expression = '{{agg_histogram_mean("payload.histograms.load_input_event_response_no_preload_ms")}}'
+    data_source = 'main'
+
+        [metrics.load_input_event_response_no_preload_ms.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.load_input_event_response_no_preload_ms.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.load_input_event_response_no_preload_ms.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.load_input_event_response_no_preload_ms.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    ## Mean Time to First Interaction (Preload)
+
+    [metrics.time_to_first_interaction_preload_ms]
+    select_expression = '{{agg_histogram_mean("payload.histograms.time_to_first_interaction_preload_ms")}}'
+    data_source = 'main'
+
+        [metrics.time_to_first_interaction_preload_ms.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_first_interaction_preload_ms.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_first_interaction_preload_ms.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_first_interaction_preload_ms.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    ## Mean Time to First Interaction (No Preload)
+
+    [metrics.time_to_first_interaction_no_preload_ms]
+    select_expression = '{{agg_histogram_mean("payload.histograms.time_to_first_interaction_no_preload_ms")}}'
+    data_source = 'main'
+
+        [metrics.time_to_first_interaction_no_preload_ms.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_first_interaction_no_preload_ms.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_first_interaction_no_preload_ms.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.time_to_first_interaction_no_preload_ms.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+
+## Segments
+
+[segments.fast_dns]
+select_expression = 'median_dns_lookup_time > 0 AND median_dns_lookup_time <= 32'
+data_source = "dns_lookup"
+
+[segments.med_dns]
+select_expression = 'median_dns_lookup_time > 32 AND median_dns_lookup_time <= 64'
+data_source = "dns_lookup"
+
+[segments.slow_dns]
+select_expression = 'median_dns_lookup_time > 64'
+data_source = "dns_lookup"
+
+[segments.other_dns]
+select_expression = 'median_dns_lookup_time IS NULL OR median_dns_lookup_time <= 0'
+data_source = "dns_lookup"
+
+[segments.data_sources.dns_lookup]
+from_expression = """
+(
+    SELECT DISTINCT
+        client_id,
+        `mozfun.hist.percentiles`(
+            `mozfun.hist.merge`(
+                ARRAY_AGG(mozfun.hist.extract(payload.histograms.dns_lookup_time)) OVER(PARTITION BY client_id)
+            ),
+            [0.5]
+        )[SAFE_OFFSET(0)].value AS median_dns_lookup_time
+    FROM `moz-fx-data-shared-prod.telemetry.main`
+    WHERE DATE(submission_timestamp) BETWEEN "{{experiment.start_date_str}}" AND "{{experiment.last_enrollment_date_str}}"
+        AND normalized_channel = 'release'
+)
+"""
