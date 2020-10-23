@@ -3,15 +3,14 @@ end_date = '2020-11-10'
 
 segments = [
     'regular_users_v3', 'new_or_resurrected_v3',
-    'fast_dns', 'med_dns', 'slow_dns', 'other_dns'
+    'fast_tcp_conn', 'med_tcp_conn', 'slow_tcp_conn', 'other_tcp_conn'
 ]
 
 [metrics]
 overall = [
     'time_to_load_event_start_preload_ms', 'time_to_load_event_start_no_preload_ms',
     'time_to_load_event_end_preload_ms', 'time_to_load_event_end_no_preload_ms',
-    'mean_preload_load_input_event_response', 'load_input_event_response_no_preload_ms',
-    'time_to_first_interaction_preload_ms', 'time_to_first_interaction_no_preload_ms'
+    'load_input_event_response_preload_ms', 'load_input_event_response_no_preload_ms',
 ]
     ## Mean Time to Load Event Start (Preload)
 
@@ -167,35 +166,33 @@ overall = [
 
 ## Segments
 
-[segments.fast_dns]
-select_expression = 'median_dns_lookup_time > 0 AND median_dns_lookup_time <= 32'
-data_source = "dns_lookup"
+[segments.tcp_conn_low_latency]
+select_expression = 'mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value BETWEEN 1 AND 62'
+data_source = "tcp_conn"
 
-[segments.med_dns]
-select_expression = 'median_dns_lookup_time > 32 AND median_dns_lookup_time <= 64'
-data_source = "dns_lookup"
+[segments.tcp_conn_med_latency]
+select_expression = 'mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value BETWEEN 63 AND 245'
+data_source = "tcp_conn"
 
-[segments.slow_dns]
-select_expression = 'median_dns_lookup_time > 64'
-data_source = "dns_lookup"
+[segments.tcp_conn_high_latency]
+select_expression = 'mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value >= 255'
+data_source = "tcp_conn"
 
-[segments.other_dns]
-select_expression = 'median_dns_lookup_time IS NULL OR median_dns_lookup_time <= 0'
-data_source = "dns_lookup"
+[segments.other_tcp_conn]
+select_expression = 'tcp_conn_time IS NULL OR mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value <= 0'
+data_source = "tcp_conn"
 
-[segments.data_sources.dns_lookup]
+[segments.data_sources.tcp_conn]
 from_expression = """
 (
-    SELECT DISTINCT
+    SELECT
+        DATE(submission_timestamp) AS submission_date,
         client_id,
-        `mozfun.hist.percentiles`(
-            `mozfun.hist.merge`(
-                ARRAY_AGG(mozfun.hist.extract(payload.histograms.dns_lookup_time)) OVER(PARTITION BY client_id)
-            ),
-            [0.5]
-        )[SAFE_OFFSET(0)].value AS median_dns_lookup_time
+        mozfun.hist.merge(ARRAY_AGG(mozfun.hist.extract(payload.histograms.HTTP_PAGE_TCP_CONNECTION_2))) AS tcp_conn_time,
     FROM `moz-fx-data-shared-prod.telemetry.main`
-    WHERE DATE(submission_timestamp) BETWEEN "{{experiment.start_date_str}}" AND "{{experiment.last_enrollment_date_str}}"
+    WHERE
+        DATE(submission_timestamp) BETWEEN DATE_SUB("{{experiment.start_date_str}}", INTERVAL 8 DAY) AND "{{experiment.last_enrollment_date_str}}"
         AND normalized_channel = 'release'
+    GROUP BY submission_date, client_id
 )
 """
