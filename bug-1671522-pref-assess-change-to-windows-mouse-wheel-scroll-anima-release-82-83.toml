@@ -1,0 +1,32 @@
+[experiment]
+end_date = '2020-11-17'
+
+segments = ['regular_users_v3', 'is_new_attributed', 'is_not_new_attributed']
+
+## Segments
+
+[segments.is_new_attributed]
+select_expression = '{{agg_any("is_new_attributed")}}'
+data_source = "new_attributed"
+
+[segments.is_not_new_attributed]
+select_expression = '{{agg_any("is_new_attributed")}} = FALSE'
+data_source = "new_attributed"
+
+[segments.data_sources.new_attributed]
+from_expression = """
+(
+    SELECT
+        DATE(submission_timestamp) AS submission_date,
+        client_id,
+        (
+            environment.settings.attribution.medium IS NOT NULL
+            AND DATE_SUB(MIN(environment.profile.creationDate) OVER(PARTITION BY client_id), current_date, INTERVAL DAY) = 0
+        ) AS is_new_attributed,   
+    FROM `moz-fx-data-shared-prod.telemetry.main`
+    WHERE
+        DATE(submission_timestamp) BETWEEN DATE_SUB("{{experiment.start_date_str}}", INTERVAL 8 DAY) AND "{{experiment.last_enrollment_date_str}}"
+        AND normalized_channel = 'release'
+    GROUP BY submission_date, client_id
+)
+"""
