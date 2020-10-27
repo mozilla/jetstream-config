@@ -3,7 +3,7 @@ end_date = '2020-11-10'
 
 segments = [
     'regular_users_v3', 'new_or_resurrected_v3',
-    'fast_tcp_conn', 'med_tcp_conn', 'slow_tcp_conn', 'other_tcp_conn'
+    'tcp_conn_high_latency', 'tcp_conn_med_latency', 'tcp_conn_low_latency', 'other_tcp_conn_latency'
 ]
 
 [metrics]
@@ -178,7 +178,7 @@ data_source = "tcp_conn"
 select_expression = 'mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value >= 255'
 data_source = "tcp_conn"
 
-[segments.other_tcp_conn]
+[segments.other_tcp_conn_latency]
 select_expression = 'tcp_conn_time IS NULL OR mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value <= 0'
 data_source = "tcp_conn"
 
