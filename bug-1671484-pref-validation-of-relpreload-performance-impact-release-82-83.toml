@@ -1,6 +1,4 @@
 [experiment]
-end_date = '2020-11-10'
-
 segments = [
     'regular_users_v3', 'new_or_resurrected_v3',
     'tcp_conn_high_latency', 'tcp_conn_med_latency', 'tcp_conn_low_latency', 'other_tcp_conn_latency'
