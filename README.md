@@ -188,6 +188,6 @@ data_source = "my_data_source"
 from_expression = '(SELECT submission_date, client_id, is_default_browser FROM my_cool_table)'
 ```
 
-Learn more about defining a segment data source in the [mozanalysis documentation](moza-segment-ds).
+Learn more about defining a segment data source in the [mozanalysis documentation][moza-segment-ds].
 
 [moza-segment-ds]: https://mozilla.github.io/mozanalysis/api/segments.html#mozanalysis.segments.SegmentDataSource
