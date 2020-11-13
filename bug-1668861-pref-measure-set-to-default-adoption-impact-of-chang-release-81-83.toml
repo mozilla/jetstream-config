@@ -1,0 +1,27 @@
+[experiment]
+reference_branch = "modal-default-browser-notification"
+
+[metrics]
+daily = ["was_ever_default_browser", "was_never_default_browser"]
+weekly = ["was_ever_default_browser", "was_never_default_browser", "retained", "active_hours", "uri_count", "search_count"]
+overall = ["was_ever_default_browser", "was_never_default_browser", "active_hours", "uri_count", "search_count"]
+
+[metrics.was_ever_default_browser]
+select_expression = "LOGICAL_OR(is_default_browser)"
+data_source = "clients_daily"
+
+[metrics.was_ever_default_browser.statistics.binomial]
+pre_treatments = ["remove_nulls"]
+
+[metrics.was_never_default_browser]
+select_expression = "LOGICAL_AND(NOT is_default_browser)"
+data_source = "clients_daily"
+
+[metrics.was_never_default_browser.statistics.binomial]
+pre_treatments = ["remove_nulls"]
+
+[metrics.retained]
+select_expression = "COALESCE(SUM(pings_aggregated_by_this_row), 0) > 0"
+data_source = "clients_daily"
+
+[metrics.retained.statistics.binomial]
