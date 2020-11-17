@@ -129,7 +129,11 @@ This looks like:
 [metrics.ever_clicked_cows.statistics.binomial]
 # Sometimes it's useful to specify a "pre-treatment" to drop extreme values
 # or perform a transformation. There is a list of these in the Jetstream wiki.
-pre_treatments = []
+# They're specified like this:
+# pre_treatments = [
+#     {name = "drop_nulls"},
+#     {name = "log", base = 2},
+# ]
 
 # You can also change the default width of the confidence interval.
 ci_width = 0.95
@@ -183,3 +187,7 @@ data_source = "my_data_source"
 [segments.data_sources.my_data_source]
 from_expression = '(SELECT submission_date, client_id, is_default_browser FROM my_cool_table)'
 ```
+
+Learn more about defining a segment data source in the [mozanalysis documentation][moza-segment-ds].
+
+[moza-segment-ds]: https://mozilla.github.io/mozanalysis/api/segments.html#mozanalysis.segments.SegmentDataSource
