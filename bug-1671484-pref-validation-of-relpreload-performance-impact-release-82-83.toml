@@ -177,7 +177,7 @@ select_expression = 'mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_con
 data_source = "tcp_conn"
 
 [segments.other_tcp_conn_latency]
-select_expression = 'tcp_conn_ms IS NULL OR mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value <= 0'
+select_expression = 'mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)) IS NULL OR mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value <= 0'
 data_source = "tcp_conn"
 
 [segments.data_sources.tcp_conn]
