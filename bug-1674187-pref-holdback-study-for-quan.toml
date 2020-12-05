@@ -1,59 +1,45 @@
 [metrics]
-daily = ["active_hours", "searchmode_counts", "searchalias_counts", "searchmode_amazon_counts", "searchalias_amazon_counts", "searchoneoff_amazon_counts"]
-weekly = ["ad_clicks", "search_count", "organic_search_count", "tagged_search_count", "tagged_follow_on_search_count"]
-overall = ["active_hours", "uri_count", "ad_clicks", "search_count"]
-
-[metrics.unenroll.statistics.binomial]
-
-[metrics.active_hours.statistics.bootstrap_mean]
-[metrics.active_hours.statistics.deciles]
-
-[metrics.uri_count.statistics.bootstrap_mean]
-[metrics.uri_count.statistics.deciles]
-
-[metrics.ad_clicks.statistics.bootstrap_mean]
-[metrics.ad_clicks.statistics.deciles]
-
-[metrics.search_count.statistics.bootstrap_mean]
-[metrics.search_count.statistics.deciles]
-
-[metrics.retained]
-select_expression = "COALESCE(SUM(pings_aggregated_by_this_row), 0) > 0"
-data_source = "clients_daily"
-
-[metrics.retained.statistics.binomial]
+weekly = ["organic_search_count", "tagged_search_count", "tagged_follow_on_search_count",
+"searchalias_counts", "searchalias_amazon_counts", "searchoneoff_amazon_counts", "searchmode_counts", "searchmode_amazon_counts", "searchmode_searchoneoff_amazon_counts", "search_engagement"]
 
 [metrics.searchalias_counts]
 select_expression = "SUM(CASE WHEN source = 'alias' then sap else 0 end)"
 data_source = "search_clients_daily"
 [metrics.searchalias_counts.bootstrap_mean]
+[metrics.searchalias_counts.deciles]
 
 [metrics.searchalias_amazon_counts]
 select_expression = "SUM(CASE WHEN source = 'alias' and engine like 'amazon%' then sap else 0 end)"
 data_source = "search_clients_daily"
 [metrics.searchalias_amazon_counts.bootstrap_mean]
+[metrics.searchalias_amazon_counts.deciles]
 
 [metrics.searchoneoff_amazon_counts]
 select_expression = "SUM(CASE WHEN source = 'urlbar' and engine like 'amazon%' then sap else 0 end)"
 data_source = "search_clients_daily"
 [metrics.searchoneoff_amazon_counts.bootstrap_mean]
+[metrics.searchoneoff_amazon_counts.deciles]
 
 [metrics.searchmode_counts]
 select_expression = "SUM(CASE WHEN source = 'urlbar-searchmode' then sap else 0 end)"
 data_source = "search_clients_daily"
 [metrics.searchmode_counts.bootstrap_mean]
+[metrics.searchmode_counts.deciles]
 
 [metrics.searchmode_amazon_counts]
 select_expression = "SUM(CASE WHEN source = 'urlbar-searchmode' and engine like 'amazon%' then sap else 0 end)"
 data_source = "search_clients_daily"
 [metrics.searchmode_amazon_counts.bootstrap_mean]
+[metrics.searchmode_amazon_counts.deciles]
 
 [metrics.searchmode_searchoneoff_amazon_counts]
 select_expression = "SUM(CASE WHEN source = 'urlbar' and engine like 'amazon%' then sap else 0 end)"
 data_source = "search_clients_daily"
 [metrics.searchmode_searchoneoff_amazon_counts.bootstrap_mean]
+[metrics.searchmode_searchoneoff_amazon_counts.deciles]
 
 [metrics.search_engagement]
 select_expression = "(SUM(tagged_sap) + SUM(tagged_follow_on))*100.0 / (SUM(organic) + SUM(tagged_sap) + SUM(tagged_follow_on))"
 data_source = "search_clients_daily"
 [metrics.search_engagement.bootstrap_mean]
+[metrics.search_engagement.deciles]
