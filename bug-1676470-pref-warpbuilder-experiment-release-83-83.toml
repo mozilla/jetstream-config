@@ -2,7 +2,7 @@
 segments = [
     'low_cpu', 'med_cpu', 'high_cpu',
     'low_mem', 'med_mem', 'high_mem',
-    'regular_users_v3', 'new_or_resurrected_v3', 'is_core_active_v1'
+    'regular_users_v3', 'new_or_resurrected_v3'
 ]
 
 [metrics]
