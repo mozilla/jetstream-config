@@ -30,6 +30,7 @@ overall = [
 
         [metrics.perf_page_load_time_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.perf_page_load_time_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -47,6 +48,7 @@ overall = [
 
         [metrics.perf_page_load_time_from_responsestart_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.perf_page_load_time_from_responsestart_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -64,6 +66,7 @@ overall = [
 
         [metrics.perf_dom_content_loaded_time_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.perf_dom_content_loaded_time_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -81,6 +84,7 @@ overall = [
 
         [metrics.perf_dom_content_loaded_time_from_responsestart_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.perf_dom_content_loaded_time_from_responsestart_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -98,6 +102,7 @@ overall = [
 
         [metrics.perf_first_contentful_paint_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.perf_first_contentful_paint_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -115,6 +120,7 @@ overall = [
 
         [metrics.perf_first_contentful_paint_from_responsestart_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.perf_first_contentful_paint_from_responsestart_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -132,6 +138,7 @@ overall = [
 
         [metrics.perf_request_animation_callback_pageload_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.perf_request_animation_callback_pageload_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -149,6 +156,7 @@ overall = [
 
         [metrics.perf_request_animation_callback_non_pageload_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.perf_request_animation_callback_non_pageload_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -166,6 +174,7 @@ overall = [
 
         [metrics.js_execution_proportion.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.js_execution_proportion.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -183,6 +192,7 @@ overall = [
 
         [metrics.time_to_first_interaction_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.time_to_first_interaction_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -200,6 +210,7 @@ overall = [
 
         [metrics.input_event_response_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.input_event_response_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -217,6 +228,7 @@ overall = [
 
         [metrics.content_keypress_present_latency.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.content_keypress_present_latency.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -234,6 +246,7 @@ overall = [
 
         [metrics.gpu_keypress_present_latency.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.gpu_keypress_present_latency.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -251,6 +264,7 @@ overall = [
 
         [metrics.load_input_event_response_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.load_input_event_response_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -268,6 +282,7 @@ overall = [
 
         [metrics.load_input_event_response_no_preload_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.load_input_event_response_no_preload_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -285,6 +300,7 @@ overall = [
 
         [metrics.load_input_event_response_preload_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.load_input_event_response_preload_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -302,6 +318,7 @@ overall = [
 
         [metrics.about_home_topsites_first_paint.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.about_home_topsites_first_paint.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -319,6 +336,7 @@ overall = [
 
         [metrics.fx_new_window_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
+        log_space = true
 
         [metrics.fx_new_window_ms.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
@@ -330,40 +348,24 @@ overall = [
 
 [segments.low_cpu]
 select_expression = 'cpu_count BETWEEN 1 AND 2'
-data_source = "client_system"
+data_source = "clients_last_seen"
 
 [segments.med_cpu]
 select_expression = 'cpu_count BETWEEN 3 AND 5'
-data_source = "client_system"
+data_source = "clients_last_seen"
 
 [segments.high_cpu]
 select_expression = 'cpu_count >= 6'
-data_source = "client_system"
+data_source = "clients_last_seen"
 
 [segments.low_mem]
 select_expression = 'memory_mb BETWEEN 1 AND 4095'
-data_source = "client_system"
+data_source = "clients_last_seen"
 
 [segments.med_mem]
 select_expression = 'memory_mb BETWEEN 4096 AND 8191'
-data_source = "client_system"
+data_source = "clients_last_seen"
 
 [segments.high_mem]
 select_expression = 'memory_mb >= 8192'
-data_source = "client_system"
-
-[segments.data_sources.client_system]
-from_expression = """
-(
-    SELECT
-        DATE(submission_timestamp) AS submission_date,
-        client_id,
-        environment.system.cpu.count AS cpu_count,
-        environment.system.memory_mb,
-    FROM `moz-fx-data-shared-prod.telemetry.main`
-    WHERE
-        DATE(submission_timestamp) BETWEEN DATE_SUB("{{experiment.start_date_str}}", INTERVAL 8 DAY) AND "{{experiment.last_enrollment_date_str}}"
-        AND normalized_channel = 'release'
-    GROUP BY submission_date, client_id
-)
-"""
+data_source = "clients_last_seen"
