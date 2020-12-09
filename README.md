@@ -64,9 +64,16 @@ enrollment_query = """
       num_enrollments
   FROM `moz-fx-data-shared-prod`.some_table.name_here
   WHERE
-      DATE(submission_timestamp) BETWEEN {{experiment.start_date}} AND {{experiment.enrollment_end}}
+      DATE(submission_timestamp) BETWEEN "{{experiment.start_date_str}}" AND "{{experiment.last_enrollment_date_str}}"
       AND mozfun.map.get_key(environment.experiments, "{{experiment.slug}}") IS NOT NULL
 """
+
+# You can override either or both of the start_date and end_date.
+# In conjunction with a custom enrollment query, this can be useful for holdbacks,
+# since you don't really care about the period of time before your client upgrades
+# to the new version.
+start_date = "2020-01-01"
+end_date = "2020-12-31"
 ```
 
 ### Metrics section
