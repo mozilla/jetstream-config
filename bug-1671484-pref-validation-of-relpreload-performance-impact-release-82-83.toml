@@ -186,12 +186,11 @@ from_expression = """
     SELECT
         DATE(submission_timestamp) AS submission_date,
         client_id,
-        mozfun.hist.merge(ARRAY_AGG(mozfun.hist.extract(payload.histograms.HTTP_PAGE_TCP_CONNECTION_2))) AS tcp_conn_time,
+        mozfun.hist.merge(ARRAY_AGG(mozfun.hist.extract(payload.processes.content.histograms.http_page_tcp_connection_2))) AS tcp_conn_time,
     FROM `moz-fx-data-shared-prod.telemetry.main`
     WHERE
         DATE(submission_timestamp) BETWEEN DATE_SUB("{{experiment.start_date_str}}", INTERVAL 8 DAY) AND "{{experiment.last_enrollment_date_str}}"
         AND normalized_channel = 'release'
-        AND payload.histograms.HTTP_PAGE_TCP_CONNECTION_2 IS NOT NULL
     GROUP BY submission_date, client_id
 )
 """
