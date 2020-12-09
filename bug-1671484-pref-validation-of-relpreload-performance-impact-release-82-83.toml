@@ -165,19 +165,19 @@ overall = [
 ## Segments
 
 [segments.tcp_conn_low_latency]
-select_expression = 'COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value BETWEEN 1 AND 62, FALSE)'
+select_expression = 'COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_time IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value BETWEEN 1 AND 62, FALSE)'
 data_source = "tcp_conn"
 
 [segments.tcp_conn_med_latency]
-select_expression = 'COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value BETWEEN 63 AND 245, FALSE)'
+select_expression = 'COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_time IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value BETWEEN 63 AND 245, FALSE)'
 data_source = "tcp_conn"
 
 [segments.tcp_conn_high_latency]
-select_expression = 'COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value >= 255, FALSE)'
+select_expression = 'COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_time IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value >= 255, FALSE)'
 data_source = "tcp_conn"
 
 [segments.other_tcp_conn_latency]
-select_expression = 'mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms IGNORE NULLS)) IS NULL OR COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value <= 0, TRUE)'
+select_expression = 'mozfun.hist.merge(ARRAY_AGG(tcp_conn_time IGNORE NULLS)) IS NULL OR COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_time IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value <= 0, TRUE)'
 data_source = "tcp_conn"
 
 [segments.data_sources.tcp_conn]
