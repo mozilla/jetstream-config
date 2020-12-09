@@ -347,25 +347,25 @@ overall = [
 ## Segments
 
 [segments.low_cpu]
-select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 1 AND 2), FALSE)'
+select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 1 AND 2, FALSE)'
 data_source = "clients_last_seen"
 
 [segments.med_cpu]
-select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 3 AND 5), FALSE)'
+select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 3 AND 5, FALSE)'
 data_source = "clients_last_seen"
 
 [segments.high_cpu]
-select_expression = 'COALESCE(MAX(cpu_count >= 6), FALSE)'
+select_expression = 'COALESCE(MAX(cpu_count) >= 6, FALSE)'
 data_source = "clients_last_seen"
 
 [segments.low_mem]
-select_expression = 'COALESCE(MAX(memory_mb BETWEEN 1 AND 4095), FALSE)'
+select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 1 AND 4095, FALSE)'
 data_source = "clients_last_seen"
 
 [segments.med_mem]
-select_expression = 'COALESCE(MAX(memory_mb BETWEEN 4096 AND 8191), FALSE)'
+select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 4096 AND 8191, FALSE)'
 data_source = "clients_last_seen"
 
 [segments.high_mem]
-select_expression = 'COALESCE(MAX(memory_mb >= 8192), FALSE)'
+select_expression = 'COALESCE(MAX(memory_mb) >= 8192, FALSE)'
 data_source = "clients_last_seen"
