@@ -2,19 +2,19 @@
 enrollment_query = """
     SELECT
         client_id,
-        mozfun.map.get_key(experiments, "{{experiment.slug}}").branch,
+        mozfun.map.get_key(experiments, "{{experiment.normandy_slug}}").branch,
         MIN(submission_date) AS submission_date,
         1 AS num_enrollments
     FROM `moz-fx-data-shared-prod`.telemetry.main_summary
     WHERE
         submission_date BETWEEN "{{experiment.start_date_str}}" AND "{{experiment.last_enrollment_date_str}}"
-        AND mozfun.map.get_key(experiments, "{{experiment.slug}}") IS NOT NULL
+        AND mozfun.map.get_key(experiments, "{{experiment.normandy_slug}}") IS NOT NULL
         AND STARTS_WITH(app_version, "83.")
     GROUP BY 1, 2
 """
-
 start_date = "2020-11-17"  # Fx 83 launch
 enrollment_period = 14
+segments = ["regular_users_v3"]
 
 [metrics]
 weekly = ["organic_search_count", "tagged_search_count",
