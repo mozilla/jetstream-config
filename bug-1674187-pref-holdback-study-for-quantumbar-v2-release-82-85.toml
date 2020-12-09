@@ -23,6 +23,13 @@ weekly = ["organic_search_count", "tagged_search_count",
           "searchmode_counts", "searchmode_amazon_counts",
           "searchmode_searchoneoff_amazon_counts", "search_engagement"]
 
+overall = ["organic_search_count", "tagged_search_count",
+           "tagged_follow_on_search_count", "searchalias_counts",
+           "searchalias_amazon_counts", "searchoneoff_amazon_counts",
+           "searchmode_counts", "searchmode_amazon_counts",
+           "searchmode_searchoneoff_amazon_counts", "search_engagement"]
+
+
 [metrics.searchalias_counts]
 select_expression = "SUM(CASE WHEN source = 'alias' then sap else 0 end)"
 data_source = "search_clients_daily"
