@@ -3,7 +3,7 @@ enrollment_query = """
     SELECT
         client_id,
         mozfun.map.get_key(experiments, "{{experiment.normandy_slug}}") AS branch,
-        MIN(submission_date) AS submission_date,
+        MIN(submission_date) AS enrollment_date,
         1 AS num_enrollments
     FROM `moz-fx-data-shared-prod`.telemetry.main_summary
     WHERE
