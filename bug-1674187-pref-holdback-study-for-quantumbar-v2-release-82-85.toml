@@ -2,7 +2,7 @@
 enrollment_query = """
     SELECT
         client_id,
-        mozfun.map.get_key(experiments, "{{experiment.normandy_slug}}") AS branch,
+        mozfun.map.get_key(experiments, "{{experiment.normandy_slug}}").branch AS branch,
         MIN(submission_date) AS submission_date,
         1 AS num_enrollments
     FROM `moz-fx-data-shared-prod`.telemetry.main_summary
@@ -14,6 +14,7 @@ enrollment_query = """
 """
 start_date = "2020-11-17"  # Fx 83 launch
 enrollment_period = 14
+
 segments = ["regular_users_v3"]
 
 [metrics]
