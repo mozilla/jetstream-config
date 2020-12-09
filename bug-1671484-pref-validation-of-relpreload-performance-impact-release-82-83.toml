@@ -165,19 +165,19 @@ overall = [
 ## Segments
 
 [segments.tcp_conn_low_latency]
-select_expression = 'mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value BETWEEN 1 AND 62'
+select_expression = 'COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value >= 255, FALSE)'
 data_source = "tcp_conn"
 
 [segments.tcp_conn_med_latency]
-select_expression = 'mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value BETWEEN 63 AND 245'
+select_expression = 'COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value BETWEEN 63 AND 245, FALSE)'
 data_source = "tcp_conn"
 
 [segments.tcp_conn_high_latency]
-select_expression = 'mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value >= 255'
+select_expression = 'COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value BETWEEN 1 AND 62, FALSE)'
 data_source = "tcp_conn"
 
 [segments.other_tcp_conn_latency]
-select_expression = 'tcp_conn_time IS NULL OR mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)), [0.5])[SAFE_OFFSET(0)].value <= 0'
+select_expression = 'mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms)) IS NULL OR COALESCE(mozfun.hist.percentiles(mozfun.hist.merge(ARRAY_AGG(tcp_conn_ms IGNORE NULLS)), [0.5])[SAFE_OFFSET(0)].value <= 0, TRUE)'
 data_source = "tcp_conn"
 
 [segments.data_sources.tcp_conn]
@@ -191,6 +191,7 @@ from_expression = """
     WHERE
         DATE(submission_timestamp) BETWEEN DATE_SUB("{{experiment.start_date_str}}", INTERVAL 8 DAY) AND "{{experiment.last_enrollment_date_str}}"
         AND normalized_channel = 'release'
+        AND payload.histograms.HTTP_PAGE_TCP_CONNECTION_2 IS NOT NULL
     GROUP BY submission_date, client_id
 )
 """
