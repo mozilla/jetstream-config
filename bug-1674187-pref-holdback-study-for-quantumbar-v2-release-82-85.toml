@@ -1,0 +1,73 @@
+[experiment]
+enrollment_query = """
+    SELECT
+        client_id,
+        mozfun.map.get_key(experiments, "{{experiment.normandy_slug}}").branch,
+        MIN(submission_date) AS submission_date,
+        1 AS num_enrollments
+    FROM `moz-fx-data-shared-prod`.telemetry.main_summary
+    WHERE
+        submission_date BETWEEN "{{experiment.start_date_str}}" AND "{{experiment.last_enrollment_date_str}}"
+        AND mozfun.map.get_key(experiments, "{{experiment.normandy_slug}}") IS NOT NULL
+        AND STARTS_WITH(app_version, "83.")
+    GROUP BY 1, 2
+"""
+start_date = "2020-11-17"  # Fx 83 launch
+enrollment_period = 14
+segments = ["regular_users_v3"]
+
+[metrics]
+weekly = ["organic_search_count", "tagged_search_count",
+          "tagged_follow_on_search_count", "searchalias_counts",
+          "searchalias_amazon_counts", "searchoneoff_amazon_counts",
+          "searchmode_counts", "searchmode_amazon_counts",
+          "searchmode_searchoneoff_amazon_counts", "search_engagement"]
+
+overall = ["organic_search_count", "tagged_search_count",
+           "tagged_follow_on_search_count", "searchalias_counts",
+           "searchalias_amazon_counts", "searchoneoff_amazon_counts",
+           "searchmode_counts", "searchmode_amazon_counts",
+           "searchmode_searchoneoff_amazon_counts", "search_engagement"]
+
+
+[metrics.searchalias_counts]
+select_expression = "SUM(CASE WHEN source = 'alias' then sap else 0 end)"
+data_source = "search_clients_daily"
+[metrics.searchalias_counts.statistics.bootstrap_mean]
+[metrics.searchalias_counts.statistics.deciles]
+
+[metrics.searchalias_amazon_counts]
+select_expression = "SUM(CASE WHEN source = 'alias' and engine like 'amazon%' then sap else 0 end)"
+data_source = "search_clients_daily"
+[metrics.searchalias_amazon_counts.statistics.bootstrap_mean]
+[metrics.searchalias_amazon_counts.statistics.deciles]
+
+[metrics.searchoneoff_amazon_counts]
+select_expression = "SUM(CASE WHEN source = 'urlbar' and engine like 'amazon%' then sap else 0 end)"
+data_source = "search_clients_daily"
+[metrics.searchoneoff_amazon_counts.statistics.bootstrap_mean]
+[metrics.searchoneoff_amazon_counts.statistics.deciles]
+
+[metrics.searchmode_counts]
+select_expression = "SUM(CASE WHEN source = 'urlbar-searchmode' then sap else 0 end)"
+data_source = "search_clients_daily"
+[metrics.searchmode_counts.statistics.bootstrap_mean]
+[metrics.searchmode_counts.statistics.deciles]
+
+[metrics.searchmode_amazon_counts]
+select_expression = "SUM(CASE WHEN source = 'urlbar-searchmode' and engine like 'amazon%' then sap else 0 end)"
+data_source = "search_clients_daily"
+[metrics.searchmode_amazon_counts.statistics.bootstrap_mean]
+[metrics.searchmode_amazon_counts.statistics.deciles]
+
+[metrics.searchmode_searchoneoff_amazon_counts]
+select_expression = "SUM(CASE WHEN source = 'urlbar' and engine like 'amazon%' then sap else 0 end)"
+data_source = "search_clients_daily"
+[metrics.searchmode_searchoneoff_amazon_counts.statistics.bootstrap_mean]
+[metrics.searchmode_searchoneoff_amazon_counts.statistics.deciles]
+
+[metrics.search_engagement]
+select_expression = "(SUM(tagged_sap) + SUM(tagged_follow_on))*100.0 / (SUM(organic) + SUM(tagged_sap) + SUM(tagged_follow_on))"
+data_source = "search_clients_daily"
+[metrics.search_engagement.statistics.bootstrap_mean]
+[metrics.search_engagement.statistics.deciles]
