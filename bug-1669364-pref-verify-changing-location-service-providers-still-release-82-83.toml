@@ -1,0 +1,10 @@
+[metrics]
+weekly = ["geolocation_accuracy"]
+overall = ["geolocation_accuracy"]
+
+
+[metrics.geolocation_accuracy]
+select_expression = "{{agg_histogram_mean('GEOLOCATION_ACCURACY_EXPONENTIAL')}}"
+data_source = "main"
+[metrics.geolocation_accuracy.statistics.bootstrap_mean]
+[metrics.geolocation_accuracy.statistics.deciles]
