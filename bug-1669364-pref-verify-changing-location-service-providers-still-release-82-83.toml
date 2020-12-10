@@ -7,4 +7,6 @@ overall = ["geolocation_accuracy"]
 select_expression = "{{agg_histogram_mean('payload.histograms.geolocation_accuracy_exponential')}}"
 data_source = "main"
 [metrics.geolocation_accuracy.statistics.bootstrap_mean]
+pre_treatments = ["remove_nulls"]
 [metrics.geolocation_accuracy.statistics.deciles]
+pre_treatments = ["remove_nulls"]
