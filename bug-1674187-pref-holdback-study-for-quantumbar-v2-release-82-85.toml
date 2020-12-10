@@ -22,13 +22,13 @@ weekly = ["organic_search_count", "tagged_search_count",
           "tagged_follow_on_search_count", "searchalias_counts",
           "searchalias_amazon_counts", "searchoneoff_amazon_counts",
           "searchmode_counts", "searchmode_amazon_counts",
-          "searchmode_searchoneoff_amazon_counts", "search_engagement"]
+          "searchmode_searchoneoff_amazon_counts"]
 
 overall = ["organic_search_count", "tagged_search_count",
            "tagged_follow_on_search_count", "searchalias_counts",
            "searchalias_amazon_counts", "searchoneoff_amazon_counts",
            "searchmode_counts", "searchmode_amazon_counts",
-           "searchmode_searchoneoff_amazon_counts", "search_engagement"]
+           "searchmode_searchoneoff_amazon_counts"]
 
 
 [metrics.searchalias_counts]
@@ -66,9 +66,3 @@ select_expression = "SUM(CASE WHEN source = 'urlbar' and engine like 'amazon%' t
 data_source = "search_clients_daily"
 [metrics.searchmode_searchoneoff_amazon_counts.statistics.bootstrap_mean]
 [metrics.searchmode_searchoneoff_amazon_counts.statistics.deciles]
-
-[metrics.search_engagement]
-select_expression = "(SUM(tagged_sap) + SUM(tagged_follow_on))*100.0 / (SUM(organic) + SUM(tagged_sap) + SUM(tagged_follow_on))"
-data_source = "search_clients_daily"
-[metrics.search_engagement.statistics.bootstrap_mean]
-[metrics.search_engagement.statistics.deciles]
