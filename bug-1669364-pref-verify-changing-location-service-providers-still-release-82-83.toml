@@ -1,6 +1,6 @@
 [metrics]
-weekly = ["geolocation_accuracy_difference"]
-overall = ["geolocation_accuracy_difference"]
+weekly = ["geolocation_accuracy_difference", "country"]
+overall = ["geolocation_accuracy_difference", "country"]
 
 
 [metrics.geolocation_accuracy_difference]
