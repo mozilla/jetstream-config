@@ -84,6 +84,7 @@ jobs:
             echo "Jetstream successfully completed."
           else
             echo "Jetstream completed in unknown status. Please check the logs."
+            echo "Analysis Errors can be accessed via Redash: https://sql.telemetry.mozilla.org/dashboard/jetstream-errors?p_experiment=%25"
             exit 1
           fi
 workflows:
