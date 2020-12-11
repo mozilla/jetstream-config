@@ -12,6 +12,6 @@ pre_treatments = ["remove_nulls"]
 pre_treatments = ["remove_nulls"]
 
 [metrics.country]
-select_expression = "{{mozfun.stats.mode_last('country')}}"
+select_expression = "mozfun.stats.mode_last(ARRAY_AGG(country))"
 data_source = "clients_daily"
 [metrics.country.statistics.count]
