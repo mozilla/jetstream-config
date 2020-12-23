@@ -58,7 +58,7 @@ data_source = "search_clients_daily"
 [metrics.search_engagement]
 select_expression = """
 safe_divide((SUM(tagged_sap) + SUM(tagged_follow_on))*100.0,
-            (SUM(organic) + SUM(tagged_sap) + SUM(tagged_follow_on))"""
+            SUM(organic) + SUM(tagged_sap) + SUM(tagged_follow_on))"""
 data_source = "search_clients_daily"
 [metrics.search_engagement.statistics.bootstrap_mean]
 pre_treatments = ["remove_nulls"]
