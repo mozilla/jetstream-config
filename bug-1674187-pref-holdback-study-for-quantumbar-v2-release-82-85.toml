@@ -14,55 +14,49 @@ enrollment_query = """
 """
 start_date = "2020-11-17"  # Fx 83 launch
 enrollment_period = 14
+reference_branch = 'holdback-group-no-update'
 
 segments = ["regular_users_v3"]
 
 [metrics]
-weekly = ["organic_search_count", "tagged_search_count",
-          "tagged_follow_on_search_count", "searchalias_counts",
-          "searchalias_amazon_counts", "searchoneoff_amazon_counts",
-          "searchmode_counts", "searchmode_amazon_counts",
-          "searchmode_searchoneoff_amazon_counts"]
+weekly = ["organic_search_count", "search_count",  "tagged_search_count",
+          "tagged_follow_on_search_count", "total_amazon_search_count",
+          "urlbar_amazon_search_count", "searchmode_count", "search_engagement"]
 
-overall = ["organic_search_count", "tagged_search_count",
-           "tagged_follow_on_search_count", "searchalias_counts",
-           "searchalias_amazon_counts", "searchoneoff_amazon_counts",
-           "searchmode_counts", "searchmode_amazon_counts",
-           "searchmode_searchoneoff_amazon_counts"]
+overall = ["organic_search_count", "search_count", "tagged_search_count",
+           "tagged_follow_on_search_count", "total_amazon_search_count",
+           "urlbar_amazon_search_count", "searchmode_count", "search_engagement"]
 
-
-[metrics.searchalias_counts]
-select_expression = "SUM(CASE WHEN source = 'alias' then sap else 0 end)"
+[metrics.total_amazon_search_count]
+select_expression = "SUM(CASE WHEN engine like 'amazon%' then sap else 0 end)"
 data_source = "search_clients_daily"
-[metrics.searchalias_counts.statistics.bootstrap_mean]
-[metrics.searchalias_counts.statistics.deciles]
+[metrics.total_amazon_search_count.statistics.bootstrap_mean]
+[metrics.total_amazon_search_count.statistics.deciles]
 
-[metrics.searchalias_amazon_counts]
-select_expression = "SUM(CASE WHEN source = 'alias' and engine like 'amazon%' then sap else 0 end)"
-data_source = "search_clients_daily"
-[metrics.searchalias_amazon_counts.statistics.bootstrap_mean]
-[metrics.searchalias_amazon_counts.statistics.deciles]
 
-[metrics.searchoneoff_amazon_counts]
-select_expression = "SUM(CASE WHEN source = 'urlbar' and engine like 'amazon%' then sap else 0 end)"
+[metrics.urlbar_amazon_search_count]
+select_expression = """
+SUM(CASE
+        WHEN source = 'alias' and engine like 'amazon%' then sap
+        WHEN source = 'urlbar' and engine like 'amazon%' then sap
+        WHEN source = 'urlbar-searchmode' and engine like 'amazon%' then sap
+        else 0 end)"""
 data_source = "search_clients_daily"
-[metrics.searchoneoff_amazon_counts.statistics.bootstrap_mean]
-[metrics.searchoneoff_amazon_counts.statistics.deciles]
+[metrics.urlbar_amazon_search_count.statistics.bootstrap_mean]
+[metrics.urlbar_amazon_search_count.statistics.deciles]
 
-[metrics.searchmode_counts]
-select_expression = "SUM(CASE WHEN source = 'urlbar-searchmode' then sap else 0 end)"
+[metrics.searchmode_count]
+select_expression = """
+SUM(CASE
+        WHEN source = 'alias' then sap
+        WHEN source = 'urlbar-searchmode' then sap
+        else 0 end)"""
 data_source = "search_clients_daily"
-[metrics.searchmode_counts.statistics.bootstrap_mean]
-[metrics.searchmode_counts.statistics.deciles]
+[metrics.searchmode_count.statistics.bootstrap_mean]
+[metrics.searchmode_count.statistics.deciles]
 
-[metrics.searchmode_amazon_counts]
-select_expression = "SUM(CASE WHEN source = 'urlbar-searchmode' and engine like 'amazon%' then sap else 0 end)"
+[metrics.search_engagement]
+select_expression = "(SUM(tagged_sap) + SUM(tagged_follow_on))*100.0 / (SUM(organic) + SUM(tagged_sap) + SUM(tagged_follow_on))"
 data_source = "search_clients_daily"
-[metrics.searchmode_amazon_counts.statistics.bootstrap_mean]
-[metrics.searchmode_amazon_counts.statistics.deciles]
-
-[metrics.searchmode_searchoneoff_amazon_counts]
-select_expression = "SUM(CASE WHEN source = 'urlbar' and engine like 'amazon%' then sap else 0 end)"
-data_source = "search_clients_daily"
-[metrics.searchmode_searchoneoff_amazon_counts.statistics.bootstrap_mean]
-[metrics.searchmode_searchoneoff_amazon_counts.statistics.deciles]
+[metrics.search_engagement.statistics.bootstrap_mean]
+[metrics.search_engagement.statistics.deciles]
