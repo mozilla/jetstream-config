@@ -128,7 +128,7 @@ data_source = "main"
 # This defaults to true so you don't need to specify it for engagement-type metrics
 # where we're trying to encourage more of something. But for performance metrics,
 # bigger is often worse, so you should set this to false.
-bigger_is_better = True
+bigger_is_better = true
 ```
 
 You should also add some sections to describe how your new metrics should be summarized for reporting.
