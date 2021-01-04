@@ -123,6 +123,12 @@ select_expression = "SUM(COALESCE(payload.processes.parent.scalars.browser_engag
 # The data source to use. You can use the slug of a data source defined in mozanalysis,
 # or else define a new data source below.
 data_source = "main"
+
+# Whether larger values of this metric are subjectively "better" or not.
+# This defaults to true so you don't need to specify it for engagement-type metrics
+# where we're trying to encourage more of something. But for performance metrics,
+# bigger is often worse, so you should set this to false.
+bigger_is_better = True
 ```
 
 You should also add some sections to describe how your new metrics should be summarized for reporting.
