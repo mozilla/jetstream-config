@@ -1,19 +1,23 @@
 # jetstream-config
 
-Custom configs for experiments analyzed in [jetstream](https://github.com/mozilla/jetstream). 
+Custom configs for [experiments](#custom-experiment-configurations) and [outcome snippets](#outcome-snippets)
+analyzed in [jetstream](https://github.com/mozilla/jetstream).
 
 ## Adding Custom Configurations
 
 Custom configuration files are written in [TOML](https://toml.io/en/).
-The name of the configuration file must match the **Normandy slug** of the experiment it is targeting.
 
 To add or update a custom configuration, open a pull request. CI checks will verify your configuration.
 Once CI completes, you may merge the pull request, which will trigger Jetstream to re-run your analysis.
 
-## Example configuration and syntax
+### Custom experiment configurations
+
+The name of the custom experiment configuration files must match the **Normandy slug**
+of the experiment it is targeting.
 
 Configuration files have four main sections:
-`[experiment]`, `[metrics]`, `[data_sources]`, and `[segments]`.
+[`[experiment]`](#experiment-section), [`[metrics]`](#metrics-section), [`[data_sources]`](#defining-data-sources),
+and [`[segments]`](#defining-segments).
 
 Examples of every value you can specify in each section are given below.
 You do not need to specify everything!
@@ -23,6 +27,21 @@ and combine them with a reasonable set of defaults.
 You should name the file according to the experiment's Normandy slug,
 like `bug_12345_my_cool_experiment.toml`.
 
+Lines starting with a `#` are comments and have no effect.
+
+### Outcome snippets
+
+Outcome snippets, which define a collection of summaries with a common theme (e.g. "performace", "Picture in Picture use"),
+are stored in the `outcomes/` directory and file names serve as unique identifiers.
+
+Configuration files have a set of [`[metrics]` definitions](#defining-metrics), [`[data_sources]`](#defining-data-sources),
+and [`[segments]`](#defining-segments).
+
+Unlike experiment configurations, the `[metrics]` section does not specify the analysis windows metrics
+are computed for. Jetstream computes metrics defined in outcome snippets for weekly and overall
+analysis windows.
+
+Examples of every value you can specify in each section are given below.
 Lines starting with a `#` are comments and have no effect.
 
 ### Experiment section
