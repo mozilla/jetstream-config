@@ -34,8 +34,8 @@ Lines starting with a `#` are comments and have no effect.
 Outcome snippets, which define a collection of summaries with a common theme (e.g. "performace", "Picture in Picture use"),
 are stored in the `outcomes/` directory and file names serve as unique identifiers.
 
-Configuration files have a set of [`[metrics]` definitions](#defining-metrics), [`[data_sources]`](#defining-data-sources),
-and [`[segments]`](#defining-segments).
+Configuration files have a set of [`[metrics]` definitions](#defining-metrics) and [`[data_sources]`](#defining-data-sources).
+A `friendly_name` and `description` are required at the top of the outcome snippet config file.
 
 Unlike experiment configurations, the `[metrics]` section does not specify the analysis windows metrics
 are computed for. Jetstream computes metrics defined in outcome snippets for weekly and overall
@@ -148,6 +148,12 @@ data_source = "main"
 # where we're trying to encourage more of something. But for performance metrics,
 # bigger is often worse, so you should set this to false.
 bigger_is_better = true
+
+# A friendly metric name displayed in dashboards.
+friendly_name = "Cows clicked"
+
+# A description that will be displayed by dashboards.
+description = "Number of cows clicked"
 ```
 
 You should also add some sections to describe how your new metrics should be summarized for reporting.
