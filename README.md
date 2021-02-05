@@ -32,7 +32,8 @@ Lines starting with a `#` are comments and have no effect.
 ### Outcome snippets
 
 Outcome snippets, which define a collection of summaries with a common theme (e.g. "performace", "Picture in Picture use"),
-are stored in the `outcomes/` directory and file names serve as unique identifiers.
+are stored in the `outcomes/` directory and file names serve as unique identifiers. Outcome snippets are organized in different
+subdirectories that represent the application they are supporting, e.g. `fenix/` or `firefox_desktop/`.
 
 Configuration files have a set of [`[metrics]` definitions](#defining-metrics) and [`[data_sources]`](#defining-data-sources).
 A `friendly_name` and `description` are required at the top of the outcome snippet config file.
