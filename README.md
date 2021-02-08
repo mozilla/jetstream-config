@@ -29,22 +29,6 @@ like `bug_12345_my_cool_experiment.toml`.
 
 Lines starting with a `#` are comments and have no effect.
 
-### Outcome snippets
-
-Outcome snippets, which define a collection of summaries with a common theme (e.g. "performace", "Picture in Picture use"),
-are stored in the `outcomes/` directory and file names serve as unique identifiers. Outcome snippets are organized in different
-subdirectories that represent the application they are supporting, e.g. `fenix/` or `firefox_desktop/`.
-
-Configuration files have a set of [`[metrics]` definitions](#defining-metrics) and [`[data_sources]`](#defining-data-sources).
-A `friendly_name` and `description` are required at the top of the outcome snippet config file.
-
-Unlike experiment configurations, the `[metrics]` section does not specify the analysis windows metrics
-are computed for. Jetstream computes metrics defined in outcome snippets for weekly and overall
-analysis windows.
-
-Examples of every value you can specify in each section are given below.
-Lines starting with a `#` are comments and have no effect.
-
 ### Experiment section
 
 This part of the configuration file lets you specify the segments you wish to analyze.
@@ -230,3 +214,41 @@ from_expression = '(SELECT submission_date, client_id, is_default_browser FROM m
 Learn more about defining a segment data source in the [mozanalysis documentation][moza-segment-ds].
 
 [moza-segment-ds]: https://mozilla.github.io/mozanalysis/api/segments.html#mozanalysis.segments.SegmentDataSource
+
+
+### Outcome snippets
+
+Outcome snippets, which define a collection of summaries with a common theme (e.g. "performace", "Picture in Picture use"),
+are stored in the `outcomes/` directory and file names serve as unique identifiers. Outcome snippets are organized in different
+subdirectories that represent the application they are supporting, e.g. `fenix/` or `firefox_desktop/`.
+
+Configuration files have a set of [`[metrics]` definitions](#defining-metrics) and [`[data_sources]`](#defining-data-sources).
+A `friendly_name` and `description` are required at the top of the outcome snippet config file.
+
+Unlike experiment configurations, the `[metrics]` section does not specify the analysis windows metrics
+are computed for. Jetstream computes metrics defined in outcome snippets for weekly and overall
+analysis windows.
+
+Outcome snippets look, for example, like:
+
+```toml
+friendly_name = 'Example config'
+description = 'Example outcome snippet'
+
+[metrics.total_amazon_search_count]
+select_expression = "SUM(CASE WHEN engine like 'amazon%' then sap else 0 end)"
+data_source = "search_clients_daily"
+[metrics.total_amazon_search_count.statistics.bootstrap_mean]
+[metrics.total_amazon_search_count.statistics.deciles]
+
+[metrics.urlbar_amazon_search_count]
+select_expression = """
+SUM(CASE
+        WHEN source = 'alias' and engine like 'amazon%' then sap
+        WHEN source = 'urlbar' and engine like 'amazon%' then sap
+        WHEN source = 'urlbar-searchmode' and engine like 'amazon%' then sap
+        else 0 end)"""
+data_source = "search_clients_daily"
+[metrics.urlbar_amazon_search_count.statistics.bootstrap_mean]
+[metrics.urlbar_amazon_search_count.statistics.deciles]
+```
