@@ -1,0 +1,28 @@
+[metrics]
+weekly = ["imported_from_chrome"]
+
+[metrics.imported_from_chrome]
+select_expression = "COALESCE(SUM(IF(browser = 'chrome', items, 0)), 0) > 0"
+data_source = "imports"
+statistics = { binomial = {} }
+
+[data_sources.imports]
+from_expression = """
+    (
+        SELECT
+            DATE(submission_timestamp) AS submission_date,
+            client_id,
+            environment.experiments,
+            stretch.entity,
+            kh.key AS browser,
+            mozfun.hist.extract(kh.value).sum AS items
+        FROM mozdata.telemetry.main
+            CROSS JOIN UNNEST([
+                STRUCT(payload.keyed_histograms.fx_migration_bookmarks_quantity AS histogram, "bookmarks" AS entity),
+                (payload.keyed_histograms.fx_migration_logins_quantity, "logins"),
+                (payload.keyed_histograms.fx_migration_history_quantity, "history")
+            ]) AS stretch
+            CROSS JOIN UNNEST(stretch.histogram) AS kh
+        )
+"""
+experiments_column_type = "native"
