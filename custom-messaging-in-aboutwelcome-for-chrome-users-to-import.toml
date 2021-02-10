@@ -9,6 +9,7 @@ weekly = [
     "imported_from_chrome",
     "imported_from_any_browser",
     "import_impression",
+    "import_button_clicks",
     "theme_impression",
     "exposed_treatment_a",
     "exposed_treatment_b",
@@ -20,6 +21,7 @@ overall = [
     "imported_from_chrome",
     "imported_from_any_browser",
     "import_impression",
+    "import_button_clicks",
     "theme_impression",
     "exposed_treatment_a",
     "exposed_treatment_b",
@@ -59,6 +61,17 @@ data_source = "onboarding"
 statistics = { binomial = {} }
 friendly_name = "Saw import screen (screen 2)"
 description = "Fraction of clients that advanced to the import settings screen. Should go to zero after week 0."
+
+[metrics.import_button_clicks]
+select_expression = """COALESCE(LOGICAL_OR(
+    event = 'CLICK_BUTTON'
+    AND ENDS_WITH(message_id, 'AW_IMPORT_SETTINGS')
+    AND JSON_EXTRACT_SCALAR(event_context, '$.source') = 'primary_button')
+, FALSE)"""
+data_source = "onboarding"
+statistics = { binomial = {} }
+friendly_name = "Opened import wizard from AW prompt"
+description = "Fraction of clients that opened the import wizard from the about:welcome prompt. Should go to zero after week 0."
 
 [metrics.theme_impression]
 select_expression = "COALESCE(LOGICAL_OR(event = 'IMPRESSION' AND ENDS_WITH(message_id, 'AW_CHOOSE_THEME')), FALSE)"
