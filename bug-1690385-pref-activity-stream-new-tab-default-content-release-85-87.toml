@@ -24,11 +24,11 @@ experiments_column_type = "native"
 [segments]
 
 [segments.attributed]
-select_expression = 'attr_source is not null'
+select_expression = 'max(attr_source is not null)'
 data_source = "npp"
 
 [segments.non_attributed]
-select_expression = 'attr_source is null'
+select_expression = 'max(attr_source is null)'
 data_source = "npp"
 
 [segments.data_sources.npp]
