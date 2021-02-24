@@ -1,5 +1,4 @@
 [experiment]
-end_date = '2020-04-13'
 
 segments = ["attributed", "non_attributed"]
 
@@ -40,8 +39,7 @@ from_expression = """
         client_id,
         environment.settings.attribution.source AS attr_source
     FROM `moz-fx-data-shared-prod.telemetry.new_profile`
-    WHERE DATE(submission_timestamp) BETWEEN "{{experiment.start_date_str}}" AND "{{experiment.last_enrollment_date_str}}"
-    AND environment.partner.distribution_id IS NULL
+    WHERE environment.partner.distribution_id IS NULL
     AND coalesce(environment.settings.attribution.ua, '') != 'firefox'
     )
     """
@@ -69,9 +67,9 @@ data_source = 'search_clients_daily'
 ## topsite_clicks
 
 [metrics.topsite_clicks]
-select_expression = "COUNTIF(
+select_expression = """COUNTIF(
                 event = 'CLICK'
-                AND source = 'TOP_SITES')"
+                AND source = 'TOP_SITES')"""
 data_source = 'activity_stream_events'
 
 [metrics.topsite_clicks.statistics.bootstrap_mean]
@@ -80,9 +78,9 @@ data_source = 'activity_stream_events'
 ## highlight_clicks
 
 [metrics.highlight_clicks]
-select_expression = "COUNTIF(
+select_expression = """COUNTIF(
                 event = 'CLICK'
-                AND source = 'HIGHLIGHTS')"
+                AND source = 'HIGHLIGHTS')"""
 data_source = 'activity_stream_events'
 
 [metrics.highlight_clicks.statistics.bootstrap_mean]
@@ -93,9 +91,9 @@ data_source = 'activity_stream_events'
     # blank. Only when users have set the page to a 3rd party! 
 
 [metrics.homepage_switch]
-select_expression = "MAX(
+select_expression = """COALESCE(MAX(
                 CASE WHEN event = 'PAGE_TAKEOVER_DATA' 
-                THEN true ELSE false END)"
+                THEN true ELSE false END), false)"""
 data_source = 'activity_stream_events'
 bigger_is_better = false
 
@@ -106,8 +104,8 @@ bigger_is_better = false
     # NOTE: true here means we know they turned it off
     # any other value can mean they didn't, or we don't know
 [metrics.turned_off_search]
-select_expression = "MAX(
-                user_prefs & 1 = 0)"
+select_expression = """COALESCE(MAX(
+                user_prefs & 1 = 0), false)"""
 data_source = 'as_session_ping'
 bigger_is_better = false
 
@@ -118,8 +116,8 @@ bigger_is_better = false
     # NOTE: true here means we know they turned it off
     # any other value can mean they didn't, or we don't know
 [metrics.turned_off_topsites]
-select_expression = "MAX(
-                user_prefs & 2 = 0)"
+select_expression = """COALESCE(MAX(
+                user_prefs & 2 = 0), false)"""
 data_source = 'as_session_ping'
 bigger_is_better = false
 
@@ -130,8 +128,8 @@ bigger_is_better = false
     # NOTE: true here means we know they turned it off
     # any other value can mean they didn't, or we don't know
 [metrics.turned_off_pocket]
-select_expression = "MAX(
-                user_prefs & 4 = 0)"
+select_expression = """COALESCE(MAX(
+                user_prefs & 4 = 0), false)"""
 data_source = 'as_session_ping'
 bigger_is_better = false
 
@@ -142,8 +140,8 @@ bigger_is_better = false
     # NOTE: true here means we know they turned it off
     # any other value can mean they didn't, or we don't know
 [metrics.turned_off_highlights]
-select_expression = "MAX(
-                user_prefs & 8 = 0)"
+select_expression = """COALESCE(MAX(
+                user_prefs & 8 = 0), false)"""
 data_source = 'as_session_ping'
 bigger_is_better = false
 
