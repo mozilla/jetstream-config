@@ -14,7 +14,6 @@ reference_branch = "baseline-newtab-content"
 ## data source: AS session pings data
 [data_sources.as_session_ping]
 from_expression = "(SELECT client_id, user_prefs, date(submission_timestamp) as submission_date FROM  `moz-fx-data-shared-prod.activity_stream.sessions`)"
-
 experiments_column_type = "native"
 
 
@@ -43,6 +42,8 @@ from_expression = """
     AND coalesce(environment.settings.attribution.ua, '') != 'firefox'
     )
     """
+window_start = -2
+window_end = 0
 
 
 ## metrics
@@ -53,6 +54,14 @@ overall = ['days_of_use', 'search_count', 'organic_search_count', 'unenroll',
            'topsite_clicks', 'highlight_clicks', 'homepage_switch', 
            'turned_off_search', 'turned_off_topsites', 'turned_off_pocket', 
            'turned_off_highlights']
+
+
+[metrics.pocket_rec_clicks.statistics.bootstrap_mean]
+
+[metrics.pocket_spoc_clicks.statistics.bootstrap_mean]
+
+[metrics.unenroll.statistics.binomial]
+
 
 
 ## homepage_search_count
