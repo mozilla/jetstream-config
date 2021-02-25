@@ -13,7 +13,7 @@ reference_branch = "baseline-newtab-content"
 
 ## data source: AS session pings data
 [data_sources.as_session_ping]
-from_expression = "(SELECT client_id, user_prefs, date(submission_timestamp) as submission_date FROM  `moz-fx-data-shared-prod.activity_stream.sessions`)"
+from_expression = "(SELECT client_id, user_prefs, experiments, date(submission_timestamp) as submission_date FROM  `moz-fx-data-shared-prod.activity_stream.sessions`)"
 experiments_column_type = "native"
 
 
