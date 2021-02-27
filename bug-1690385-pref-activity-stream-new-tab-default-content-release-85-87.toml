@@ -54,6 +54,12 @@ overall = ['days_of_use', 'search_count', 'organic_search_count', 'unenroll',
            'topsite_clicks', 'highlight_clicks', 'homepage_switch', 
            'turned_off_search', 'turned_off_topsites', 'turned_off_pocket', 
            'turned_off_highlights']
+           
+weekly = ['days_of_use', 'search_count', 'organic_search_count', 'unenroll', 
+           'pocket_rec_clicks', 'pocket_spoc_clicks', 'homepage_search_count', 
+           'topsite_clicks', 'highlight_clicks', 'homepage_switch', 
+           'turned_off_search', 'turned_off_topsites', 'turned_off_pocket', 
+           'turned_off_highlights']
 
 
 [metrics.pocket_rec_clicks.statistics.bootstrap_mean]
