@@ -78,6 +78,10 @@ enrollment_query = """
 # to the new version.
 start_date = "2020-01-01"
 end_date = "2020-12-31"
+
+# If you need Jetstream to decline to run analysis for an experiment,
+# you can set this to true.
+skip = false
 ```
 
 ### Metrics section
