@@ -1,0 +1,3 @@
+[experiment]
+# Cause this experiment to be skipped by Jetstream.
+enrollment_period = 0
