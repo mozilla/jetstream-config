@@ -53,11 +53,11 @@ jobs:
           kubectl delete pod -l app=$pod_identifier
 
           # start a new instance
-          kubectl run $pod_identifier --image=gcr.io/moz-fx-data-experiments/jetstream -l app=$pod_identifier --restart=Never --command -- jetstream rerun-config-changed --argo --return-status --recreate-enrollments
+          kubectl run $pod_identifier --image=gcr.io/moz-fx-data-experiments/jetstream -l app=$pod_identifier --restart=Never --command -- jetstream rerun-config-changed --argo --return-status --recreate-enrollments=true
           
           # link to logs
           cur_date=`date -u +%FT%TZ`
-          echo "Pod Logs: https://console.cloud.google.com/logs/viewer?project=moz-fx-data-experiments&timestamp=$cur_date&advancedFilter=resource.type%3D%22k8s_container%22%0Aresource.labels.project_id%3D%22moz-fx-data-experiments%22%0Aresource.labels.location%3D%22us-central1-a%22%0Aresource.labels.cluster_name%3D%22jetstream%22%0Aresource.labels.namespace_name%3D%22default%22%0Alabels.k8s-pod%2Fapp%3D%22jetstream%22&scrollTimestamp=$cur_date"
+          echo "Pod Logs: https://console.cloud.google.com/logs/query;query=resource.type%3D%22k8s_container%22%0Aresource.labels.project_id%3D%22moz-fx-data-experiments%22%0Aresource.labels.location%3D%22us-central1-a%22%0Aresource.labels.cluster_name%3D%22jetstream%22%0Aresource.labels.namespace_name%3D%22default%22?scrollTimestamp=$cur_date"
 
           echo "Analysis Errors can be accessed via Redash: https://sql.telemetry.mozilla.org/dashboard/jetstream-errors?p_experiment=%25"
 
