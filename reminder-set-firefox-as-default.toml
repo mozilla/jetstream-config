@@ -33,10 +33,16 @@ window_start = -2
 window_end = 0
 
 ## Metrics
-weekly = ['days_of_use', 'retained', 'search_count', 'organic_search_count', 'active_hours', 'unenroll',
+
+[metrics]
+
+weekly = ['days_of_use', 'search_count', 'organic_search_count', 'active_hours', 'unenroll',
     'set_to_default_rate']
-overall = ['days_of_use', 'retained', 'search_count', 'organic_search_count', 'active_hours', 'unenroll',
+
+overall = ['days_of_use', 'search_count', 'organic_search_count', 'active_hours', 'unenroll',
     'set_to_default_rate']
+
+[metrics.unenroll.statistics.binomial]
 
 ## Set to default rate
 
