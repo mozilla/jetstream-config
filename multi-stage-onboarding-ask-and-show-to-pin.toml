@@ -3,7 +3,7 @@
 
 segments = ["attributed", "non_attributed"]
 
-enrollment_period = 8
+enrollment_period = 7
 start_date = "2021-02-25"
 end_date = "2021-04-01"
 
@@ -113,7 +113,7 @@ description = "Fraction of clients that imported at least one item from a non-Fi
 
 [metrics.is_default]
 select_expression = "COALESCE(MAX(is_default_browser), false)"
-data_source = clients_daily
+data_source = "clients_daily"
 statistics = { binomial = {} }
 friendly_name = "Set to Default"
 description = "Fraction of clients reported FF is set as default at least once in period."
@@ -125,7 +125,7 @@ description = "Fraction of clients reported FF is set as default at least once i
 
 [metrics.set_theme]
 select_expression = "COALESCE(MAX(theme_set_count > 0), false)"
-data_source = themes
+data_source = "themes"
 statistics = { binomial = {} }
 friendly_name = "Set to Default"
 description = "Fraction of clients reported a theme switch event at least once in period."
