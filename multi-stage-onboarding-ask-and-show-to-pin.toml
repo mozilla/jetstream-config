@@ -44,7 +44,7 @@ experiments_column_type = "native"
 from_expression = """
     (
         SELECT
-            DATE(submission_timestamp) AS submission_date,
+            submission_date,
             client_id,
             count(*) as theme_set_count, 
             any_value(experiments) as experiments
@@ -52,6 +52,7 @@ from_expression = """
         WHERE event_category = 'addonsManager'
         AND event_method = 'enable'
         AND event_object = 'theme'
+        GROUP BY 1, 2
         )
 """
 experiments_column_type = "native"
