@@ -102,11 +102,11 @@ weekly = ['days_of_use', 'unenroll', 'is_default', 'imported_from_any_browser', 
 [metrics.imported_from_any_browser]
 select_expression = "COALESCE(SUM(IF(browser != 'firefox', items, 0)), 0) > 0"
 data_source = "imports"
-statistics = { binomial = {} }
 friendly_name = "Importers"
 description = "Fraction of clients that imported at least one item from a non-Firefox browser."
+bigger_is_better = true
 
-[metrics.turned_off_highlights.statistics.binomial]
+[metrics.imported_from_any_browser.statistics.binomial]
 
 
 ## set to default
@@ -114,11 +114,11 @@ description = "Fraction of clients that imported at least one item from a non-Fi
 [metrics.is_default]
 select_expression = "COALESCE(MAX(is_default_browser), false)"
 data_source = "clients_daily"
-statistics = { binomial = {} }
 friendly_name = "Set to Default"
 description = "Fraction of clients reported FF is set as default at least once in period."
+bigger_is_better = true
 
-[metrics.turned_off_highlights.statistics.binomial]
+[metrics.is_default.statistics.binomial]
 
 
 ## set to default
@@ -126,8 +126,8 @@ description = "Fraction of clients reported FF is set as default at least once i
 [metrics.set_theme]
 select_expression = "COALESCE(MAX(theme_set_count > 0), false)"
 data_source = "themes"
-statistics = { binomial = {} }
 friendly_name = "Set to Default"
 description = "Fraction of clients reported a theme switch event at least once in period."
+bigger_is_better = true
 
-[metrics.turned_off_highlights.statistics.binomial]
+[metrics.set_theme.statistics.binomial]
