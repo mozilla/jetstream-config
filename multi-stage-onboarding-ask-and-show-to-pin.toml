@@ -46,13 +46,12 @@ from_expression = """
         SELECT
             submission_date,
             client_id,
-            count(*) as theme_set_count, 
-            any_value(experiments) as experiments
+            experiments, 
+            true as switched_theme
         FROM `moz-fx-data-shared-prod.telemetry.events`
         WHERE event_category = 'addonsManager'
         AND event_method = 'enable'
         AND event_object = 'theme'
-        GROUP BY 1, 2
         )
 """
 experiments_column_type = "native"
@@ -125,7 +124,7 @@ bigger_is_better = true
 ## set to default
 
 [metrics.set_theme]
-select_expression = "COALESCE(MAX(theme_set_count > 0), false)"
+select_expression = "COALESCE(MAX(switched_theme), false)"
 data_source = "themes"
 friendly_name = "Set to Default"
 description = "Fraction of clients reported a theme switch event at least once in period."
