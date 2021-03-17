@@ -54,7 +54,7 @@ description = "The distribution of total user PiP session duration"
 select_expression = """
     SUM(
         mozfun.hist.extract(
-            payload.histograms.fx_picture_in_picture_window_open_durations
+            payload.histograms.fx_picture_in_picture_window_open_duration
         ).sum
     )
 """
