@@ -5,6 +5,9 @@ segments = ["attributed", "non_attributed"]
 
 reference_branch = "msw_default"
 
+start_date = "2021-02-16"
+end_date = "2020-03-23"
+
 
 ## data sources
 
