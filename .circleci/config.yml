@@ -63,18 +63,21 @@ jobs:
 
           # wait for pod to finish and check status
           active_pods=1
+          completed_pods=0
 
-          while [ $active_pods -gt 0 ]
+          while [ $active_pods -gt 0 || $completed_pods == 0 ]
           do
             echo "Wait for jetstream to finish"
-            echo "Active Jobs: "
+            echo "Active Jobs:"
             echo $active_pods
 
+            echo "Completed Jobs:"
+            echo $completed_pods
+
             active_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Running --output json | jq -j '.items | length'`
+            completed_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Succeeded --output json | jq -j '.items | length'`
             sleep 10
           done
-
-          completed_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Succeeded --output json | jq -j '.items | length'`
 
           # delete pod
           kubectl delete pod -l app=$pod_identifier
