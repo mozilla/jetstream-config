@@ -62,17 +62,19 @@ jobs:
           echo "Analysis Errors can be accessed via Redash: https://sql.telemetry.mozilla.org/dashboard/jetstream-errors?p_experiment=%25"
 
           # wait for pod to finish and check status
-          active_pods=`kubectl get pod -l app=$pod_identifier --output json | jq -j '.items | length'`
-          failed_pods=0
-          completed_pods=0
+          active_pods=1
 
-          while [ $active_pods -ge 0 -a $completed_pods == 0 ]
+          while [ $active_pods -gt 0 ]
           do
             echo "Wait for jetstream to finish"
-            failed_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Failed --output json | jq -j '.items | length'`
-            completed_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Succeeded --output json | jq -j '.items | length'`
+            echo "Active Jobs: "
+            echo $active_pods
+
+            active_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Running --output json | jq -j '.items | length'`
             sleep 10
           done
+
+          completed_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Succeeded --output json | jq -j '.items | length'`
 
           # delete pod
           kubectl delete pod -l app=$pod_identifier
