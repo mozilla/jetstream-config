@@ -66,7 +66,7 @@ jobs:
           failed_pods=0
           completed_pods=0
 
-          while [ $active_pods -ge 0 -a $failed_pods == 0 -a $completed_pods == 0 ]
+          while [ $active_pods -ge 0 -a $completed_pods == 0 ]
           do
             echo "Wait for jetstream to finish"
             failed_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Failed --output json | jq -j '.items | length'`
@@ -79,14 +79,25 @@ jobs:
 
           # argo pods can fail but succeed in a retry run
           # use the executed command to check if failed pods eventually succeeded
-          failed_pod_commands=( $(kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Failed --output json | jq -j '.items[].spec.containers[1].command') )
-          succeeded_pod_commands=( $(kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Succeeded --output json | jq -j '.items[].spec.containers[1].command') )
+          failed_pod_commands=$(kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Failed --output json | jq -r '.items[].spec.containers[1].command')
+          succeeded_pod_commands=$(kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Succeeded --output json | jq -r '.items[].spec.containers[1].command')
           failed_pods=false
+
+          echo "Succeeded commands:"
+          echo $succeeded_pod_commands
+
+          echo "Failed commands:"
+          echo $failed_pod_commands
+
+          echo "Completed:"
+          echo $completed_pods
 
           for f in $failed_pod_commands
           do
             if [[ ! " ${succeeded_pod_commands[@]} " =~ " ${f} " ]]; then
               failed_pods=true
+              echo "Failed command: "
+              echo $f
             fi
           done
 
