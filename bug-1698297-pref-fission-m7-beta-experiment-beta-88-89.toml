@@ -218,57 +218,57 @@ daily = [
         pre_treatments = ["remove_nulls"]
         log_space = true
 
-   [metrics.histograms.content_frame_time_vsync]
+   [metrics.content_frame_time_vsync]
     select_expression = '{{agg_histogram_mean("payload.histograms.content_frame_time_vsync")}}'
     data_source = 'main_cleaned'
 
-        [metrics.histograms.content_frame_time_vsync.statistics.bootstrap_mean]
+        [metrics.content_frame_time_vsync.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.histograms.content_frame_time_vsync.statistics.deciles]
+        [metrics.content_frame_time_vsync.statistics.deciles]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.histograms.content_frame_time_vsync.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-        [metrics.histograms.content_frame_time_vsync.statistics.empirical_cdf]
+        [metrics.content_frame_time_vsync.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
         log_space = true
 
-   [metrics.histograms.child_process_launch_ms]
+        [metrics.content_frame_time_vsync.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+   [metrics.child_process_launch_ms]
     select_expression = '{{agg_histogram_mean("payload.histograms.child_process_launch_ms")}}'
     data_source = 'main_cleaned'
 
-        [metrics.histograms.child_process_launch_ms.statistics.bootstrap_mean]
+        [metrics.child_process_launch_ms.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.histograms.child_process_launch_ms.statistics.deciles]
+        [metrics.child_process_launch_ms.statistics.deciles]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.histograms.child_process_launch_ms.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-        [metrics.histograms.child_process_launch_ms.statistics.empirical_cdf]
+        [metrics.child_process_launch_ms.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
         log_space = true
 
-   [metrics.histograms.checkerboard_severity]
+        [metrics.child_process_launch_ms.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+   [metrics.checkerboard_severity]
     select_expression = '{{agg_histogram_mean("payload.processes.gpu.histograms.checkerboard_severity")}}'
     data_source = 'main_cleaned'
 
-        [metrics.histograms.checkerboard_severity.statistics.bootstrap_mean]
+        [metrics.checkerboard_severity.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.histograms.checkerboard_severity.statistics.deciles]
+        [metrics.checkerboard_severity.statistics.deciles]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.histograms.checkerboard_severity.statistics.kernel_density_estimate]
+        [metrics.checkerboard_severity.statistics.kernel_density_estimate]
         pre_treatments = ["remove_nulls"]
         log_space = true
 
-        [metrics.histograms.checkerboard_severity.statistics.empirical_cdf]
+        [metrics.checkerboard_severity.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
         log_space = true
 
