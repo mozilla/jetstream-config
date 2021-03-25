@@ -10,9 +10,11 @@ enrollment_period = 1
 
 reference_branch = "fission-disabled"
 
+## Data Sources
+
 [data_sources]
 
-## data source: removing session corresponding to enrollment
+## main: removing session corresponding to enrollment
 [data_sources.main_cleaned]
 from_expression = """ (
   SELECT
@@ -39,7 +41,7 @@ from_expression = """ (
 """
 experiments_column_type = "native"
 
-
+## Metrics
 [metrics]
 
 # TODO: crashes, engagement.
@@ -271,6 +273,7 @@ daily = [
         log_space = true
 
 ## Segments
+[segments]
 
 [segments.low_cpu]
 select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 1 AND 2, FALSE)'
