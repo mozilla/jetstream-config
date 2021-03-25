@@ -62,14 +62,19 @@ jobs:
           echo "Analysis Errors can be accessed via Redash: https://sql.telemetry.mozilla.org/dashboard/jetstream-errors?p_experiment=%25"
 
           # wait for pod to finish and check status
-          active_pods=`kubectl get pod -l app=$pod_identifier --output json | jq -j '.items | length'`
-          failed_pods=0
+          active_pods=1
           completed_pods=0
 
-          while [ $active_pods -ge 0 -a $failed_pods == 0 -a $completed_pods == 0 ]
+          while [ $active_pods -gt 0 ] || [ $completed_pods == 0 ]
           do
             echo "Wait for jetstream to finish"
-            failed_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Failed --output json | jq -j '.items | length'`
+            echo "Active Jobs:"
+            echo $active_pods
+
+            echo "Completed Jobs:"
+            echo $completed_pods
+
+            active_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Running --output json | jq -j '.items | length'`
             completed_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Succeeded --output json | jq -j '.items | length'`
             sleep 10
           done
@@ -77,7 +82,31 @@ jobs:
           # delete pod
           kubectl delete pod -l app=$pod_identifier
 
-          if [ $failed_pods -ge 1 ]; then
+          # argo pods can fail but succeed in a retry run
+          # use the executed command to check if failed pods eventually succeeded
+          failed_pod_commands=$(kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Failed --output json | jq -r '.items[].spec.containers[1].command')
+          succeeded_pod_commands=$(kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Succeeded --output json | jq -r '.items[].spec.containers[1].command')
+          failed_pods=false
+
+          echo "Succeeded commands:"
+          echo $succeeded_pod_commands
+
+          echo "Failed commands:"
+          echo $failed_pod_commands
+
+          echo "Completed:"
+          echo $completed_pods
+
+          for f in $failed_pod_commands
+          do
+            if [[ ! " ${succeeded_pod_commands[@]} " =~ " ${f} " ]]; then
+              failed_pods=true
+              echo "Failed command: "
+              echo $f
+            fi
+          done
+
+          if [ $failed_pods = true ]; then
             echo "Error when running jetstream. Check the logs for more information."
             exit 1
           elif [ $completed_pods -ge 1 ]; then
