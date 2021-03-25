@@ -3,6 +3,8 @@
 segments = ["attributed", "non_attributed"]
 
 enrollment_period = 8
+start_date = "2021-02-09"
+end_date = "2021-03-17"
 
 reference_branch = "baseline-newtab-content"
 
