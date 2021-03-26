@@ -73,6 +73,7 @@ daily = [
     'checkerboard_severity'
 ]
 
+## Performance
     [metrics.perf_page_load_time_ms]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.perf_page_load_time_ms")}}'
     data_source = 'main_cleaned'
@@ -280,6 +281,235 @@ daily = [
         log_space = true
 
         [metrics.checkerboard_severity.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+## Memory
+    [metrics.memory_total]
+    select_expression = '{{agg_histogram_mean("payload.histograms.memory_total")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.memory_total.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.memory_total.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.memory_total.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.memory_total.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.memory_unique_content_startup]
+    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.memory_unique_content_startup")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.memory_unique_content_startup.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.memory_unique_content_startup.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.memory_unique_content_startup.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.memory_unique_content_startup.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.cycle_collector_max_pause]
+    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.cycle_collector_max_pause")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.cycle_collector_max_pause.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.cycle_collector_max_pause.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.cycle_collector_max_pause.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.cycle_collector_max_pause.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.cycle_collector_max_pause]
+    select_expression = '{{agg_histogram_mean("payload.histograms.cycle_collector_max_pause")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.cycle_collector_max_pause.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.cycle_collector_max_pause.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.cycle_collector_max_pause.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.cycle_collector_max_pause.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.cycle_collector_max_pause_content]
+    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.cycle_collector_max_pause")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.cycle_collector_max_pause_content.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.cycle_collector_max_pause_content.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.cycle_collector_max_pause_content.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.cycle_collector_max_pause_content.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+   [metrics.gc_max_pause_ms_2]
+    select_expression = '{{agg_histogram_mean("payload.histograms.gc_max_pause_ms_2")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.gc_max_pause_ms_2.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_max_pause_ms_2.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_max_pause_ms_2.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.gc_max_pause_ms_2.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+   [metrics.gc_max_pause_ms_2_content]
+    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.cycle_collector_max_pause")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.gc_max_pause_ms_2_content.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_max_pause_ms_2_content.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_max_pause_ms_2_content.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.gc_max_pause_ms_2_content.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+   [metrics.gc_max_pause_ms_2_content]
+    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.cycle_collector_max_pause")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.gc_max_pause_ms_2_content.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_max_pause_ms_2_content.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_max_pause_ms_2_content.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.gc_max_pause_ms_2_content.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+   [metrics.gc_ms]
+    select_expression = '{{agg_histogram_mean("payload.histograms.gc_ms")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.gc_ms.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_ms.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_ms.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.gc_ms.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.gc_ms_content]
+    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.gc_ms")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.gc_ms_content.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_ms_content.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_ms_content.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.gc_ms_content.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.gc_slice_during_idle]
+    select_expression = '{{agg_histogram_mean("payload.histograms.gc_slice_during_idle")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.gc_slice_during_idle.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_slice_during_idle.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_slice_during_idle.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.gc_slice_during_idle.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.gc_slice_during_idle_content]
+    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.gc_slice_during_idle")}}'
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+        [metrics.gc_slice_during_idle_content.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_slice_during_idle_content.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.gc_slice_during_idle_content.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.gc_slice_during_idle_content.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
         log_space = true
 
