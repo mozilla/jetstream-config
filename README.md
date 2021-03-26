@@ -103,6 +103,9 @@ daily = []
 # Metrics to compute for each weekly analysis window.
 weekly = ["uri_count", "retained"]
 
+# Metrics to compute for each 28 days long analysis window
+28_day = ["uri_count"]
+
 # Metrics to compute only for the overall analysis window.
 overall = ["uri_count", "search_count"]
 ```
