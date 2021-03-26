@@ -64,7 +64,7 @@ jobs:
           # wait for pod to finish and check status
           running=true
 
-          while [ $running ]
+          while [ $running = true ]
           do
             echo "Wait for jetstream to finish"
             pod_status=`kubectl get pod -l app=$pod_identifier --no-headers -o custom-columns=":status.phase"`
