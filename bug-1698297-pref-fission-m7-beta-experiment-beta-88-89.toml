@@ -6,7 +6,7 @@ segments = [
     'regular_users_v3', 'new_or_resurrected_v3'
 ]
 
-enrollment_period = 1
+enrollment_period = 7
 
 reference_branch = "fission-disabled"
 
@@ -76,6 +76,7 @@ daily = [
     [metrics.perf_page_load_time_ms]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.perf_page_load_time_ms")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.perf_page_load_time_ms.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
@@ -94,6 +95,7 @@ daily = [
     [metrics.time_to_first_interaction_ms]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.time_to_first_interaction_ms")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.time_to_first_interaction_ms.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
@@ -112,6 +114,7 @@ daily = [
     [metrics.input_event_response_ms]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.input_event_response_ms")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.input_event_response_ms.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
@@ -130,6 +133,7 @@ daily = [
     [metrics.perf_first_contentful_paint_ms]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.perf_first_contentful_paint_ms")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.perf_first_contentful_paint_ms.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
@@ -148,6 +152,7 @@ daily = [
     [metrics.content_keypress_present_latency]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.keypress_present_latency")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.content_keypress_present_latency.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
@@ -166,6 +171,7 @@ daily = [
     [metrics.gpu_keypress_present_latency]
     select_expression = '{{agg_histogram_mean("payload.processes.gpu.histograms.keypress_present_latency")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.gpu_keypress_present_latency.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
@@ -185,6 +191,7 @@ daily = [
     [metrics.fx_new_window_ms]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.fx_new_window_ms")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.fx_new_window_ms.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
@@ -203,6 +210,7 @@ daily = [
     [metrics.fx_tab_switch_composite_e10s_ms]
     select_expression = '{{agg_histogram_mean("payload.histograms.fx_tab_switch_composite_e10s_ms")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.fx_tab_switch_composite_e10s_ms.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
@@ -221,6 +229,7 @@ daily = [
    [metrics.content_frame_time_vsync]
     select_expression = '{{agg_histogram_mean("payload.histograms.content_frame_time_vsync")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.content_frame_time_vsync.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
@@ -239,6 +248,7 @@ daily = [
    [metrics.child_process_launch_ms]
     select_expression = '{{agg_histogram_mean("payload.histograms.child_process_launch_ms")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.child_process_launch_ms.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
@@ -257,6 +267,7 @@ daily = [
    [metrics.checkerboard_severity]
     select_expression = '{{agg_histogram_mean("payload.processes.gpu.histograms.checkerboard_severity")}}'
     data_source = 'main_cleaned'
+    bigger_is_better = false
 
         [metrics.checkerboard_severity.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
