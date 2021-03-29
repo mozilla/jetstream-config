@@ -599,7 +599,7 @@ daily = [
         SAFE_DIVIDE(
             SUM(IF(payload.process_type = 'main' OR payload.process_type IS NULL, 1, 0)),
             SUM(active_s/3600)
-         ) AS main_crash'
+         )
         """
     data_source = 'crash_cleaned'
     bigger_is_better = false
@@ -615,6 +615,31 @@ daily = [
         log_space = true
 
         [metrics.main_crashes_per_hour.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.content_crashes_per_hour]
+    select_expression = """
+        SAFE_DIVIDE(
+            SUM(IF(REGEXP_CONTAINS(payload.process_type, 'content')
+                AND NOT REGEXP_CONTAINS(COALESCE(payload.metadata.ipc_channel_error, ''), 'ShutDownKill'), 1,0)),
+            SUM(active_s/3600)
+         )
+        """
+    data_source = 'crash_cleaned'
+    bigger_is_better = false
+
+        [metrics.content_crashes_per_hour.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.content_crashes_per_hour.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.content_crashes_per_hour.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.content_crashes_per_hour.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
         log_space = true
 
