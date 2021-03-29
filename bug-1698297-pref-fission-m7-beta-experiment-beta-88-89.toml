@@ -555,11 +555,13 @@ daily = [
 
     [metrics.active_hrs]
     select_expression = 'SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_active_ticks, 0)*5/3600)'
+    data_source = 'main_cleaned'
         [metrics.active_hrs.statistics.bootstrap_mean]
         [metrics.active_hrs.statistics.deciles]
 
     [metrics.uri_number]
     select_expression = 'SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_total_uri_count, 0))'
+    data_source = 'main_cleaned'
         [metrics.uri_number.statistics.bootstrap_mean]
         [metrics.uri_number.statistics.deciles]
 
