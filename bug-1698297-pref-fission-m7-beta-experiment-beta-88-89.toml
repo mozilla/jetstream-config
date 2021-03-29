@@ -559,11 +559,11 @@ daily = [
         [metrics.active_hrs.statistics.bootstrap_mean]
         [metrics.active_hrs.statistics.deciles]
 
-    [metrics.uri_number]
-    select_expression = 'SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_total_uri_count, 0))'
-    data_source = 'main_cleaned'
-        [metrics.uri_number.statistics.bootstrap_mean]
-        [metrics.uri_number.statistics.deciles]
+#    [metrics.uri_number]
+#    select_expression = 'SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_total_uri_count, 0))'
+#    data_source = 'main_cleaned'
+#        [metrics.uri_number.statistics.bootstrap_mean]
+#        [metrics.uri_number.statistics.deciles]
 
     [metrics.max_concurrent_tab_count]
     select_expression = 'AVG(COALESCE(payload.processes.parent.scalars.browser_engagement_max_concurrent_tab_count, 0))'
