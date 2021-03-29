@@ -505,27 +505,30 @@ daily = [
 
 ## Engagement
     [metrics.subsession_length]
-    select_expression = '{{agg_sum("subsession_hours_sum")}}'
-    data_source = 'clients_daily'
-
+    select_expression = 'SUM(COALESCE(payload.info.subsession_length, 0)/3600)'
+    data_source = 'main_cleaned'
         [metrics.subsession_length.statistics.bootstrap_mean]
         [metrics.subsession_length.statistics.deciles]
 
-        [metrics.uri_count.statistics.bootstrap_mean]
-        [metrics.uri_count.statistics.deciles]
+    [metrics.active_hrs]
+    select_expression = 'SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_active_ticks, 0)*5/3600)'
+        [metrics.active_hrs.statistics.bootstrap_mean]
+        [metrics.active_hrs.statistics.deciles]
 
-        [metrics.active_hours.statistics.bootstrap_mean]
-        [metrics.active_hours.statistics.deciles]
+    [metrics.uri_number]
+    select_expression = 'SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_total_uri_count, 0))'
+        [metrics.uri_number.statistics.bootstrap_mean]
+        [metrics.uri_number.statistics.deciles]
 
     [metrics.max_concurrent_tab_count]
-    select_expression = 'AVG(scalar_parent_browser_engagement_max_concurrent_tab_count_max)'
-    data_source = 'clients_daily'
+    select_expression = 'AVG(COALESCE(payload.processes.parent.scalars.browser_engagement_max_concurrent_tab_count, 0))'
+    data_source = 'main_cleaned'
         [metrics.max_concurrent_tab_count.statistics.bootstrap_mean]
         [metrics.max_concurrent_tab_count.statistics.deciles]
 
     [metrics.tab_open_event_count]
-    select_expression = 'SUM(scalar_parent_browser_engagement_tab_open_event_count_sum)'
-    data_source = 'clients_daily'
+    select_expression = 'SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_tab_open_event_count, 0))'
+    data_source = 'main_cleaned'
         [metrics.tab_open_event_count.statistics.bootstrap_mean]
         [metrics.tab_open_event_count.statistics.deciles]
 
