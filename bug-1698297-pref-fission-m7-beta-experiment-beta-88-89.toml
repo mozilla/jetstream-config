@@ -101,7 +101,7 @@ overall = [
     'gc_max_pause_ms_2', 'gc_max_pause_ms_2_content',
     'gc_ms', 'gc_ms_content',
     'gc_slice_during_idle', 'gc_slice_during_idle_content',
-    'subsession_length', 'uri_number',
+    # 'subsession_length', 'uri_number',
     'active_hrs', 'max_concurrent_tab_count',
     'tab_open_event_count', 'content_process_count',
     'content_process_max', 'loaded_tab_count'
@@ -119,7 +119,7 @@ weekly = [
     'gc_max_pause_ms_2', 'gc_max_pause_ms_2_content',
     'gc_ms', 'gc_ms_content',
     'gc_slice_during_idle', 'gc_slice_during_idle_content',
-    'subsession_length', 'uri_number',
+   #  'subsession_length', 'uri_number',
     'active_hrs', 'max_concurrent_tab_count',
     'tab_open_event_count', 'content_process_count',
     'content_process_max', 'loaded_tab_count'
@@ -137,7 +137,7 @@ daily = [
     'gc_max_pause_ms_2', 'gc_max_pause_ms_2_content',
     'gc_ms', 'gc_ms_content',
     'gc_slice_during_idle', 'gc_slice_during_idle_content',
-    'subsession_length', 'uri_number',
+  #   'subsession_length', 'uri_number',
     'active_hrs', 'max_concurrent_tab_count',
     'tab_open_event_count', 'content_process_count',
     'content_process_max', 'loaded_tab_count'
