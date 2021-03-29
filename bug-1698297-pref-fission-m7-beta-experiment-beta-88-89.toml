@@ -52,7 +52,13 @@ overall = [
     'content_keypress_present_latency', 'gpu_keypress_present_latency',
     'fx_new_window_ms', 'fx_tab_switch_composite_e10s_ms',
     'content_frame_time_vsync', 'child_process_launch_ms',
-    'checkerboard_severity'
+    'checkerboard_severity',
+    'memory_total', 'memory_unique_content_startup',
+    'cycle_collector_max_pause', 'cycle_collector_max_pause_content',
+    'gc_max_pause_ms_2', 'gc_max_pause_ms_2_content',
+    'gc_ms', 'gc_ms_content',
+    'gc_slice_during_idle', 'gc_slice_during_idle_content',
+    'subsession_length', 'uri_count'
 ]
 
 weekly = [
@@ -324,25 +330,6 @@ daily = [
         log_space = true
 
     [metrics.cycle_collector_max_pause]
-    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.cycle_collector_max_pause")}}'
-    data_source = 'main_cleaned'
-    bigger_is_better = false
-
-        [metrics.cycle_collector_max_pause.statistics.bootstrap_mean]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.cycle_collector_max_pause.statistics.deciles]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.cycle_collector_max_pause.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-        [metrics.cycle_collector_max_pause.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-    [metrics.cycle_collector_max_pause]
     select_expression = '{{agg_histogram_mean("payload.histograms.cycle_collector_max_pause")}}'
     data_source = 'main_cleaned'
     bigger_is_better = false
@@ -396,25 +383,6 @@ daily = [
         log_space = true
 
         [metrics.gc_max_pause_ms_2.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-   [metrics.gc_max_pause_ms_2_content]
-    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.cycle_collector_max_pause")}}'
-    data_source = 'main_cleaned'
-    bigger_is_better = false
-
-        [metrics.gc_max_pause_ms_2_content.statistics.bootstrap_mean]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.gc_max_pause_ms_2_content.statistics.deciles]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.gc_max_pause_ms_2_content.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-        [metrics.gc_max_pause_ms_2_content.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
         log_space = true
 
@@ -512,6 +480,53 @@ daily = [
         [metrics.gc_slice_during_idle_content.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
         log_space = true
+
+## Engagement
+    [metrics.subsession_length]
+    select_expression = '{{agg_sum("subsession_hours_sum")}}'
+    data_source = 'clients_daily'
+
+        [metrics.subsession_length.statistics.bootstrap_mean]
+        [metrics.subsession_length.statistics.deciles]
+
+        [metrics.uri_count.statistics.bootstrap_mean]
+        [metrics.uri_count.statistics.deciles]
+
+        [metrics.active_hours.statistics.bootstrap_mean]
+        [metrics.active_hours.statistics.deciles]
+
+    [metrics.max_concurrent_tab_count]
+    select_expression = 'AVG(scalar_parent_browser_engagement_max_concurrent_tab_count_max)'
+    data_source = 'clients_daily'
+        [metrics.max_concurrent_tab_count.statistics.bootstrap_mean]
+        [metrics.max_concurrent_tab_count.statistics.deciles]
+
+    [metrics.tab_open_event_count]
+    select_expression = 'SUM(scalar_parent_browser_engagement_tab_open_event_count_sum)'
+    data_source = 'clients_daily'
+        [metrics.tab_open_event_count.statistics.bootstrap_mean]
+        [metrics.tab_open_event_count.statistics.deciles]
+
+   [metrics.content_process_count]
+    select_expression = '{{agg_histogram_mean("payload.histograms.content_process_count")}}'
+    data_source = 'clients_daily'
+        [metrics.content_process_count.statistics.bootstrap_mean]
+        [metrics.content_process_count.statistics.deciles]
+
+   [metrics.content_process_max]
+    select_expression = 'MAX(COALESCE(`moz-fx-data-shared-prod`.udf.histogram_max_key_with_nonzero_value("payload.histograms.content_process_max"), 0))'
+    data_source = 'clients_daily'
+        [metrics.content_process_max.statistics.bootstrap_mean]
+        [metrics.content_process_max.statistics.deciles]
+
+   [metrics.loaded_tab_count]
+    select_expression = '{{agg_histogram_mean("payload.histograms.loaded_tab_count")}}'
+    data_source = 'clients_daily'
+        [metrics.loaded_tab_count.statistics.bootstrap_mean]
+        [metrics.loaded_tab_count.statistics.deciles]
+
+
+
 
 ## Segments
 [segments]
