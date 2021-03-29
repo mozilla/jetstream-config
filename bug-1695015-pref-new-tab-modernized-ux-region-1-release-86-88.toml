@@ -110,6 +110,15 @@ bigger_is_better = false
 
 [metrics.homepage_switch.statistics.binomial]
 
+## newtab_switch
+[metrics.newtab_switch]
+select_expression = """LOGICAL_OR(
+                        COALESCE(`mozdata.udf.get_key`(environment.settings.user_prefs,
+                            'browser.newtabpage.enabled') == 'false', false))"""
+data_source = 'main'
+bigger_is_better = false
+
+[metrics.homepage_switch.statistics.binomial]
 
 ## turned_off_search
     # NOTE: true here means we know they turned it off
