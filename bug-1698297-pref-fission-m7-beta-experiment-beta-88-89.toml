@@ -104,7 +104,11 @@ overall = [
     'subsession_length', 'uri_cnt',
     'active_hrs', 'max_concurrent_tab_count',
     'tab_open_event_count', 'content_process_count',
-    'content_process_max', 'loaded_tab_count'
+    'content_process_max', 'loaded_tab_count',
+    'main_crashes_per_hour', 'content_crashes_per_hour',
+    'oom_crashes_per_hour', 'shutdown_kill_crashes_per_hour',
+    'shutdown_crashes_per_hour', 'crash_tab_ui_presented',
+    'crash_subframe_ui_presented'
 ]
 
 weekly = [
@@ -122,7 +126,11 @@ weekly = [
     'subsession_length', 'uri_cnt',
     'active_hrs', 'max_concurrent_tab_count',
     'tab_open_event_count', 'content_process_count',
-    'content_process_max', 'loaded_tab_count'
+    'content_process_max', 'loaded_tab_count',
+     'main_crashes_per_hour', 'content_crashes_per_hour',
+    'oom_crashes_per_hour', 'shutdown_kill_crashes_per_hour',
+    'shutdown_crashes_per_hour', 'crash_tab_ui_presented',
+    'crash_subframe_ui_presented'
 ]
 
 daily = [
@@ -140,7 +148,11 @@ daily = [
     'subsession_length', 'uri_cnt',
     'active_hrs', 'max_concurrent_tab_count',
     'tab_open_event_count', 'content_process_count',
-    'content_process_max', 'loaded_tab_count'
+    'content_process_max', 'loaded_tab_count',
+     'main_crashes_per_hour', 'content_crashes_per_hour',
+    'oom_crashes_per_hour', 'shutdown_kill_crashes_per_hour',
+    'shutdown_crashes_per_hour', 'crash_tab_ui_presented',
+    'crash_subframe_ui_presented'
 ]
 
 ## Performance
