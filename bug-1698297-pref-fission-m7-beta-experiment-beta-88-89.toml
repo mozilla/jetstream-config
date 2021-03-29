@@ -58,7 +58,10 @@ overall = [
     'gc_max_pause_ms_2', 'gc_max_pause_ms_2_content',
     'gc_ms', 'gc_ms_content',
     'gc_slice_during_idle', 'gc_slice_during_idle_content',
-    'subsession_length', 'uri_count'
+    'subsession_length', 'uri_count',
+    'active_hours', 'max_concurrent_tab_count',
+    'tab_open_event_count', 'content_process_count',
+    'content_process_max', 'loaded_tab_count'
 ]
 
 weekly = [
@@ -67,7 +70,16 @@ weekly = [
     'content_keypress_present_latency', 'gpu_keypress_present_latency',
     'fx_new_window_ms', 'fx_tab_switch_composite_e10s_ms',
     'content_frame_time_vsync', 'child_process_launch_ms',
-    'checkerboard_severity'
+    'checkerboard_severity',
+    'memory_total', 'memory_unique_content_startup',
+    'cycle_collector_max_pause', 'cycle_collector_max_pause_content',
+    'gc_max_pause_ms_2', 'gc_max_pause_ms_2_content',
+    'gc_ms', 'gc_ms_content',
+    'gc_slice_during_idle', 'gc_slice_during_idle_content',
+    'subsession_length', 'uri_count',
+    'active_hours', 'max_concurrent_tab_count',
+    'tab_open_event_count', 'content_process_count',
+    'content_process_max', 'loaded_tab_count'
 ]
 
 daily = [
@@ -76,7 +88,16 @@ daily = [
     'content_keypress_present_latency', 'gpu_keypress_present_latency',
     'fx_new_window_ms', 'fx_tab_switch_composite_e10s_ms',
     'content_frame_time_vsync', 'child_process_launch_ms',
-    'checkerboard_severity'
+    'checkerboard_severity',
+    'memory_total', 'memory_unique_content_startup',
+    'cycle_collector_max_pause', 'cycle_collector_max_pause_content',
+    'gc_max_pause_ms_2', 'gc_max_pause_ms_2_content',
+    'gc_ms', 'gc_ms_content',
+    'gc_slice_during_idle', 'gc_slice_during_idle_content',
+    'subsession_length', 'uri_count',
+    'active_hours', 'max_concurrent_tab_count',
+    'tab_open_event_count', 'content_process_count',
+    'content_process_max', 'loaded_tab_count'
 ]
 
 ## Performance
@@ -160,6 +181,7 @@ daily = [
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.keypress_present_latency")}}'
     data_source = 'main_cleaned'
     bigger_is_better = false
+
 
         [metrics.content_keypress_present_latency.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
