@@ -645,6 +645,116 @@ daily = [
         pre_treatments = ["remove_nulls"]
         log_space = true
 
+    [metrics.oom_crashes_per_hour]
+    select_expression = """
+        SAFE_DIVIDE(
+            SUM(IF(payload.metadata.oom_allocation_size IS NOT NULL, 1, 0)),
+            SUM(active_s/3600)
+         )
+        """
+    data_source = 'crash_cleaned'
+    bigger_is_better = false
+
+        [metrics.oom_crashes_per_hour.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.oom_crashes_per_hour.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.oom_crashes_per_hour.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.oom_crashes_per_hour.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.shutdown_kill_crashes_per_hour]
+    select_expression = """
+        SAFE_DIVIDE(
+            SUM(IF(payload.metadata.ipc_channel_error = 'ShutDownKill', 1, 0)),
+            SUM(active_s/3600)
+         )
+        """
+    data_source = 'crash_cleaned'
+    bigger_is_better = false
+
+        [metrics.shutdown_kill_crashes_per_hour.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.shutdown_kill_crashes_per_hour.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.shutdown_kill_crashes_per_hour.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.shutdown_kill_crashes_per_hour.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.shutdown_crashes_per_hour]
+    select_expression = """
+        SAFE_DIVIDE(
+            SUM(IF(payload.metadata.moz_crash_reason LIKE 'MOZ_CRASH%', 1, 0)),
+            SUM(active_s/3600)
+         )
+        """
+    data_source = 'crash_cleaned'
+    bigger_is_better = false
+
+        [metrics.shutdown_crashes_per_hour.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.shutdown_crashes_per_hour.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.shutdown_crashes_per_hour.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.shutdown_crashes_per_hour.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.crash_tab_ui_presented]
+    select_expression = """SUM(payload.processes.parent.scalars.dom_contentprocess_unsubmitted_ui_presented)"""
+    data_source = 'crash_cleaned'
+    bigger_is_better = false
+
+        [metrics.crash_tab_ui_presented.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.crash_tab_ui_presented.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.crash_tab_ui_presented.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.crash_tab_ui_presented.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+    [metrics.crash_subframe_ui_presented]
+    select_expression = """SUM(payload.processes.parent.scalars.dom_contentprocess_crash_subframe_ui_presented)"""
+    data_source = 'crash_cleaned'
+    bigger_is_better = false
+
+        [metrics.crash_subframe_ui_presented.statistics.bootstrap_mean]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.crash_subframe_ui_presented.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.crash_subframe_ui_presented.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.crash_subframe_ui_presented.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
 
 ## Segments
 [segments]
