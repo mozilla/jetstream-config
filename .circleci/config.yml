@@ -13,10 +13,8 @@ jobs:
         name: Validate config files
         command: |
           changed_files=$(git diff --name-only $BASE_COMMIT..$REVISION_COMMIT -- '*.toml' '*.toml.example')
-
           echo "Run validation on changed files: "
           echo $changed_files
-
           jetstream validate_config $changed_files
   rerun:
     docker:
@@ -36,9 +34,7 @@ jobs:
         command: |
           # required for parsing kubectl pod statuses
           apt-get install jq -y
-
           apt-get install uuid-runtime
-
           export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
           echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
           gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
@@ -51,65 +47,30 @@ jobs:
           uuid=`uuidgen`
           pod_identifier="jetstream-${uuid}"
           kubectl delete pod -l app=$pod_identifier
-
           # start a new instance
           kubectl run $pod_identifier --image=gcr.io/moz-fx-data-experiments/jetstream -l app=$pod_identifier --restart=Never --command -- jetstream rerun-config-changed --argo --return-status --recreate-enrollments
-          
+
           # link to logs
           cur_date=`date -u +%FT%TZ`
           echo "Pod Logs: https://console.cloud.google.com/logs/query;query=resource.type%3D%22k8s_container%22%0Aresource.labels.project_id%3D%22moz-fx-data-experiments%22%0Aresource.labels.location%3D%22us-central1-a%22%0Aresource.labels.cluster_name%3D%22jetstream%22%0Aresource.labels.namespace_name%3D%22default%22?scrollTimestamp=$cur_date"
-
           echo "Analysis Errors can be accessed via Redash: https://sql.telemetry.mozilla.org/dashboard/jetstream-errors?p_experiment=%25"
-
           # wait for pod to finish and check status
-          active_pods=1
-          completed_pods=0
-
-          while [ $active_pods -gt 0 ] || [ $completed_pods == 0 ]
+          running=true
+          while [ $running = true ]
           do
             echo "Wait for jetstream to finish"
-            echo "Active Jobs:"
-            echo $active_pods
-
-            echo "Completed Jobs:"
-            echo $completed_pods
-
-            active_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Running --output json | jq -j '.items | length'`
-            completed_pods=`kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Succeeded --output json | jq -j '.items | length'`
+            pod_status=`kubectl get pod -l app=$pod_identifier --no-headers -o custom-columns=":status.phase"`
+            if [ $pod_status = 'Succeeded' ] || [ $pod_status = 'Failed' ]; then
+              running=false
+            fi
             sleep 10
           done
-
           # delete pod
           kubectl delete pod -l app=$pod_identifier
-
-          # argo pods can fail but succeed in a retry run
-          # use the executed command to check if failed pods eventually succeeded
-          failed_pod_commands=$(kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Failed --output json | jq -r '.items[].spec.containers[1].command')
-          succeeded_pod_commands=$(kubectl get pod -l app=$pod_identifier --field-selector=status.phase=Succeeded --output json | jq -r '.items[].spec.containers[1].command')
-          failed_pods=false
-
-          echo "Succeeded commands:"
-          echo $succeeded_pod_commands
-
-          echo "Failed commands:"
-          echo $failed_pod_commands
-
-          echo "Completed:"
-          echo $completed_pods
-
-          for f in $failed_pod_commands
-          do
-            if [[ ! " ${succeeded_pod_commands[@]} " =~ " ${f} " ]]; then
-              failed_pods=true
-              echo "Failed command: "
-              echo $f
-            fi
-          done
-
-          if [ $failed_pods = true ]; then
+          if [ $pod_status = 'Failed' ]; then
             echo "Error when running jetstream. Check the logs for more information."
             exit 1
-          elif [ $completed_pods -ge 1 ]; then
+          elif [ $pod_status = 'Succeeded' ]; then
             echo "Jetstream successfully completed."
           else
             echo "Jetstream completed in unknown status. Please check the logs."
