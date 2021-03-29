@@ -731,7 +731,7 @@ daily = [
 
     [metrics.crash_tab_ui_presented]
     select_expression = """SUM(payload.processes.parent.scalars.dom_contentprocess_unsubmitted_ui_presented)"""
-    data_source = 'crash_cleaned'
+    data_source = 'main_cleaned'
     bigger_is_better = false
 
         [metrics.crash_tab_ui_presented.statistics.bootstrap_mean]
@@ -750,7 +750,7 @@ daily = [
 
     [metrics.crash_subframe_ui_presented]
     select_expression = """SUM(payload.processes.parent.scalars.dom_contentprocess_crash_subframe_ui_presented)"""
-    data_source = 'crash_cleaned'
+    data_source = 'main_cleaned'
     bigger_is_better = false
 
         [metrics.crash_subframe_ui_presented.statistics.bootstrap_mean]
