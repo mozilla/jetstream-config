@@ -118,7 +118,7 @@ select_expression = """LOGICAL_OR(
 data_source = 'main'
 bigger_is_better = false
 
-[metrics.homepage_switch.statistics.binomial]
+[metrics.newtab_switch.statistics.binomial]
 
 ## turned_off_search
     # NOTE: true here means we know they turned it off
