@@ -114,7 +114,7 @@ bigger_is_better = false
 [metrics.newtab_switch]
 select_expression = """LOGICAL_OR(
                         COALESCE(`mozdata.udf.get_key`(environment.settings.user_prefs,
-                            'browser.newtabpage.enabled') == 'false', false))"""
+                            'browser.newtabpage.enabled') = 'false', false))"""
 data_source = 'main'
 bigger_is_better = false
 
