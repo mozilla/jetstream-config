@@ -4,7 +4,7 @@ segments = ["attributed", "non_attributed"]
 
 enrollment_period = 7
 
-reference_branch = "newtab-control"
+reference_branch = "baseline-newtab-content"
 
 ## data sources
 
