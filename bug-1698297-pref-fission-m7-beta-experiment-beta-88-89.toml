@@ -596,7 +596,7 @@ daily = [
         [metrics.content_process_count.statistics.deciles]
 
    [metrics.content_process_max]
-    select_expression = 'MAX(COALESCE(`moz-fx-data-shared-prod`.udf.histogram_max_key_with_nonzero_value("payload.histograms.content_process_max"), 0))'
+    select_expression = 'MAX(COALESCE(`moz-fx-data-shared-prod`.udf.histogram_max_key_with_nonzero_value(payload.histograms.content_process_max), 0))'
     data_source = 'main_cleaned'
         [metrics.content_process_max.statistics.bootstrap_mean]
         [metrics.content_process_max.statistics.deciles]
