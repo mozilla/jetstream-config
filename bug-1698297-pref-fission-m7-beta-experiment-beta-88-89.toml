@@ -92,7 +92,7 @@ experiments_column_type = "native"
 overall = [
     'perf_page_load_time_ms', 'time_to_first_interaction_ms',
     'input_event_response_ms', 'perf_first_contentful_paint_ms',
-    'content_keypress_present_latency', 'gpu_keypress_present_latency',
+    'gpu_keypress_present_latency',
     'fx_new_window_ms', 'fx_tab_switch_composite_e10s_ms',
     'content_frame_time_vsync', 'child_process_launch_ms',
     'checkerboard_severity',
@@ -106,15 +106,15 @@ overall = [
     'tab_open_event_count', 'content_process_count',
     'content_process_max', 'loaded_tab_count',
     'main_crashes_per_hour', 'content_crashes_per_hour',
-    'oom_crashes_per_hour', 'shutdown_kill_crashes_per_hour',
-    'shutdown_crashes_per_hour', 'crash_tab_ui_presented',
+    'oom_crashes_per_hour', 'content_shutdown_crashes_per_hour',
+    'shutdown_hangs_per_hour', 'crash_tab_ui_presented',
     'crash_subframe_ui_presented'
 ]
 
 weekly = [
     'perf_page_load_time_ms', 'time_to_first_interaction_ms',
     'input_event_response_ms', 'perf_first_contentful_paint_ms',
-    'content_keypress_present_latency', 'gpu_keypress_present_latency',
+    'gpu_keypress_present_latency',
     'fx_new_window_ms', 'fx_tab_switch_composite_e10s_ms',
     'content_frame_time_vsync', 'child_process_launch_ms',
     'checkerboard_severity',
@@ -127,32 +127,21 @@ weekly = [
     'active_hrs', 'max_concurrent_tab_count',
     'tab_open_event_count', 'content_process_count',
     'content_process_max', 'loaded_tab_count',
-     'main_crashes_per_hour', 'content_crashes_per_hour',
-    'oom_crashes_per_hour', 'shutdown_kill_crashes_per_hour',
-    'shutdown_crashes_per_hour', 'crash_tab_ui_presented',
+    'main_crashes_per_hour', 'content_crashes_per_hour',
+    'oom_crashes_per_hour', 'content_shutdown_crashes_per_hour',
+    'shutdown_hangs_per_hour', 'crash_tab_ui_presented',
     'crash_subframe_ui_presented'
 ]
 
 daily = [
-    'perf_page_load_time_ms', 'time_to_first_interaction_ms',
-    'input_event_response_ms', 'perf_first_contentful_paint_ms',
-    'content_keypress_present_latency', 'gpu_keypress_present_latency',
-    'fx_new_window_ms', 'fx_tab_switch_composite_e10s_ms',
-    'content_frame_time_vsync', 'child_process_launch_ms',
-    'checkerboard_severity',
+    'perf_page_load_time_ms', 'perf_first_contentful_paint_ms',
+    'child_process_launch_ms',
     'memory_total', 'memory_unique_content_startup',
-    'cycle_collector_max_pause', 'cycle_collector_max_pause_content',
-    'gc_max_pause_ms_2', 'gc_max_pause_ms_2_content',
-    'gc_ms', 'gc_ms_content',
-    'gc_slice_during_idle', 'gc_slice_during_idle_content',
-    'subsession_length', 'uri_cnt',
-    'active_hrs', 'max_concurrent_tab_count',
-    'tab_open_event_count', 'content_process_count',
-    'content_process_max', 'loaded_tab_count',
-     'main_crashes_per_hour', 'content_crashes_per_hour',
-    'oom_crashes_per_hour', 'shutdown_kill_crashes_per_hour',
-    'shutdown_crashes_per_hour', 'crash_tab_ui_presented',
-    'crash_subframe_ui_presented'
+    'max_concurrent_tab_count', 'tab_open_event_count',
+    'main_crashes_per_hour', 'content_crashes_per_hour',
+    'oom_crashes_per_hour', 'content_shutdown_crashes_per_hour',
+    'shutdown_hangs_per_hour',
+    'crash_tab_ui_presented', 'crash_subframe_ui_presented'
 ]
 
 ## Performance
@@ -232,25 +221,6 @@ daily = [
         pre_treatments = ["remove_nulls"]
         log_space = true
 
-    [metrics.content_keypress_present_latency]
-    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.keypress_present_latency")}}'
-    data_source = 'main_cleaned'
-    bigger_is_better = false
-
-
-        [metrics.content_keypress_present_latency.statistics.bootstrap_mean]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.content_keypress_present_latency.statistics.deciles]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.content_keypress_present_latency.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-        [metrics.content_keypress_present_latency.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
 
     [metrics.gpu_keypress_present_latency]
     select_expression = '{{agg_histogram_mean("payload.processes.gpu.histograms.keypress_present_latency")}}'
@@ -273,7 +243,7 @@ daily = [
 
 
     [metrics.fx_new_window_ms]
-    select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.fx_new_window_ms")}}'
+    select_expression = '{{agg_histogram_mean("payload.histograms.fx_new_window_ms")}}'
     data_source = 'main_cleaned'
     bigger_is_better = false
 
@@ -624,13 +594,13 @@ daily = [
         [metrics.main_crashes_per_hour.statistics.deciles]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.main_crashes_per_hour.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-        [metrics.main_crashes_per_hour.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
+#        [metrics.main_crashes_per_hour.statistics.kernel_density_estimate]
+#        pre_treatments = ["remove_nulls"]
+#        log_space = true
+#
+#        [metrics.main_crashes_per_hour.statistics.empirical_cdf]
+#        pre_treatments = ["remove_nulls"]
+#        log_space = true
 
     [metrics.content_crashes_per_hour]
     select_expression = """
@@ -649,13 +619,13 @@ daily = [
         [metrics.content_crashes_per_hour.statistics.deciles]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.content_crashes_per_hour.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-        [metrics.content_crashes_per_hour.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
+#        [metrics.content_crashes_per_hour.statistics.kernel_density_estimate]
+#        pre_treatments = ["remove_nulls"]
+#        log_space = true
+#
+#        [metrics.content_crashes_per_hour.statistics.empirical_cdf]
+#        pre_treatments = ["remove_nulls"]
+#        log_space = true
 
     [metrics.oom_crashes_per_hour]
     select_expression = """
@@ -673,39 +643,42 @@ daily = [
         [metrics.oom_crashes_per_hour.statistics.deciles]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.oom_crashes_per_hour.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
+#        [metrics.oom_crashes_per_hour.statistics.kernel_density_estimate]
+#        pre_treatments = ["remove_nulls"]
+#        log_space = true
+#
+#        [metrics.oom_crashes_per_hour.statistics.empirical_cdf]
+#        pre_treatments = ["remove_nulls"]
+#        log_space = true
 
-        [metrics.oom_crashes_per_hour.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-    [metrics.shutdown_kill_crashes_per_hour]
+    [metrics.content_shutdown_crashes_per_hour]
     select_expression = """
         SAFE_DIVIDE(
-            SUM(IF(payload.metadata.ipc_channel_error = 'ShutDownKill', 1, 0)),
+            SUM(
+                IF(REGEXP_CONTAINS(payload.process_type, 'content')
+                AND REGEXP_CONTAINS(payload.metadata.ipc_channel_error, 'ShutDownKill'), 1, 0)
+                ),
             SUM(active_s/3600)
          )
         """
     data_source = 'crash_cleaned'
     bigger_is_better = false
 
-        [metrics.shutdown_kill_crashes_per_hour.statistics.bootstrap_mean]
+        [metrics.content_shutdown_crashes_per_hour.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.shutdown_kill_crashes_per_hour.statistics.deciles]
+        [metrics.content_shutdown_crashes_per_hour.statistics.deciles]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.shutdown_kill_crashes_per_hour.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
+#        [metrics.content_shutdown_crashes_per_hour.statistics.kernel_density_estimate]
+#        pre_treatments = ["remove_nulls"]
+#        log_space = true
+#
+#        [metrics.content_shutdown_crashes_per_hour.statistics.empirical_cdf]
+#        pre_treatments = ["remove_nulls"]
+#        log_space = true
 
-        [metrics.shutdown_kill_crashes_per_hour.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-    [metrics.shutdown_crashes_per_hour]
+    [metrics.shutdown_hangs_per_hour]
     select_expression = """
         SAFE_DIVIDE(
             SUM(IF(payload.metadata.moz_crash_reason LIKE 'MOZ_CRASH%', 1, 0)),
@@ -715,22 +688,22 @@ daily = [
     data_source = 'crash_cleaned'
     bigger_is_better = false
 
-        [metrics.shutdown_crashes_per_hour.statistics.bootstrap_mean]
+        [metrics.shutdown_hangs_per_hour.statistics.bootstrap_mean]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.shutdown_crashes_per_hour.statistics.deciles]
+        [metrics.shutdown_hangs_per_hour.statistics.deciles]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.shutdown_crashes_per_hour.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-        [metrics.shutdown_crashes_per_hour.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
+#        [metrics.shutdown_crashes_per_hour.statistics.kernel_density_estimate]
+#        pre_treatments = ["remove_nulls"]
+#        log_space = true
+#
+#        [metrics.shutdown_crashes_per_hour.statistics.empirical_cdf]
+#        pre_treatments = ["remove_nulls"]
+#        log_space = true
 
     [metrics.crash_tab_ui_presented]
-    select_expression = """SUM(payload.processes.parent.scalars.dom_contentprocess_unsubmitted_ui_presented)"""
+    select_expression = """SUM(COALESCE(payload.processes.parent.scalars.dom_contentprocess_unsubmitted_ui_presented, 0))"""
     data_source = 'main_cleaned'
     bigger_is_better = false
 
@@ -740,16 +713,8 @@ daily = [
         [metrics.crash_tab_ui_presented.statistics.deciles]
         pre_treatments = ["remove_nulls"]
 
-        [metrics.crash_tab_ui_presented.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-        [metrics.crash_tab_ui_presented.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
     [metrics.crash_subframe_ui_presented]
-    select_expression = """SUM(payload.processes.parent.scalars.dom_contentprocess_crash_subframe_ui_presented)"""
+    select_expression = """SUM(COALESCE(payload.processes.parent.scalars.dom_contentprocess_crash_subframe_ui_presented, 0))"""
     data_source = 'main_cleaned'
     bigger_is_better = false
 
@@ -758,14 +723,6 @@ daily = [
 
         [metrics.crash_subframe_ui_presented.statistics.deciles]
         pre_treatments = ["remove_nulls"]
-
-        [metrics.crash_subframe_ui_presented.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
-
-        [metrics.crash_subframe_ui_presented.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
 
 
 ## Segments
