@@ -13,10 +13,8 @@ jobs:
         name: Validate config files
         command: |
           changed_files=$(git diff --name-only $BASE_COMMIT..$REVISION_COMMIT -- '*.toml' '*.toml.example')
-
           echo "Run validation on changed files: "
           echo $changed_files
-
           jetstream validate_config $changed_files
   rerun:
     docker:
@@ -36,9 +34,7 @@ jobs:
         command: |
           # required for parsing kubectl pod statuses
           apt-get install jq -y
-
           apt-get install uuid-runtime
-
           export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
           echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
           gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
@@ -51,33 +47,26 @@ jobs:
           uuid=`uuidgen`
           pod_identifier="jetstream-${uuid}"
           kubectl delete pod -l app=$pod_identifier
-
           # start a new instance
           kubectl run $pod_identifier --image=gcr.io/moz-fx-data-experiments/jetstream -l app=$pod_identifier --restart=Never --command -- jetstream rerun-config-changed --argo --return-status --recreate-enrollments
-          
+
           # link to logs
           cur_date=`date -u +%FT%TZ`
           echo "Pod Logs: https://console.cloud.google.com/logs/query;query=resource.type%3D%22k8s_container%22%0Aresource.labels.project_id%3D%22moz-fx-data-experiments%22%0Aresource.labels.location%3D%22us-central1-a%22%0Aresource.labels.cluster_name%3D%22jetstream%22%0Aresource.labels.namespace_name%3D%22default%22?scrollTimestamp=$cur_date"
-
           echo "Analysis Errors can be accessed via Redash: https://sql.telemetry.mozilla.org/dashboard/jetstream-errors?p_experiment=%25"
-
           # wait for pod to finish and check status
           running=true
-
           while [ $running = true ]
           do
             echo "Wait for jetstream to finish"
             pod_status=`kubectl get pod -l app=$pod_identifier --no-headers -o custom-columns=":status.phase"`
-
-            if [ $pod_status = 'Succeeded' ] || [ $pod_status = 'Failed' ]; then 
+            if [ $pod_status = 'Succeeded' ] || [ $pod_status = 'Failed' ]; then
               running=false
             fi
             sleep 10
           done
-
           # delete pod
           kubectl delete pod -l app=$pod_identifier
-
           if [ $pod_status = 'Failed' ]; then
             echo "Error when running jetstream. Check the logs for more information."
             exit 1
