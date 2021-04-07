@@ -87,8 +87,6 @@ experiments_column_type = "native"
 ## Metrics
 [metrics]
 
-# TODO: crashes
-
 overall = [
     'perf_page_load_time_ms', 'time_to_first_interaction_ms',
     'input_event_response_ms', 'perf_first_contentful_paint_ms',
