@@ -134,14 +134,6 @@ weekly = [
 ]
 
 daily = [
-    'perf_page_load_time_ms', 'perf_first_contentful_paint_ms',
-    'child_process_launch_ms',
-    'memory_total', 'memory_unique_content_startup',
-    'max_concurrent_tab_count', 'tab_open_event_count',
-    'main_crashes_per_hour', 'content_crashes_per_hour',
-    'oom_crashes_per_hour', 'content_shutdown_crashes_per_hour',
-    'shutdown_hangs_per_hour',
-    'crash_tab_ui_presented', 'crash_subframe_ui_presented'
 ]
 
 ## Performance
@@ -703,7 +695,7 @@ daily = [
 #        log_space = true
 
     [metrics.crash_tab_ui_presented]
-    select_expression = """SUM(COALESCE(payload.processes.parent.scalars.dom_contentprocess_unsubmitted_ui_presented, 0))"""
+    select_expression = """SUM(COALESCE(payload.processes.parent.scalars.dom_contentprocess_crash_tab_ui_presented, 0))"""
     data_source = 'main_cleaned'
     bigger_is_better = false
 
