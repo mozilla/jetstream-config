@@ -1,9 +1,8 @@
 [experiment]
 
 segments = [
-    'low_cpu', 'med_cpu', 'high_cpu',
-    'low_mem', 'med_mem', 'high_mem',
-    'regular_users_v3', 'new_or_resurrected_v3'
+    'low_cpu', 'high_cpu',
+    'low_mem', 'high_mem',
 ]
 
 enrollment_period = 7
@@ -722,9 +721,9 @@ daily = [
 select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 1 AND 2, FALSE)'
 data_source = "clients_last_seen"
 
-[segments.med_cpu]
-select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 3 AND 5, FALSE)'
-data_source = "clients_last_seen"
+#[segments.med_cpu]
+#select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 3 AND 5, FALSE)'
+#data_source = "clients_last_seen"
 
 [segments.high_cpu]
 select_expression = 'COALESCE(MAX(cpu_count) >= 6, FALSE)'
@@ -734,9 +733,9 @@ data_source = "clients_last_seen"
 select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 1 AND 4095, FALSE)'
 data_source = "clients_last_seen"
 
-[segments.med_mem]
-select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 4096 AND 8191, FALSE)'
-data_source = "clients_last_seen"
+#[segments.med_mem]
+#select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 4096 AND 8191, FALSE)'
+#data_source = "clients_last_seen"
 
 [segments.high_mem]
 select_expression = 'COALESCE(MAX(memory_mb) >= 8192, FALSE)'
