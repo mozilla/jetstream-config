@@ -4,8 +4,9 @@
 [experiment]
 segments = ["low_cpu", "better_cpu", "hdd", "ssd"]
 
-metrics.weekly = ["num_enrollments", "tagged_uri_count"]
-metrics.overall = ["num_enrollments", "tagged_uri_count"]
+[metrics]
+weekly = ["num_enrollments", "tagged_uri_count"]
+overall = ["num_enrollments", "tagged_uri_count"]
 
 [metrics.num_enrollments]
 select_expression = """
