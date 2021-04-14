@@ -4,8 +4,8 @@
 [experiment]
 segments = ["low_cpu", "better_cpu", "hdd", "ssd"]
 
-metrics.weekly = ["num_enrollments"]
-metrics.overall = ["num_enrollments"]
+metrics.weekly = ["num_enrollments", "tagged_uri_count"]
+metrics.overall = ["num_enrollments", "tagged_uri_count"]
 
 [metrics.num_enrollments]
 select_expression = """
@@ -19,6 +19,22 @@ select_expression = """
     )"""
 data_source = "normandy_events"
 statistics = { empirical_cdf = {} }
+
+[metrics.tagged_uri_count]
+select_expression = """
+    COALESCE(
+        SUM(
+            IF(
+                mozfun.map.get_key(experiments, "bug-1689450-pref-pre-xul-skeleton-ui-startup-improvement-experimen-release-86-90") IS NOT NULL,
+                scalar_parent_browser_engagement_total_uri_count,
+                0
+            )
+        ),
+        0
+    )
+"""
+data_source = "main_summary"
+statistics = { bootstrap_mean = {}, deciles = {} }
 
 [segments.low_cpu]
 select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 1 AND 2, FALSE)'
