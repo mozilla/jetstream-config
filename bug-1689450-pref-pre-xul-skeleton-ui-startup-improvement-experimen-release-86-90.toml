@@ -18,6 +18,7 @@ select_expression = """
         )
     )"""
 data_source = "normandy_events"
+statistics = { empirical_cdf = {} }
 
 [segments.low_cpu]
 select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 1 AND 2, FALSE)'
