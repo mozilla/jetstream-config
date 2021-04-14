@@ -11,7 +11,7 @@ metrics.overall = ["num_enrollments"]
 select_expression = """
     COUNT(DISTINCT
         IF(
-            event_method = "enroll
+            event_method = "enroll"
                 AND event_string_value = "bug-1689450-pref-pre-xul-skeleton-ui-startup-improvement-experimen-release-86-90",
             mozfun.map.get_key(event_map_values, "enrollmentId"),
             NULL
