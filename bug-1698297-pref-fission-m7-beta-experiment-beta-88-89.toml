@@ -2,7 +2,7 @@
 
 segments = [
     'low_cpu', 'high_cpu',
-    'low_mem', 'high_mem',
+    'mem_lte_2GB', 'mem_gt_2GB_lte_4GB', 'high_mem',
 ]
 
 enrollment_period = 7
@@ -729,9 +729,17 @@ data_source = "clients_last_seen"
 select_expression = 'COALESCE(MAX(cpu_count) >= 6, FALSE)'
 data_source = "clients_last_seen"
 
-[segments.low_mem]
-select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 1 AND 4095, FALSE)'
+[segments.mem_lte_2GB]
+select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 1 AND 2047, FALSE)'
 data_source = "clients_last_seen"
+
+[segments.mem_gt_2GB_lte_4GB]
+select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 2048 AND 4095, FALSE)'
+data_source = "clients_last_seen"
+
+#[segments.low_mem]
+#select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 1 AND 4095, FALSE)'
+#data_source = "clients_last_seen"
 
 #[segments.med_mem]
 #select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 4096 AND 8191, FALSE)'
