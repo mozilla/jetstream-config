@@ -4,39 +4,6 @@
 [experiment]
 segments = ["low_cpu", "better_cpu", "hdd", "ssd"]
 
-[metrics]
-weekly = ["num_enrollments", "tagged_uri_count"]
-overall = ["num_enrollments", "tagged_uri_count"]
-
-[metrics.num_enrollments]
-select_expression = """
-    COUNT(DISTINCT
-        IF(
-            event_method = "enroll"
-                AND event_string_value = "bug-1689450-pref-pre-xul-skeleton-ui-startup-improvement-experimen-release-86-90",
-            mozfun.map.get_key(event_map_values, "enrollmentId"),
-            NULL
-        )
-    )"""
-data_source = "normandy_events"
-statistics = { empirical_cdf = {} }
-
-[metrics.tagged_uri_count]
-select_expression = """
-    COALESCE(
-        SUM(
-            IF(
-                mozfun.map.get_key(experiments, "bug-1689450-pref-pre-xul-skeleton-ui-startup-improvement-experimen-release-86-90") IS NOT NULL,
-                scalar_parent_browser_engagement_total_uri_count,
-                0
-            )
-        ),
-        0
-    )
-"""
-data_source = "main_summary"
-statistics = { bootstrap_mean = {}, deciles = {} }
-
 [segments.low_cpu]
 select_expression = 'COALESCE(MAX(cpu_count) BETWEEN 1 AND 2, FALSE)'
 data_source = "clients_last_seen"
@@ -62,3 +29,36 @@ from_expression = """
     FROM `moz-fx-data-shared-prod`.telemetry.event)
     """
 
+##
+
+[metrics.active_hours.statistics.bootstrap_mean]
+drop_highest = 0.01
+[metrics.active_hours.statistics.deciles]
+
+[metrics.ad_clicks.statistics.bootstrap_mean]
+drop_highest = 0.01
+[metrics.ad_clicks.statistics.deciles]
+
+[metrics.organic_search_count.statistics.bootstrap_mean]
+drop_highest = 0.01
+[metrics.organic_search_count.statistics.deciles]
+
+[metrics.uri_count.statistics.bootstrap_mean]
+drop_highest = 0.01
+[metrics.uri_count.statistics.deciles]
+
+[metrics.search_count.statistics.bootstrap_mean]
+drop_highest = 0.01
+[metrics.search_count.statistics.deciles]
+
+[metrics.searches_with_ads.statistics.bootstrap_mean]
+drop_highest = 0.01
+[metrics.searches_with_ads.statistics.deciles]
+
+[metrics.tagged_search_count.statistics.bootstrap_mean]
+drop_highest = 0.01
+[metrics.tagged_search_count.statistics.deciles]
+
+[metrics.tagged_follow_on_search_count.statistics.bootstrap_mean]
+drop_highest = 0.01
+[metrics.tagged_follow_on_search_count.statistics.deciles]
