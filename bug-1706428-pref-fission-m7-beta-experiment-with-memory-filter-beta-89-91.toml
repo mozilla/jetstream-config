@@ -24,7 +24,7 @@ from_expression = """ (
   FROM
     `moz-fx-data-shared-prod`.telemetry.main
   WHERE
-    DATE(submission_timestamp) >= '2021-03-23'
+    DATE(submission_timestamp) >= '2021-04-27'
     AND environment.system.gfx.features.compositor = "webrender"
     AND payload.info.session_id not in (
         SELECT
@@ -34,8 +34,8 @@ from_expression = """ (
         WHERE
           event_category = 'normandy'
           AND event_method = 'enroll'
-          AND submission_date >= '2021-03-23'
-          AND event_string_value = 'bug-1698297-pref-fission-m7-beta-experiment-beta-88-89')
+          AND submission_date >= '2021-04-27'
+          AND event_string_value = 'bug-1706428-pref-fission-m7-beta-experiment-with-memory-filter-beta-89-91')
           )
 """
 experiments_column_type = "native"
@@ -55,8 +55,8 @@ from_expression = """
       ON m.client_id = cr.client_id
       AND DATE(m.submission_timestamp) = DATE(cr.submission_timestamp)
   WHERE
-    DATE(cr.submission_timestamp) >= '2021-03-23'
-    AND DATE(m.submission_timestamp) >= '2021-03-23'
+    DATE(cr.submission_timestamp) >= '2021-04-27'
+    AND DATE(m.submission_timestamp) >= '2021-04-27'
     AND m.normalized_channel = 'beta'
     AND m.environment.system.gfx.features.compositor = "webrender"
     AND cr.normalized_channel = 'beta'
@@ -68,8 +68,8 @@ from_expression = """
         WHERE
           event_category = 'normandy'
           AND event_method = 'enroll'
-          AND submission_date >= '2021-03-23'
-          AND event_string_value = 'bug-1698297-pref-fission-m7-beta-experiment-beta-88-89')
+          AND submission_date >= '2021-04-27'
+          AND event_string_value = 'bug-1706428-pref-fission-m7-beta-experiment-with-memory-filter-beta-89-91')
     AND m.payload.info.session_id not in (
         SELECT
           session_id
@@ -78,7 +78,7 @@ from_expression = """
         WHERE
           event_category = 'normandy'
           AND event_method = 'enroll'
-          AND submission_date >= '2021-03-23'
+          AND submission_date >= '2021-04-27'
           AND event_string_value = 'bug-1698297-pref-fission-m7-beta-experiment-beta-88-89')
     )
 """
