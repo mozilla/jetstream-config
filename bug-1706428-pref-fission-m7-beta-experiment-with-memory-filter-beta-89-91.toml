@@ -56,7 +56,7 @@ from_expression = """
       AND DATE(m.submission_timestamp) = DATE(cr.submission_timestamp)
   WHERE
     DATE(cr.submission_timestamp) >= '2021-04-27'
-    AND DATE(m.submission_timestamp) >= '2021-04-27u'
+    AND DATE(m.submission_timestamp) >= '2021-04-27'
     AND m.normalized_channel = 'beta'
     AND m.environment.system.gfx.features.compositor = "webrender"
     AND cr.normalized_channel = 'beta'
