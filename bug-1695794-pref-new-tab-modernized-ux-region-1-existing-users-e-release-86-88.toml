@@ -2,7 +2,8 @@
 
 segments = ["attributed", "non_attributed"]
 
-enrollment_period = 7
+enrollment_period = 13
+end_date = "2021-05-28"
 
 reference_branch = "newtab-control"
 
