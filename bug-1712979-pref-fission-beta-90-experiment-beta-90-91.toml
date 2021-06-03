@@ -95,7 +95,7 @@ overall = [
     'gpu_keypress_present_latency',
     'fx_new_window_ms', 'fx_tab_switch_composite_e10s_ms',
     'content_frame_time_vsync', 'child_process_launch_ms',
-    'checkerboard_severity',
+    'checkerboard_severity', 'checkerboard_severity_count_per_hour',
     'memory_total', 'memory_unique_content_startup',
     'cycle_collector_max_pause', 'cycle_collector_max_pause_content',
     'gc_max_pause_ms_2', 'gc_max_pause_ms_2_content',
@@ -117,7 +117,7 @@ weekly = [
     'gpu_keypress_present_latency',
     'fx_new_window_ms', 'fx_tab_switch_composite_e10s_ms',
     'content_frame_time_vsync', 'child_process_launch_ms',
-    'checkerboard_severity',
+    'checkerboard_severity', 'checkerboard_severity_count_per_hour',
     'memory_total', 'memory_unique_content_startup',
     'cycle_collector_max_pause', 'cycle_collector_max_pause_content',
     'gc_max_pause_ms_2', 'gc_max_pause_ms_2_content',
@@ -326,6 +326,29 @@ daily = [
         log_space = true
 
         [metrics.checkerboard_severity.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+   [metrics.checkerboard_severity_count_per_hour]
+    select_expression = """SAFE_DIVIDE(
+                                SUM(COALESCE((SELECT SUM(value) FROM UNNEST(mozfun.hist.extract(payload.processes.gpu.histograms.checkerboard_severity).values)), 0)),
+                                SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_active_ticks, 0))*5/3600
+                                )
+                                """
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+#        [metrics.checkerboard_severity_count_per_hour.statistics.bootstrap_mean]
+#        pre_treatments = ["remove_nulls"]
+
+        [metrics.checkerboard_severity_count_per_hour.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.checkerboard_severity_count_per_hour.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.checkerboard_severity_count_per_hour.statistics.empirical_cdf]
         pre_treatments = ["remove_nulls"]
         log_space = true
 
