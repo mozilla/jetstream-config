@@ -3,6 +3,7 @@
 segments = ["attributed", "non_attributed"]
 
 enrollment_period = 14
+end_date = "2021-05-26"
 
 reference_branch = "control"
 
