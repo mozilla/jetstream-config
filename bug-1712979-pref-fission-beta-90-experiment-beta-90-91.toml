@@ -60,7 +60,7 @@ from_expression = """
     DATE(cr.submission_timestamp) >= '2021-06-01'
     AND DATE(m.submission_timestamp) >= '2021-06-01'
     AND m.normalized_channel in ('beta', 'aurora')
-    AND environment.system.gfx.features.compositor in ("webrender", "webrender_software", "webrender_software_d3d11")
+    AND m.environment.system.gfx.features.compositor in ("webrender", "webrender_software", "webrender_software_d3d11")
     AND cr.normalized_channel in ('beta', 'aurora')
     AND cr.payload.session_id not in (
         SELECT
