@@ -2,7 +2,7 @@
 
 segments = ["attributed", "non_attributed"]
 
-enrollment_period = 14
+# enrollment_period = 14
 
 reference_branch = "control"
 
