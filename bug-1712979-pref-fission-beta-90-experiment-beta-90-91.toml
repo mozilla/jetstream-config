@@ -7,7 +7,7 @@ segments = [
 ]
 
 enrollment_period = 7
-end_date = "2021-05-25"
+end_date = "2021-06-29"
 
 reference_branch = "fission-disabled"
 
