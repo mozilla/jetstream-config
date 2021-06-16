@@ -244,7 +244,7 @@ description = 'Example outcome snippet'
 
 [metrics.total_amazon_search_count]
 select_expression = "SUM(CASE WHEN engine like 'amazon%' then sap else 0 end)"
-data_source = "search_clients_daily"
+data_source = "search_clients_engines_sources_daily"
 [metrics.total_amazon_search_count.statistics.bootstrap_mean]
 [metrics.total_amazon_search_count.statistics.deciles]
 
@@ -255,7 +255,7 @@ SUM(CASE
         WHEN source = 'urlbar' and engine like 'amazon%' then sap
         WHEN source = 'urlbar-searchmode' and engine like 'amazon%' then sap
         else 0 end)"""
-data_source = "search_clients_daily"
+data_source = "search_clients_engines_sources_daily"
 [metrics.urlbar_amazon_search_count.statistics.bootstrap_mean]
 [metrics.urlbar_amazon_search_count.statistics.deciles]
 ```
