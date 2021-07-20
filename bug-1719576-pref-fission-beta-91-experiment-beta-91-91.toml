@@ -349,28 +349,28 @@ daily = [
         pre_treatments = ["remove_nulls"]
         log_space = true
 
-#   [metrics.checkerboard_severity_count_per_hour]
-#    select_expression = """SAFE_DIVIDE(
-#                                SUM(COALESCE((SELECT SUM(value) FROM UNNEST(mozfun.hist.extract(payload.processes.gpu.histograms.checkerboard_severity).values)), 0)),
-#                                SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_active_ticks, 0))*5/3600
-#                                )
-#                                """
-#    data_source = 'main_cleaned'
-#    bigger_is_better = false
-#
-##        [metrics.checkerboard_severity_count_per_hour.statistics.bootstrap_mean]
-##        pre_treatments = ["remove_nulls"]
-#
-#        [metrics.checkerboard_severity_count_per_hour.statistics.deciles]
+   [metrics.checkerboard_severity_count_per_hour]
+    select_expression = """SAFE_DIVIDE(
+                                SUM(COALESCE((SELECT SUM(value) FROM UNNEST(mozfun.hist.extract(payload.processes.gpu.histograms.checkerboard_severity).values)), 0)),
+                                SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_active_ticks, 0))*5/3600
+                                )
+                                """
+    data_source = 'main_cleaned'
+    bigger_is_better = false
+
+#        [metrics.checkerboard_severity_count_per_hour.statistics.bootstrap_mean]
 #        pre_treatments = ["remove_nulls"]
-#
-#        [metrics.checkerboard_severity_count_per_hour.statistics.kernel_density_estimate]
-#        pre_treatments = ["remove_nulls"]
-#        log_space = true
-#
-#        [metrics.checkerboard_severity_count_per_hour.statistics.empirical_cdf]
-#        pre_treatments = ["remove_nulls"]
-#        log_space = true
+
+        [metrics.checkerboard_severity_count_per_hour.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.checkerboard_severity_count_per_hour.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.checkerboard_severity_count_per_hour.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
 
 ## Memory
     [metrics.memory_total]
@@ -616,7 +616,7 @@ daily = [
     [metrics.main_crashes_per_hour]
     select_expression = """
         SAFE_DIVIDE(
-            SUM(IF(payload.process_type = 'main' OR payload.process_type IS NULL, 1, 0)),
+            COALESCE(SUM(IF(payload.process_type = 'main' OR payload.process_type IS NULL, 1, 0)), 0),
             SUM(active_s/3600)
          )
         """
@@ -640,8 +640,8 @@ daily = [
     [metrics.content_crashes_per_hour]
     select_expression = """
         SAFE_DIVIDE(
-            SUM(IF(REGEXP_CONTAINS(payload.process_type, 'content')
-                AND NOT REGEXP_CONTAINS(COALESCE(payload.metadata.ipc_channel_error, ''), 'ShutDownKill'), 1,0)),
+            COALESCE(SUM(IF(REGEXP_CONTAINS(payload.process_type, 'content')
+                AND NOT REGEXP_CONTAINS(COALESCE(payload.metadata.ipc_channel_error, ''), 'ShutDownKill'), 1,0)), 0),
             SUM(active_s/3600)
          )
         """
@@ -665,7 +665,7 @@ daily = [
     [metrics.oom_crashes_per_hour]
     select_expression = """
         SAFE_DIVIDE(
-            SUM(IF(payload.metadata.oom_allocation_size IS NOT NULL, 1, 0)),
+            COALESCE(SUM(IF(payload.metadata.oom_allocation_size IS NOT NULL, 1, 0)), 0),
             SUM(active_s/3600)
          )
         """
@@ -690,8 +690,8 @@ daily = [
     select_expression = """
         SAFE_DIVIDE(
             SUM(
-                IF(REGEXP_CONTAINS(payload.process_type, 'content')
-                AND REGEXP_CONTAINS(payload.metadata.ipc_channel_error, 'ShutDownKill'), 1, 0)
+                COALESCE(IF(REGEXP_CONTAINS(payload.process_type, 'content')
+                AND REGEXP_CONTAINS(payload.metadata.ipc_channel_error, 'ShutDownKill'), 1, 0), 0)
                 ),
             SUM(active_s/3600)
          )
@@ -716,7 +716,7 @@ daily = [
     [metrics.shutdown_hangs_per_hour]
     select_expression = """
         SAFE_DIVIDE(
-            SUM(IF(payload.metadata.moz_crash_reason LIKE 'MOZ_CRASH%', 1, 0)),
+            COALESCE(SUM(IF(payload.metadata.moz_crash_reason LIKE 'MOZ_CRASH%', 1, 0)), 0),
             SUM(active_s/3600)
          )
         """
