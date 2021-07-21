@@ -97,30 +97,40 @@ exposure_basis = ["exposures", "enrollments"]
 
 [metrics.active_hours]
 exposure_basis = ["exposures", "enrollments"]
+[metrics.active_hours.statistics.bootstrap_mean]
 
 [metrics.uri_count]
 exposure_basis = ["exposures", "enrollments"]
+[metrics.uri_count.statistics.bootstrap_mean]
 
 [metrics.search_count]
 exposure_basis = ["exposures", "enrollments"]
+[metrics.search_count.statistics.bootstrap_mean]
 
 [metrics.tagged_search_count]
 exposure_basis = ["exposures", "enrollments"]
+[metrics.tagged_search_count.statistics.bootstrap_mean]
 
 [metrics.tagged_follow_on_search_count]
 exposure_basis = ["exposures", "enrollments"]
+[metrics.tagged_follow_on_search_count.statistics.bootstrap_mean]
 
 [metrics.ad_clicks]
 exposure_basis = ["exposures", "enrollments"]
+[metrics.ad_clicks.statistics.bootstrap_mean]
 
 [metrics.searches_with_ads]
 exposure_basis = ["exposures", "enrollments"]
+[metrics.searches_with_ads.statistics.bootstrap_mean]
 
 [metrics.organic_search_count]
 exposure_basis = ["exposures", "enrollments"]
+[metrics.organic_search_count.statistics.bootstrap_mean]
 
 [metrics.unenroll]
 exposure_basis = ["exposures", "enrollments"]
+[metrics.unenroll.statistics.bootstrap_mean]
 
 [metrics.days_of_use]
-exposure_basis = ["exposures", "enrollments"
+exposure_basis = ["exposures", "enrollments"]
+[metrics.days_of_use.statistics.bootstrap_mean]
