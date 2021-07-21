@@ -30,60 +30,70 @@ select_expression = "SUM(CASE WHEN source in ('urlbar', 'urlbar-searchmode') THE
 data_source = "search_clients_engines_sources_daily"
 description = "Number of searches performed in the urlbar, including search mode"
 exposure_basis = ["exposures", "enrollments"]
+[metrics.urlbar_search_count.statistics.bootstrap_mean]
 
 [metrics.autofill_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_autofill_sum) x), 0))"
 data_source = "clients_daily"
 description = "Number of autofills selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
+[metrics.autofill_count.statistics.bootstrap_mean]
 
 [metrics.bookmark_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_bookmark_sum) x), 0))"
 data_source = "clients_daily"
 description = "Number of bookmarks selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
+[metrics.bookmark_count.statistics.bootstrap_mean]
 
 [metrics.formhistory_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_formhistory_sum) x), 0))"
 data_source = "clients_daily"
 description = "Number of search suggestions from previous search history selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
+[metrics.formhistory_count.statistics.bootstrap_mean]
 
 [metrics.history_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_history_sum) x), 0))"
 data_source = "clients_daily"
 description = "Number of history urls selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
+[metrics.history_count.statistics.bootstrap_mean]
 
 [metrics.searchengine_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_searchengine_sum) x), 0))"
 data_source = "clients_daily"
 description = "Number of search results selected from the urlbar, not including search suggestions"
 exposure_basis = ["exposures", "enrollments"]
+[metrics.searchengine_count.statistics.bootstrap_mean]
 
 [metrics.searchsuggestion_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_searchsuggestion_sum) x), 0))"
 data_source = "clients_daily"
 description = "Number of search suggestions from search providers (not firefox suggest) selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
+[metrics.searchsuggestion_count.statistics.bootstrap_mean]
 
 [metrics.topsite_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_topsite_sum) x), 0))"
 data_source = "clients_daily"
 description = "Number of topsides selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
+[metrics.topsite_count.statistics.bootstrap_mean]
 
 [metrics.visiturl_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_visiturl_sum) x), 0))"
 data_source = "clients_daily"
 description = "Number of full urls selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
+[metrics.visiturl_count.statistics.bootstrap_mean]
 
 [metrics.unknown_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_unknown_sum) x), 0))"
 data_source = "clients_daily"
 description = "Number of unknown types selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
+[metrics.unknown_count.statistics.bootstrap_mean]
 
 [metrics.active_hours]
 exposure_basis = ["exposures", "enrollments"]
