@@ -129,7 +129,7 @@ exposure_basis = ["exposures", "enrollments"]
 
 [metrics.unenroll]
 exposure_basis = ["exposures", "enrollments"]
-[metrics.unenroll.statistics.bootstrap_mean]
+[metrics.unenroll.statistics.binomial]
 
 [metrics.days_of_use]
 exposure_basis = ["exposures", "enrollments"]
