@@ -7,43 +7,16 @@ segments = [
 ]
 
 enrollment_period = 7
-end_date = "2021-08-10"
+end_date = '2021-09-07'
 
-reference_branch = "fission-disabled"
+reference_branch = "process-count-1"
 
 ## Data Sources
 
 [data_sources]
 
-## main: removing session corresponding to enrollment
-[data_sources.main_cleaned]
-from_expression = """ (
-  SELECT
-    *,
-    DATE(submission_timestamp) AS submission_date,
-    environment.experiments
-  FROM
-    `moz-fx-data-shared-prod`.telemetry.main
-  WHERE
-    DATE(submission_timestamp) >= '2021-07-13'
-    AND normalized_channel in ('beta', 'aurora')
-    AND environment.system.gfx.features.compositor in ("webrender", "webrender_software", "webrender_software_d3d11")
-    AND payload.info.session_id not in (
-        SELECT
-          session_id
-        FROM
-          `moz-fx-data-shared-prod.telemetry.events`
-        WHERE
-          event_category = 'normandy'
-          AND event_method = 'enroll'
-          AND submission_date >= '2021-07-13'
-          AND event_string_value = 'bug-1719576-pref-fission-beta-91-experiment-beta-91-91')
-          )
-"""
-experiments_column_type = "native"
-
 ## crash: removing session corresponding to enrollment
-[data_sources.crash_cleaned]
+[data_sources.crash_hour]
 from_expression = """
 (
   SELECT
@@ -56,32 +29,8 @@ from_expression = """
     INNER JOIN  `moz-fx-data-shared-prod`.telemetry.main m
       ON m.client_id = cr.client_id
       AND DATE(m.submission_timestamp) = DATE(cr.submission_timestamp)
-  WHERE
-    DATE(cr.submission_timestamp) >= '2021-07-13'
-    AND DATE(m.submission_timestamp) >= '2021-07-13'
-    AND m.normalized_channel in ('beta', 'aurora')
-    AND m.environment.system.gfx.features.compositor in ("webrender", "webrender_software", "webrender_software_d3d11")
-    AND cr.normalized_channel in ('beta', 'aurora')
-    AND cr.payload.session_id not in (
-        SELECT
-          session_id
-        FROM
-          `moz-fx-data-shared-prod.telemetry.events`
-        WHERE
-          event_category = 'normandy'
-          AND event_method = 'enroll'
-          AND submission_date >= '2021-07-13'
-          AND event_string_value = 'bug-1719576-pref-fission-beta-91-experiment-beta-91-91')
-    AND m.payload.info.session_id not in (
-        SELECT
-          session_id
-        FROM
-          `moz-fx-data-shared-prod.telemetry.events`
-        WHERE
-          event_category = 'normandy'
-          AND event_method = 'enroll'
-          AND submission_date >= '2021-07-13'
-          AND event_string_value = 'bug-1719576-pref-fission-beta-91-experiment-beta-91-91')
+    WHERE DATE(m.submission_timestamp) >= '2021-08-03'
+    AND DATE(cr.submission_timestamp) >= '2021-08-03'
     )
 """
 experiments_column_type = "native"
@@ -141,7 +90,7 @@ daily = [
 ## Performance
     [metrics.perf_page_load_time_ms]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.perf_page_load_time_ms")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.perf_page_load_time_ms.statistics.bootstrap_mean]
@@ -160,7 +109,7 @@ daily = [
 
     [metrics.time_to_first_interaction_ms]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.time_to_first_interaction_ms")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.time_to_first_interaction_ms.statistics.bootstrap_mean]
@@ -179,7 +128,7 @@ daily = [
 
     [metrics.input_event_response_ms]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.input_event_response_ms")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.input_event_response_ms.statistics.bootstrap_mean]
@@ -198,7 +147,7 @@ daily = [
 
     [metrics.input_event_response_ms_parent]
     select_expression = '{{agg_histogram_mean("payload.histograms.input_event_response_ms")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.input_event_response_ms.statistics.bootstrap_mean]
@@ -217,7 +166,7 @@ daily = [
 
     [metrics.perf_first_contentful_paint_ms]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.perf_first_contentful_paint_ms")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.perf_first_contentful_paint_ms.statistics.bootstrap_mean]
@@ -237,7 +186,7 @@ daily = [
 
     [metrics.gpu_keypress_present_latency]
     select_expression = '{{agg_histogram_mean("payload.processes.gpu.histograms.keypress_present_latency")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.gpu_keypress_present_latency.statistics.bootstrap_mean]
@@ -257,7 +206,7 @@ daily = [
 
     [metrics.fx_new_window_ms]
     select_expression = '{{agg_histogram_mean("payload.histograms.fx_new_window_ms")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.fx_new_window_ms.statistics.bootstrap_mean]
@@ -276,7 +225,7 @@ daily = [
 
     [metrics.fx_tab_switch_composite_e10s_ms]
     select_expression = '{{agg_histogram_mean("payload.histograms.fx_tab_switch_composite_e10s_ms")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.fx_tab_switch_composite_e10s_ms.statistics.bootstrap_mean]
@@ -295,7 +244,7 @@ daily = [
 
    [metrics.content_frame_time_vsync]
     select_expression = '{{agg_histogram_mean("payload.histograms.content_frame_time_vsync")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.content_frame_time_vsync.statistics.bootstrap_mean]
@@ -314,7 +263,7 @@ daily = [
 
    [metrics.child_process_launch_ms]
     select_expression = '{{agg_histogram_mean("payload.histograms.child_process_launch_ms")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.child_process_launch_ms.statistics.bootstrap_mean]
@@ -333,7 +282,7 @@ daily = [
 
    [metrics.checkerboard_severity]
     select_expression = '{{agg_histogram_mean("payload.processes.gpu.histograms.checkerboard_severity")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.checkerboard_severity.statistics.bootstrap_mean]
@@ -356,7 +305,7 @@ daily = [
                                 SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_active_ticks, 0))*5/3600
                                 )
                                 """
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.checkerboard_severity_count_per_hour.statistics.bootstrap_mean]
@@ -376,7 +325,7 @@ daily = [
 ## Memory
     [metrics.memory_total]
     select_expression = '{{agg_histogram_mean("payload.histograms.memory_total")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.memory_total.statistics.bootstrap_mean]
@@ -395,7 +344,7 @@ daily = [
 
     [metrics.memory_unique_content_startup]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.memory_unique_content_startup")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.memory_unique_content_startup.statistics.bootstrap_mean]
@@ -414,7 +363,7 @@ daily = [
 
     [metrics.cycle_collector_max_pause]
     select_expression = '{{agg_histogram_mean("payload.histograms.cycle_collector_max_pause")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.cycle_collector_max_pause.statistics.bootstrap_mean]
@@ -433,7 +382,7 @@ daily = [
 
     [metrics.cycle_collector_max_pause_content]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.cycle_collector_max_pause")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.cycle_collector_max_pause_content.statistics.bootstrap_mean]
@@ -452,7 +401,7 @@ daily = [
 
    [metrics.gc_max_pause_ms_2]
     select_expression = '{{agg_histogram_mean("payload.histograms.gc_max_pause_ms_2")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.gc_max_pause_ms_2.statistics.bootstrap_mean]
@@ -471,7 +420,7 @@ daily = [
 
    [metrics.gc_max_pause_ms_2_content]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.cycle_collector_max_pause")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.gc_max_pause_ms_2_content.statistics.bootstrap_mean]
@@ -490,7 +439,7 @@ daily = [
 
    [metrics.gc_ms]
     select_expression = '{{agg_histogram_mean("payload.histograms.gc_ms")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.gc_ms.statistics.bootstrap_mean]
@@ -509,7 +458,7 @@ daily = [
 
     [metrics.gc_ms_content]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.gc_ms")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.gc_ms_content.statistics.bootstrap_mean]
@@ -528,7 +477,7 @@ daily = [
 
     [metrics.gc_slice_during_idle]
     select_expression = '{{agg_histogram_mean("payload.histograms.gc_slice_during_idle")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.gc_slice_during_idle.statistics.bootstrap_mean]
@@ -547,7 +496,7 @@ daily = [
 
     [metrics.gc_slice_during_idle_content]
     select_expression = '{{agg_histogram_mean("payload.processes.content.histograms.gc_slice_during_idle")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
 #        [metrics.gc_slice_during_idle_content.statistics.bootstrap_mean]
@@ -567,49 +516,49 @@ daily = [
 ## Engagement
     [metrics.subsession_length]
     select_expression = 'SUM(COALESCE(payload.info.subsession_length, 0)/3600)'
-    data_source = 'main_cleaned'
+    data_source = 'main'
         [metrics.subsession_length.statistics.bootstrap_mean]
         [metrics.subsession_length.statistics.deciles]
 
     [metrics.active_hrs]
     select_expression = 'SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_active_ticks, 0)*5/3600)'
-    data_source = 'main_cleaned'
+    data_source = 'main'
         [metrics.active_hrs.statistics.bootstrap_mean]
         [metrics.active_hrs.statistics.deciles]
 
     [metrics.uri_cnt]
     select_expression = 'SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_total_uri_count, 0))'
-    data_source = 'main_cleaned'
+    data_source = 'main'
         [metrics.uri_cnt.statistics.bootstrap_mean]
         [metrics.uri_cnt.statistics.deciles]
 
     [metrics.max_concurrent_tab_count]
     select_expression = 'AVG(COALESCE(payload.processes.parent.scalars.browser_engagement_max_concurrent_tab_count, 0))'
-    data_source = 'main_cleaned'
+    data_source = 'main'
         [metrics.max_concurrent_tab_count.statistics.bootstrap_mean]
         [metrics.max_concurrent_tab_count.statistics.deciles]
 
     [metrics.tab_open_event_count]
     select_expression = 'SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_tab_open_event_count, 0))'
-    data_source = 'main_cleaned'
+    data_source = 'main'
         [metrics.tab_open_event_count.statistics.bootstrap_mean]
         [metrics.tab_open_event_count.statistics.deciles]
 
    [metrics.content_process_count]
     select_expression = '{{agg_histogram_mean("payload.histograms.content_process_count")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
         [metrics.content_process_count.statistics.bootstrap_mean]
         [metrics.content_process_count.statistics.deciles]
 
    [metrics.content_process_max]
     select_expression = 'MAX(COALESCE(`moz-fx-data-shared-prod`.udf.histogram_max_key_with_nonzero_value(payload.histograms.content_process_max), 0))'
-    data_source = 'main_cleaned'
+    data_source = 'main'
         [metrics.content_process_max.statistics.bootstrap_mean]
         [metrics.content_process_max.statistics.deciles]
 
    [metrics.loaded_tab_count]
     select_expression = '{{agg_histogram_mean("payload.histograms.loaded_tab_count")}}'
-    data_source = 'main_cleaned'
+    data_source = 'main'
         [metrics.loaded_tab_count.statistics.bootstrap_mean]
         [metrics.loaded_tab_count.statistics.deciles]
 
@@ -621,7 +570,7 @@ daily = [
             SUM(active_s/3600)
          )
         """
-    data_source = 'crash_cleaned'
+    data_source = 'crash_hour'
     bigger_is_better = false
 
         [metrics.main_crashes_per_hour.statistics.bootstrap_mean]
@@ -646,7 +595,7 @@ daily = [
             SUM(active_s/3600)
          )
         """
-    data_source = 'crash_cleaned'
+    data_source = 'crash_hour'
     bigger_is_better = false
 
         [metrics.content_crashes_per_hour.statistics.bootstrap_mean]
@@ -670,7 +619,7 @@ daily = [
             SUM(active_s/3600)
          )
         """
-    data_source = 'crash_cleaned'
+    data_source = 'crash_hour'
     bigger_is_better = false
 
         [metrics.oom_crashes_per_hour.statistics.bootstrap_mean]
@@ -697,7 +646,7 @@ daily = [
             SUM(active_s/3600)
          )
         """
-    data_source = 'crash_cleaned'
+    data_source = 'crash_hour'
     bigger_is_better = false
 
         [metrics.content_shutdown_crashes_per_hour.statistics.bootstrap_mean]
@@ -721,7 +670,7 @@ daily = [
             SUM(active_s/3600)
          )
         """
-    data_source = 'crash_cleaned'
+    data_source = 'crash_hour'
     bigger_is_better = false
 
         [metrics.shutdown_hangs_per_hour.statistics.bootstrap_mean]
@@ -740,7 +689,7 @@ daily = [
 
     [metrics.crash_tab_ui_presented]
     select_expression = """SUM(COALESCE(payload.processes.parent.scalars.dom_contentprocess_crash_tab_ui_presented, 0))"""
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
         [metrics.crash_tab_ui_presented.statistics.bootstrap_mean]
@@ -751,7 +700,7 @@ daily = [
 
     [metrics.crash_subframe_ui_presented]
     select_expression = """SUM(COALESCE(payload.processes.parent.scalars.dom_contentprocess_crash_subframe_ui_presented, 0))"""
-    data_source = 'main_cleaned'
+    data_source = 'main'
     bigger_is_better = false
 
         [metrics.crash_subframe_ui_presented.statistics.bootstrap_mean]
