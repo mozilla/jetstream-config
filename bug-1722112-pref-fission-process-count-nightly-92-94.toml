@@ -32,6 +32,7 @@ from_expression = """
     )
     WHERE DATE(m.submission_timestamp) >= '2021-08-03'
     AND DATE(c.submission_timestamp) >= '2021-08-03'
+    )
 """
 experiments_column_type = "native"
 
