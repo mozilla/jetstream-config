@@ -29,7 +29,6 @@ from_expression = """
     INNER JOIN  `moz-fx-data-shared-prod`.telemetry.main m
       ON m.client_id = cr.client_id
       AND DATE(m.submission_timestamp) = DATE(cr.submission_timestamp)
-    )
     WHERE DATE(m.submission_timestamp) >= '2021-08-03'
     AND DATE(c.submission_timestamp) >= '2021-08-03'
     )
