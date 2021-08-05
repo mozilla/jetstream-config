@@ -26,6 +26,7 @@ from_expression = """
     COALESCE(m.payload.processes.parent.scalars.browser_engagement_active_ticks, 0)*5 as active_s
   FROM
     `moz-fx-data-shared-prod`.telemetry.crash cr
+    )
 """
 experiments_column_type = "native"
 
