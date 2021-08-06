@@ -1,5 +1,43 @@
-[metrics]
+[experiment]
+Segments = ['urlbar_exposed', 'urlbar_users']
 
+[segments.urlbar_exposed]
+select_expression = 'COALESCE(LOGICAL_OR((events.key like "urlbar#%#%") AND (events.value > 0)), FALSE)'
+data_source = "clients_daily_unnested_exposed"
+
+[segments.data_sources.clients_daily_unnested_exposed]
+from_expression = """(
+  SELECT 
+    submission_date,
+    client_id,
+    events
+  FROM
+    `moz-fx-data-shared-prod`.telemetry.clients_daily
+  CROSS JOIN
+    UNNEST(scalar_parent_telemetry_event_counts_sum) AS events
+)"""
+window_start = 0
+window_end = 28
+
+[segments.urlbar_users]
+select_expression = 'COALESCE(LOGICAL_OR((events.key like "urlbar#%#%") AND (events.value > 0)), FALSE)'
+data_source = "clients_daily_unnested_users"
+
+[segments.data_sources.clients_daily_unnested_users]
+from_expression = """(
+  SELECT 
+    submission_date,
+    client_id,
+    events
+  FROM
+    `moz-fx-data-shared-prod`.telemetry.clients_daily
+  CROSS JOIN
+    UNNEST(scalar_parent_telemetry_event_counts_sum) AS events
+)"""
+window_start = -7
+window_end = 0
+
+[metrics]
 weekly = [
 	"urlbar_search_count", 
 	"autofill_count", 
@@ -95,42 +133,3 @@ description = "Number of unknown types selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
 [metrics.unknown_count.statistics.bootstrap_mean]
 
-[metrics.active_hours]
-exposure_basis = ["exposures", "enrollments"]
-[metrics.active_hours.statistics.bootstrap_mean]
-
-[metrics.uri_count]
-exposure_basis = ["exposures", "enrollments"]
-[metrics.uri_count.statistics.bootstrap_mean]
-
-[metrics.search_count]
-exposure_basis = ["exposures", "enrollments"]
-[metrics.search_count.statistics.bootstrap_mean]
-
-[metrics.tagged_search_count]
-exposure_basis = ["exposures", "enrollments"]
-[metrics.tagged_search_count.statistics.bootstrap_mean]
-
-[metrics.tagged_follow_on_search_count]
-exposure_basis = ["exposures", "enrollments"]
-[metrics.tagged_follow_on_search_count.statistics.bootstrap_mean]
-
-[metrics.ad_clicks]
-exposure_basis = ["exposures", "enrollments"]
-[metrics.ad_clicks.statistics.bootstrap_mean]
-
-[metrics.searches_with_ads]
-exposure_basis = ["exposures", "enrollments"]
-[metrics.searches_with_ads.statistics.bootstrap_mean]
-
-[metrics.organic_search_count]
-exposure_basis = ["exposures", "enrollments"]
-[metrics.organic_search_count.statistics.bootstrap_mean]
-
-[metrics.unenroll]
-exposure_basis = ["exposures", "enrollments"]
-[metrics.unenroll.statistics.binomial]
-
-[metrics.days_of_use]
-exposure_basis = ["exposures", "enrollments"]
-[metrics.days_of_use.statistics.bootstrap_mean]
