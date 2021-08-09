@@ -1,23 +1,5 @@
 [experiment]
-segments = ['urlbar_exposed', 'urlbar_users']
-
-[segments.urlbar_exposed]
-select_expression = 'COALESCE(LOGICAL_OR((events.key like "urlbar#%#%") AND (events.value > 0)), FALSE)'
-data_source = "clients_daily_unnested_exposed"
-
-[segments.data_sources.clients_daily_unnested_exposed]
-from_expression = """(
-  SELECT 
-    submission_date,
-    client_id,
-    events
-  FROM
-    `moz-fx-data-shared-prod`.telemetry.clients_daily
-  CROSS JOIN
-    UNNEST(scalar_parent_telemetry_event_counts_sum) AS events
-)"""
-window_start = 0
-window_end = 28
+segments = ['urlbar_users']
 
 [segments.urlbar_users]
 select_expression = 'COALESCE(LOGICAL_OR((events.key like "urlbar#%#%") AND (events.value > 0)), FALSE)'
