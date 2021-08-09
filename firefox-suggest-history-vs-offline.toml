@@ -1,5 +1,5 @@
 [experiment]
-Segments = ['urlbar_exposed', 'urlbar_users']
+segments = ['urlbar_exposed', 'urlbar_users']
 
 [segments.urlbar_exposed]
 select_expression = 'COALESCE(LOGICAL_OR((events.key like "urlbar#%#%") AND (events.value > 0)), FALSE)'
