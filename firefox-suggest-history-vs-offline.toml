@@ -19,8 +19,12 @@ from_expression = """(
 window_start = -7
 window_end = 0
 
-segments.searchsuggestion_users]
-select_expression = 'COALESCE((SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_searchsuggestion_sum) x), 0)) > 0), FALSE)'
+[segments.searchsuggestion_users]
+select_expression = """
+  COALESCE((SUM(COALESCE((
+    SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_searchsuggestion_sum
+  ) x), 0)) > 0), FALSE)
+"""
 data_source = "clients_daily"
 
 [segments.data_sources.clients_daily]
