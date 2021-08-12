@@ -1,11 +1,11 @@
 [experiment]
-segments = ['urlbar_users']
+segments = ['urlbar_users', 'searchsuggestion_users']
 
 [segments.urlbar_users]
 select_expression = 'COALESCE(LOGICAL_OR((events.key like "urlbar#%#%") AND (events.value > 0)), FALSE)'
-data_source = "clients_daily_unnested_users"
+data_source = "clients_daily_unnested"
 
-[segments.data_sources.clients_daily_unnested_users]
+[segments.data_sources.clients_daily_unnested]
 from_expression = """(
   SELECT 
     submission_date,
@@ -18,6 +18,19 @@ from_expression = """(
 )"""
 window_start = -7
 window_end = 0
+
+[segments.data_sources.clients_daily_custom_windows]
+from_expression = "mozdata.telemetry.clients_daily"
+window_start = -7
+window_end = 0
+
+[segments.searchsuggestion_users]
+select_expression = """
+  COALESCE((SUM(COALESCE((
+    SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_searchsuggestion_sum
+  ) x), 0)) > 0), FALSE)
+"""
+data_source = "clients_daily_custom_windows"
 
 [metrics]
 weekly = [
@@ -114,4 +127,3 @@ data_source = "clients_daily"
 description = "Number of unknown types selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
 [metrics.unknown_count.statistics.bootstrap_mean]
-
