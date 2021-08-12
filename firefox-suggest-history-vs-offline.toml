@@ -25,9 +25,10 @@ select_expression = """
     SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_searchsuggestion_sum
   ) x), 0)) > 0), FALSE)
 """
-data_source = "clients_daily"
+data_source = "clients_daily_custom_windows"
 
-[segments.data_sources.clients_daily]
+[segments.data_sources.clients_daily_custom_windows]
+from_expression = "mozdata.telemetry.clients_daily"
 window_start = -7
 window_end = 0
 
