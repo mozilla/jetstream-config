@@ -32,30 +32,3 @@ from_expression = "mozdata.telemetry.clients_daily"
 window_start = -7
 window_end = 0
 
-[metrics]
-weekly = [
-	"urlbar_search_count", 
-	"autofill_count", 
-	"bookmark_count", 
-	"formhistory_count", 
-	"history_count", 
-	"searchengine_count", 
-	"searchsuggestion_count", 
-	"topsite_count", 
-	"visiturl_count", 
-	"unknown_count"
-]
-overall = [
-	"urlbar_search_count", 
-	"autofill_count", 
-	"bookmark_count", 
-	"formhistory_count", 
-	"history_count", 
-	"searchengine_count", 
-	"searchsuggestion_count", 
-	"topsite_count", 
-	"visiturl_count", 
-	"unknown_count"
-]
-
-
