@@ -26,7 +26,7 @@ from_expression = """
     COALESCE(m.payload.processes.parent.scalars.browser_engagement_active_ticks, 0)*5 as active_s
   FROM
     `moz-fx-data-shared-prod`.telemetry.crash cr
-    INNER JOIN  `moz-fx-data-shared-prod`.telemetry.main m
+    INNER JOIN  `moz-fx-data-shared-prod`.telemetry_stable.main_v4 m
       ON m.client_id = cr.client_id
       AND DATE(m.submission_timestamp) = DATE(cr.submission_timestamp)
     WHERE DATE(m.submission_timestamp) >= '2021-08-03'
