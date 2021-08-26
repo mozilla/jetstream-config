@@ -2,8 +2,7 @@
 
 segments = [
     'low_cpu', 'high_cpu',
-    'mem_lte_2GB', 'mem_gt_2GB_lte_4GB', 'mem_gt_4GB_lte_6GB', 'mem_gt_6GB_lte_8GB', 'high_mem',
-    'win7'
+    'mem_lte_2GB', 'mem_gt_2GB_lte_4GB', 'mem_gt_6GB_lte_8GB', 'high_mem',
 ]
 
 enrollment_period = 7
@@ -25,7 +24,7 @@ from_expression = """
     cr.environment.experiments,
     COALESCE(m.payload.processes.parent.scalars.browser_engagement_active_ticks, 0)*5 as active_s
   FROM
-    `moz-fx-data-shared-prod`.telemetry.crash cr
+    `moz-fx-data-shared-prod.telemetry_stable.crash_v4` cr
     INNER JOIN  `moz-fx-data-shared-prod`.telemetry_stable.main_v4 m
       ON m.client_id = cr.client_id
       AND DATE(m.submission_timestamp) = DATE(cr.submission_timestamp)
@@ -56,9 +55,7 @@ overall = [
     'tab_open_event_count', 'content_process_count',
     'content_process_max', 'loaded_tab_count',
     'main_crashes_per_hour', 'content_crashes_per_hour',
-    'oom_crashes_per_hour', 'content_shutdown_crashes_per_hour',
-    'shutdown_hangs_per_hour', 'crash_tab_ui_presented',
-    'crash_subframe_ui_presented'
+    'oom_crashes_per_hour', 'shutdown_hangs_per_hour'
 ]
 
 weekly = [
@@ -79,9 +76,7 @@ weekly = [
     'tab_open_event_count', 'content_process_count',
     'content_process_max', 'loaded_tab_count',
     'main_crashes_per_hour', 'content_crashes_per_hour',
-    'oom_crashes_per_hour', 'content_shutdown_crashes_per_hour',
-    'shutdown_hangs_per_hour', 'crash_tab_ui_presented',
-    'crash_subframe_ui_presented'
+    'oom_crashes_per_hour', 'shutdown_hangs_per_hour'
 ]
 
 daily = [
@@ -636,32 +631,6 @@ daily = [
 #        pre_treatments = ["remove_nulls"]
 #        log_space = true
 
-    [metrics.content_shutdown_crashes_per_hour]
-    select_expression = """
-        SAFE_DIVIDE(
-            SUM(
-                COALESCE(IF(REGEXP_CONTAINS(payload.process_type, 'content')
-                AND REGEXP_CONTAINS(payload.metadata.ipc_channel_error, 'ShutDownKill'), 1, 0), 0)
-                ),
-            SUM(active_s/3600)
-         )
-        """
-    data_source = 'crash_hour'
-    bigger_is_better = false
-
-        [metrics.content_shutdown_crashes_per_hour.statistics.bootstrap_mean]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.content_shutdown_crashes_per_hour.statistics.deciles]
-        pre_treatments = ["remove_nulls"]
-
-#        [metrics.content_shutdown_crashes_per_hour.statistics.kernel_density_estimate]
-#        pre_treatments = ["remove_nulls"]
-#        log_space = true
-#
-#        [metrics.content_shutdown_crashes_per_hour.statistics.empirical_cdf]
-#        pre_treatments = ["remove_nulls"]
-#        log_space = true
 
     [metrics.shutdown_hangs_per_hour]
     select_expression = """
@@ -687,28 +656,6 @@ daily = [
 #        pre_treatments = ["remove_nulls"]
 #        log_space = true
 
-    [metrics.crash_tab_ui_presented]
-    select_expression = """SUM(COALESCE(payload.processes.parent.scalars.dom_contentprocess_crash_tab_ui_presented, 0))"""
-    data_source = 'main'
-    bigger_is_better = false
-
-        [metrics.crash_tab_ui_presented.statistics.bootstrap_mean]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.crash_tab_ui_presented.statistics.deciles]
-        pre_treatments = ["remove_nulls"]
-
-    [metrics.crash_subframe_ui_presented]
-    select_expression = """SUM(COALESCE(payload.processes.parent.scalars.dom_contentprocess_crash_subframe_ui_presented, 0))"""
-    data_source = 'main'
-    bigger_is_better = false
-
-        [metrics.crash_subframe_ui_presented.statistics.bootstrap_mean]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.crash_subframe_ui_presented.statistics.deciles]
-        pre_treatments = ["remove_nulls"]
-
 
 ## Segments
 [segments]
@@ -733,10 +680,6 @@ data_source = "clients_last_seen"
 select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 2048 AND 4095, FALSE)'
 data_source = "clients_last_seen"
 
-[segments.mem_gt_4GB_lte_6GB]
-select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 4096 AND 6143, FALSE)'
-data_source = "clients_last_seen"
-
 [segments.mem_gt_6GB_lte_8GB]
 select_expression = 'COALESCE(MAX(memory_mb) BETWEEN 6144 AND 8191, FALSE)'
 data_source = "clients_last_seen"
@@ -751,8 +694,4 @@ data_source = "clients_last_seen"
 
 [segments.high_mem]
 select_expression = 'COALESCE(MAX(memory_mb) >= 8192, FALSE)'
-data_source = "clients_last_seen"
-
-[segments.win7]
-select_expression = """COALESCE(LOGICAL_OR(os='Windows_NT' and normalized_os_version = '6.1'), FALSE)"""
 data_source = "clients_last_seen"
