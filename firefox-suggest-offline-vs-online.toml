@@ -16,10 +16,13 @@ from_expression = """(
   client_choices AS (
   SELECT 
     client_id,
-    CASE --TO DO: REPLACE WITH ACTUAL PREFS
-        WHEN user_pref_browser_search_suggest_enabled = "false" THEN "No Content"
-        WHEN user_pref_browser_search_suggest_enabled = "true" AND user_pref_browser_urlbar_suggest_searches = "false" THEN "Non-sponsored Only"
-        WHEN user_pref_browser_search_suggest_enabled = "true" AND user_pref_browser_urlbar_suggest_searches = "true" THEN "All Content"
+    CASE
+        WHEN user_pref_browser_urlbar_suggest_quicksuggest = 'false' 
+        THEN 'No Content'
+        WHEN user_pref_browser_urlbar_suggest_quicksuggest = 'true' AND user_pref_browser_urlbar_suggest_quicksuggest_sponsored = 'false' 
+        THEN 'Non-sponsored Only'
+        WHEN user_pref_browser_urlbar_suggest_quicksuggest = 'true' AND user_pref_browser_urlbar_suggest_quicksuggest_sponsored = 'true' 
+        THEN 'All Content'
         ELSE NULL
     END AS choice,
     COUNT(DISTINCT c.submission_date) AS days
@@ -30,13 +33,13 @@ from_expression = """(
   USING 
     ( client_id )
   WHERE 
-    c.submission_date >= "2021-09-30"
+    c.submission_date >= '2021-09-30'
   AND 
     e.enrollment_date  <= c.submission_date
-  AND --TO DO: REPLACE WITH ACTUAL PREFS 
-    user_pref_browser_search_suggest_enabled IN ("true", "false")
-  AND --TO DO: REPLACE WITH ACTUAL PREFS
-    user_pref_browser_urlbar_suggest_searches IN ("true", "false")
+  AND
+    user_pref_browser_urlbar_suggest_quicksuggest IN ('true', 'false')
+  AND
+    user_pref_browser_urlbar_suggest_quicksuggest_sponsored IN ('true', 'false')
   GROUP BY 1, 2
 )
 SELECT 
