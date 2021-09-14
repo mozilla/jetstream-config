@@ -1,0 +1,62 @@
+[experiment]
+segments = ['no_content', 'nonsponsored_only', 'all_content']
+
+[segments.data_sources.clients_by_choice]
+from_expression = """(
+  WITH enrollments as (
+    SELECT 
+        client_id,
+        MIN(enrollment_date) AS enrollment_date
+    FROM
+        `moz-fx-data-experiments.mozanalysis.firefox_suggest_offline_vs_online_enrollments_daily`
+    WHERE 
+        enrollment_date IS NOT NULL
+    GROUP BY 1
+  ),
+  client_choices AS (
+  SELECT 
+    client_id,
+    CASE --TO DO: REPLACE WITH ACTUAL PREFS
+        WHEN user_pref_browser_search_suggest_enabled = "false" THEN "No Content"
+        WHEN user_pref_browser_search_suggest_enabled = "true" AND user_pref_browser_urlbar_suggest_searches = "false" THEN "Non-sponsored Only"
+        WHEN user_pref_browser_search_suggest_enabled = "true" AND user_pref_browser_urlbar_suggest_searches = "true" THEN "All Content"
+        ELSE NULL
+    END AS choice,
+    COUNT(DISTINCT c.submission_date) AS days
+  FROM 
+    enrollments e
+  LEFT JOIN 
+    `moz-fx-data-shared-prod.telemetry.clients_daily` c
+  USING 
+    ( client_id )
+  WHERE 
+    c.submission_date >= "2021-09-30"
+  AND 
+    e.enrollment_date  <= c.submission_date
+  AND --TO DO: REPLACE WITH ACTUAL PREFS 
+    user_pref_browser_search_suggest_enabled IN ("true", "false")
+  AND --TO DO: REPLACE WITH ACTUAL PREFS
+    user_pref_browser_urlbar_suggest_searches IN ("true", "false")
+  GROUP BY 1, 2
+)
+SELECT 
+    client_id,
+    FIRST_VALUE(choice) OVER (ORDER BY days DESC) AS choice
+FROM 
+    client_choices
+)"""
+window_start = 0
+window_end = 28 
+
+
+[segments.no_content]
+select_expression = 'CAST(MAX(choice) = "No Content" AS BOOL)'
+data_source = "clients_by_choice"
+
+[segments.nonsponsored_only]
+select_expression = 'CAST(MAX(choice) = "Non-sponsored Only" AS BOOL)'
+data_source = "clients_by_choice"
+
+[segments.all_content]
+select_expression = 'CAST(MAX(choice) = "All Content" AS BOOL)'
+data_source = "clients_by_choice"
