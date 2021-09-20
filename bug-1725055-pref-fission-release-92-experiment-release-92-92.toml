@@ -2,11 +2,11 @@
 
 segments = [
     'low_cpu', 'high_cpu',
-    'mem_lte_2GB', 'mem_gt_2GB_lte_4GB', 'mem_gt_6GB_lte_8GB', 'high_mem',
+    'mem_lte_2GB', 'mem_gt_2GB_lte_4GB', 'mem_gt_6GB_lte_8GB', 'high_mem'
 ]
 
 enrollment_period = 7
-end_date = "2021-09-07"
+end_date = "2021-10-05"
 
 reference_branch = "fission-disabled"
 
@@ -24,8 +24,8 @@ from_expression = """ (
   FROM
     `moz-fx-data-shared-prod`.telemetry.main
   WHERE
-    DATE(submission_timestamp) >= '2021-08-10'
-    AND normalized_channel in ('beta', 'aurora')
+    DATE(submission_timestamp) >= '2021-09-07'
+    AND normalized_channel = 'release'
     AND environment.system.gfx.features.compositor in ("webrender", "webrender_software", "webrender_software_d3d11")
     AND payload.info.session_id not in (
         SELECT
@@ -35,8 +35,8 @@ from_expression = """ (
         WHERE
           event_category = 'normandy'
           AND event_method = 'enroll'
-          AND submission_date >= '2021-08-10'
-          AND event_string_value = 'bug-1724054-pref-fission-beta-92-experiment-beta-92-92')
+          AND submission_date >= '2021-09-07'
+          AND event_string_value = 'bug-1725055-pref-fission-release-92-experiment-release-92-92')
           )
 """
 experiments_column_type = "native"
@@ -51,16 +51,16 @@ from_expression = """
     cr.environment.experiments,
     COALESCE(m.payload.processes.parent.scalars.browser_engagement_active_ticks, 0)*5 as active_s
   FROM
-    `moz-fx-data-shared-prod`.telemetry.crash cr
+    `moz-fx-data-shared-prod.telemetry_stable.crash_v4` cr
     INNER JOIN  `moz-fx-data-shared-prod`.telemetry.main m
       ON m.client_id = cr.client_id
       AND DATE(m.submission_timestamp) = DATE(cr.submission_timestamp)
   WHERE
-    DATE(cr.submission_timestamp) >= '2021-08-10'
-    AND DATE(m.submission_timestamp) >= '2021-08-10'
-    AND m.normalized_channel in ('beta', 'aurora')
+    DATE(cr.submission_timestamp) >= '2021-09-07'
+    AND DATE(m.submission_timestamp) >= '2021-09-07'
+    AND m.normalized_channel = 'release'
     AND m.environment.system.gfx.features.compositor in ("webrender", "webrender_software", "webrender_software_d3d11")
-    AND cr.normalized_channel in ('beta', 'aurora')
+    AND cr.normalized_channel = 'release'
     AND cr.payload.session_id not in (
         SELECT
           session_id
@@ -69,8 +69,8 @@ from_expression = """
         WHERE
           event_category = 'normandy'
           AND event_method = 'enroll'
-          AND submission_date >= '2021-08-10'
-          AND event_string_value = 'bug-1724054-pref-fission-beta-92-experiment-beta-92-92')
+          AND submission_date >= '2021-09-07'
+          AND event_string_value = 'bug-1725055-pref-fission-release-92-experiment-release-92-92')
     AND m.payload.info.session_id not in (
         SELECT
           session_id
@@ -79,8 +79,8 @@ from_expression = """
         WHERE
           event_category = 'normandy'
           AND event_method = 'enroll'
-          AND submission_date >= '2021-08-10'
-          AND event_string_value = 'bug-1724054-pref-fission-beta-92-experiment-beta-92-92')
+          AND submission_date >= '2021-09-07'
+          AND event_string_value = 'bug-1725055-pref-fission-release-92-experiment-release-92-92')
     )
 """
 experiments_column_type = "native"
@@ -106,7 +106,7 @@ overall = [
     'tab_open_event_count', 'content_process_count',
     'content_process_max', 'loaded_tab_count',
     'main_crashes_per_hour', 'content_crashes_per_hour',
-    'oom_crashes_per_hour', 'shutdown_hangs_per_hour',
+    'oom_crashes_per_hour', 'shutdown_hangs_per_hour'
 ]
 
 weekly = [
@@ -127,7 +127,7 @@ weekly = [
     'tab_open_event_count', 'content_process_count',
     'content_process_max', 'loaded_tab_count',
     'main_crashes_per_hour', 'content_crashes_per_hour',
-    'oom_crashes_per_hour', 'shutdown_hangs_per_hour',
+    'oom_crashes_per_hour', 'shutdown_hangs_per_hour'
 ]
 
 daily = [
@@ -681,6 +681,7 @@ daily = [
 #        [metrics.oom_crashes_per_hour.statistics.empirical_cdf]
 #        pre_treatments = ["remove_nulls"]
 #        log_space = true
+
 
     [metrics.shutdown_hangs_per_hour]
     select_expression = """
