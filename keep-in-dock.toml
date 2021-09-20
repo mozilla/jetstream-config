@@ -1,0 +1,10 @@
+[experiment]
+segments = ["regular_users_v3", "new_or_resurrected_v3", "is_core_active_v1", "is_casual_or_infrequent"]
+
+[segments.is_core_active_v1]
+select_expression = '{{agg_any("is_core_active_v1")}}'
+data_source = "clients_last_seen"
+
+[segments.is_casual_or_infrequent]
+select_expression = 'LOGICAL_OR(BIT_COUNT(days_seen_bits) < 14)'
+data_source = "clients_last_seen"
