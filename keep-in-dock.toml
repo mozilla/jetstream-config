@@ -11,3 +11,20 @@ data_source = "clients_last_seen"
 [segments.is_casual_or_infrequent]
 select_expression = 'COALESCE(LOGICAL_OR(BIT_COUNT(days_seen_bits) < 14), FALSE)'
 data_source = "clients_last_seen"
+
+[metrics]
+overall = ["was_ever_default_browser", "was_never_default_browser"]
+
+[metrics.was_ever_default_browser]
+select_expression = "LOGICAL_OR(is_default_browser)"
+data_source = "clients_daily"
+
+[metrics.was_ever_default_browser.statistics.binomial]
+pre_treatments = ["remove_nulls"]
+
+[metrics.was_never_default_browser]
+select_expression = "LOGICAL_OR(NOT is_default_browser)"
+data_source = "clients_daily"
+
+[metrics.was_never_default_browser.statistics.binomial]
+pre_treatments = ["remove_nulls"]
