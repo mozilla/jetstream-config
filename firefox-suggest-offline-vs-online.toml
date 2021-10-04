@@ -1,0 +1,45 @@
+[experiment]
+segments = ['exposed', 'non_exposed']
+
+[segments.data_sources.events_unnested]
+from_expression = """(
+  SELECT
+    *,
+    e.key as experiment_name
+  FROM
+    `moz-fx-data-shared-prod.telemetry.events`
+  CROSS JOIN UNNEST(experiments) e
+)"""
+window_start = 0
+window_end = 28 
+
+[segments.exposed]
+select_expression = """
+  COALESCE(CAST(MAX(
+    CASE WHEN event_category = 'normandy'
+           AND event_method = 'expose'
+           AND event_object = 'nimbus_experiment'
+           AND experiment_name = 'firefox-suggest-offline-vs-online'
+           AND normalized_channel = 'release'
+         THEN 1
+         ELSE 0
+    END
+  ) AS BOOL), FALSE)
+"""
+data_source = "events_unnested"
+
+[segments.non_exposed]
+select_expression = """
+  COALESCE(  NOT  CAST(MAX(
+    CASE WHEN event_category = 'normandy'
+           AND event_method = 'expose'
+           AND event_object = 'nimbus_experiment'
+           AND experiment_name = 'firefox-suggest-offline-vs-online'
+           AND normalized_channel = 'release'
+         THEN 1
+         ELSE 0
+    END
+  ) AS BOOL), FALSE)
+"""
+data_source = "events_unnested"
+
