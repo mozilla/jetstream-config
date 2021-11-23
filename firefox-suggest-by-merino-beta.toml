@@ -28,7 +28,7 @@ data_source = "events_unnested"
 
 [metrics]
 weekly = ["merino_latency", "remote_settings_latency", "merino_success", "merino_timeout", "merino_network_error", "merino_http_error"]
-overall = ["merino_latency", "remote_settings_latency" "merino_success", "merino_timeout", "merino_network_error", "merino_http_error"]
+overall = ["merino_latency", "remote_settings_latency", "merino_success", "merino_timeout", "merino_network_error", "merino_http_error"]
 
 [metrics.merino_latency]
 select_expression = """
