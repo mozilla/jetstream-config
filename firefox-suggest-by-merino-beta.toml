@@ -26,3 +26,76 @@ select_expression = """
 """
 data_source = "events_unnested"
 
+[metrics]
+weekly = ["merino_latency", "remote_settings_latency"]
+overall = ["merino_latency", "remote_settings_latency"]
+
+[metrics.merino_latency]
+select_expression = """
+  SAFE_DIVIDE(
+    SUM(COALESCE(`moz-fx-data-shared-prod.udf.json_extract_histogram`(
+      payload.histograms.fx_urlbar_merino_latency_ms
+    ).sum, 0)), 
+    SUM(COALESCE(`moz-fx-data-shared-prod.udf.histogram_to_threshold_count`(
+      payload.histograms.fx_urlbar_merino_latency_ms
+    , -1), 0))
+  )
+"""
+data_source = "main"
+friendly_name = "Merino Latency"
+description = "Average Merino latency per user"
+
+[metrics.remote_settings_latency]
+select_expression = """
+  SAFE_DIVIDE(
+    SUM(COALESCE(`moz-fx-data-shared-prod.udf.json_extract_histogram`(
+      payload.histograms.fx_urlbar_quick_suggest_remote_settings_latency_ms
+    ).sum, 0)), 
+    SUM(COALESCE(`moz-fx-data-shared-prod.udf.histogram_to_threshold_count`(
+      payload.histograms.fx_urlbar_quick_suggest_remote_settings_latency_ms
+    , -1), 0))
+  )
+"""
+data_source = "main"
+friendly_name = "Remote Settings Latency"
+description = "Average Remote Settings latency per user"
+
+[metrics.merino_success]
+select_expression = """
+  SUM(COALESCE(`moz-fx-data-shared-prod.udf.get_key`(`moz-fx-data-shared-prod.udf.json_extract_histogram`(
+    payload.histograms.FX_URLBAR_MERINO_RESPONSE
+  ).values, 0),0))
+"""
+data_source = "main"
+friendly_name = "Merino Response: Success"
+description = "Average number of Merino responses that returned `success` per user"
+
+[metrics.merino_timeout]
+select_expression = """
+  SUM(COALESCE(`moz-fx-data-shared-prod.udf.get_key`(`moz-fx-data-shared-prod.udf.json_extract_histogram`(
+    payload.histograms.FX_URLBAR_MERINO_RESPONSE
+  ).values, 1),0))
+"""
+data_source = "main"
+friendly_name = "Merino Response: Timeout"
+description = "Average number of Merino responses that returned `timeout` per user"
+
+[metrics.merino_network_error]
+select_expression = """
+  SUM(COALESCE(`moz-fx-data-shared-prod.udf.get_key`(`moz-fx-data-shared-prod.udf.json_extract_histogram`(
+    payload.histograms.FX_URLBAR_MERINO_RESPONSE
+  ).values, 2),0))
+"""
+data_source = "main"
+friendly_name = "Merino Response: Network Error"
+description = "Average number of Merino responses that returned `network error` per user"
+
+[metrics.merino_http_error]
+select_expression = """
+  SUM(COALESCE(`moz-fx-data-shared-prod.udf.get_key`(`moz-fx-data-shared-prod.udf.json_extract_histogram`(
+    payload.histograms.FX_URLBAR_MERINO_RESPONSE
+  ).values, 3),0))
+"""
+data_source = "main"
+friendly_name = "Merino Response: HTTP Error"
+description = "Average number of Merino responses that returned `HTTP Error` per user"
