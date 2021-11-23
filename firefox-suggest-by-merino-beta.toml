@@ -1,0 +1,28 @@
+[experiment]
+segments = ['exposed']
+
+[segments.data_sources.events_unnested]
+from_expression = """(
+  SELECT
+    *
+  FROM
+    `moz-fx-data-shared-prod.telemetry.events`
+)"""
+window_start = 'analysis_window_start'
+window_end = 'analysis_window_end'
+
+[segments.exposed]
+select_expression = """
+  COALESCE(CAST(MAX(
+    CASE WHEN event_category = 'normandy'
+           AND event_method = 'expose'
+           AND event_object = 'nimbus_experiment'
+           AND event_string_value = 'firefox-suggest-offline-vs-online'
+           AND normalized_channel = 'release'
+         THEN 1
+         ELSE 0
+    END
+  ) AS BOOL), FALSE)
+"""
+data_source = "events_unnested"
+
