@@ -27,8 +27,8 @@ select_expression = """
 data_source = "events_unnested"
 
 [metrics]
-weekly = ["merino_latency", "remote_settings_latency"]
-overall = ["merino_latency", "remote_settings_latency"]
+weekly = ["merino_latency", "remote_settings_latency", "merino_success", "merino_timeout", "merino_network_error", "merino_http_error"]
+overall = ["merino_latency", "remote_settings_latency" "merino_success", "merino_timeout", "merino_network_error", "merino_http_error"]
 
 [metrics.merino_latency]
 select_expression = """
@@ -44,6 +44,7 @@ select_expression = """
 data_source = "main"
 friendly_name = "Merino Latency"
 description = "Average Merino latency per user"
+[metrics.merino_latency.statistics.bootstrap_mean]
 
 [metrics.remote_settings_latency]
 select_expression = """
@@ -59,6 +60,7 @@ select_expression = """
 data_source = "main"
 friendly_name = "Remote Settings Latency"
 description = "Average Remote Settings latency per user"
+[metrics.remote_settings_latency.statistics.bootstrap_mean]
 
 [metrics.merino_success]
 select_expression = """
@@ -69,6 +71,7 @@ select_expression = """
 data_source = "main"
 friendly_name = "Merino Response: Success"
 description = "Average number of Merino responses that returned `success` per user"
+[metrics.merino_success.statistics.bootstrap_mean]
 
 [metrics.merino_timeout]
 select_expression = """
@@ -79,6 +82,7 @@ select_expression = """
 data_source = "main"
 friendly_name = "Merino Response: Timeout"
 description = "Average number of Merino responses that returned `timeout` per user"
+[metrics.merino_timeout.statistics.bootstrap_mean]
 
 [metrics.merino_network_error]
 select_expression = """
@@ -89,6 +93,7 @@ select_expression = """
 data_source = "main"
 friendly_name = "Merino Response: Network Error"
 description = "Average number of Merino responses that returned `network error` per user"
+[metrics.merino_network_error.statistics.bootstrap_mean]
 
 [metrics.merino_http_error]
 select_expression = """
@@ -99,3 +104,4 @@ select_expression = """
 data_source = "main"
 friendly_name = "Merino Response: HTTP Error"
 description = "Average number of Merino responses that returned `HTTP Error` per user"
+[metrics.merino_http_error.statistics.bootstrap_mean]
