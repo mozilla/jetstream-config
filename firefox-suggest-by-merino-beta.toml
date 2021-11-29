@@ -15,8 +15,9 @@ select_expression = """
     event_category = 'normandy'
     AND event_method = 'expose'
     AND event_object = 'nimbus_experiment'
-    AND event_string_value = 'firefox-suggest-offline-vs-online'
-    AND normalized_channel = 'release'
+    AND event_string_value = 'firefox-suggest-by-merino-beta'
+    AND normalized_channel = 'beta'
+    AND country = 'US'
 """
 data_source = "events_unnested"
 window_start = "analysis_window_start"
