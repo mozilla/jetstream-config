@@ -11,6 +11,7 @@ from_expression = """(
 [experiment.exposure_signal]
 name = "nimbus_exposure"
 friendly_name = "Nimbus Exposure"
+description = "Firefox Suggest exposure per analysis window"
 select_expression = """
     event_category = 'normandy'
     AND event_method = 'expose'
