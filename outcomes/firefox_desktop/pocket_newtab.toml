@@ -34,7 +34,7 @@ select_expression = """
       COUNTIF(
           event = 'PREF_CHANGED'
           AND source = 'TOP_STORIES'
-          AND JSON_EXTRACT_SCALAR(value, '$.card_type') = 'false'
+          AND JSON_EXTRACT_SCALAR(value, '$.status') = 'false'
       )
 """
 data_source = "as_events"
@@ -48,7 +48,7 @@ select_expression = """
       COUNTIF(
           event = 'PREF_CHANGED'
           AND source = 'POCKET_SPOCS'
-          AND JSON_EXTRACT_SCALAR(value, '$.card_type') = 'false'
+          AND JSON_EXTRACT_SCALAR(value, '$.status') = 'false'
       )
 """
 data_source = "as_events"
