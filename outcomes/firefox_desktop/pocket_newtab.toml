@@ -38,7 +38,7 @@ select_expression = """
       )
 """
 data_source = "as_events"
-statistics = { bootstrap_mean = {} }
+statistics = { bootstrap_mean = { drop_highest = .0000001 } }
 bigger_is_better = false
 
 [metrics.disabled_pocket_sponsored_content_in_new_tab]
@@ -52,7 +52,7 @@ select_expression = """
       )
 """
 data_source = "as_events"
-statistics = { bootstrap_mean = {} }
+statistics = { bootstrap_mean = { drop_highest = .0000001 } }
 bigger_is_better = false
 
 [data_sources.as_events]
