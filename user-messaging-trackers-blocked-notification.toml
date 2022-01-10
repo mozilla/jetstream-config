@@ -1,6 +1,10 @@
 [experiment]
 reference_branch = "control"
 
+[metrics]
+weekly = ["days_of_use", "search_count", "organic_search_count", "active_hours", "unenroll", "set_to_default_rate", "taskbar_pin_rate"]
+overall = ["days_of_use", "search_count", "organic_search_count", "active_hours", "unenroll", "set_to_default_rate", "taskbar_pin_rate"]
+
 [metrics.set_to_default_rate]
 select_expression = "COALESCE(LOGICAL_OR(is_default_browser), FALSE)"
 data_source = 'clients_daily'
