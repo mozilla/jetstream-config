@@ -34,11 +34,11 @@ select_expression = """
       COUNTIF(
           event = 'PREF_CHANGED'
           AND source = 'TOP_STORIES'
-          AND JSON_EXTRACT_SCALAR(value, '$.card_type') = 'false'
+          AND JSON_EXTRACT_SCALAR(value, '$.status') = 'false'
       )
 """
 data_source = "as_events"
-statistics = { bootstrap_mean = {} }
+statistics = { bootstrap_mean = { drop_highest = 0.0000001 } }
 bigger_is_better = false
 
 [metrics.disabled_pocket_sponsored_content_in_new_tab]
@@ -48,11 +48,11 @@ select_expression = """
       COUNTIF(
           event = 'PREF_CHANGED'
           AND source = 'POCKET_SPOCS'
-          AND JSON_EXTRACT_SCALAR(value, '$.card_type') = 'false'
+          AND JSON_EXTRACT_SCALAR(value, '$.status') = 'false'
       )
 """
 data_source = "as_events"
-statistics = { bootstrap_mean = {} }
+statistics = { bootstrap_mean = { drop_highest = 0.0000001 } }
 bigger_is_better = false
 
 [data_sources.as_events]
