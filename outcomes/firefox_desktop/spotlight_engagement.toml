@@ -4,21 +4,21 @@ description = "Usage and engagement metrics for the Spotlight feature."
 [metrics.spotlight_impressions]
 friendly_name = "Spotlight Impressions"
 description = "How often users saw Spotlight during an analysis window"
-select_expression = "COUNTIF(event = 'IMPRESSION' AND message_id = CONCAT(exp_slug, ':', branch_slug))"
+select_expression = "COUNTIF(event = 'IMPRESSION')"
 data_source = "spotlight"
 statistics = { bootstrap_mean = {} }
 
 [metrics.spotlight_clicks]
 friendly_name = "Spotlight Clicks"
 description = "How often users clicked Spotlight during an analysis window"
-select_expression = "COUNTIF(event = 'CLICK' AND message_id = CONCAT(exp_slug, ':', branch_slug))"
+select_expression = "COUNTIF(event = 'CLICK')"
 data_source = "spotlight"
 statistics = { bootstrap_mean = {} }
 
 [metrics.spotlight_dismisses]
 friendly_name = "Spotlight Dismisses"
 description = "How often users dismissed Spotlight during an analysis window"
-select_expression = "COUNTIF(event = 'DISMISS' AND message_id = CONCAT(exp_slug, ':', branch_slug))"
+select_expression = "COUNTIF(event = 'DISMISS')"
 data_source = "spotlight"
 statistics = { bootstrap_mean = {} }
 
@@ -28,14 +28,13 @@ from_expression = """
     client_id,
     event,
     experiments,
-    experiment.key AS exp_slug,
-    experiment.value.branch AS branch_slug,
-    message_id,
     DATE(submission_timestamp) AS submission_date
 FROM
     mozdata.messaging_system.spotlight
 CROSS JOIN
     UNNEST(experiments) AS experiment
+WHERE
+    message_id = CONCAT(experiment.key, ':', experiment.value.branch)
 )
 """
 experiments_column_type = "native"
