@@ -26,7 +26,6 @@ statistics = { bootstrap_mean = {} }
 from_expression = """
 (SELECT
     client_id,
-    document_id,
     event,
     experiments,
     experiment.key AS exp_slug,
@@ -37,7 +36,6 @@ FROM
     mozdata.messaging_system.spotlight
 CROSS JOIN
     UNNEST(experiments) AS experiment
-WHERE
-    submission_timestamp IS NOT NULL)
+)
 """
 experiments_column_type = "native"
