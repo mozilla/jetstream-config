@@ -26,7 +26,7 @@ select_expression = """
     )
 """
 data_source = "events"
-statistics = { bootstrap_mean = {} }
+statistics = { bootstrap_mean = { drop_highest = 0.0000001 } }
 
 [metrics.reader_mode_total_duration]
 friendly_name = "Time spent in Reader Mode"
@@ -40,4 +40,4 @@ select_expression = """
     )
 """
 data_source = "events"
-statistics = { bootstrap_mean = {} }
+statistics = { bootstrap_mean = { drop_highest = 0.0000001 } }
