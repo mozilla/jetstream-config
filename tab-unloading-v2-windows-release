@@ -1,7 +1,5 @@
 [experiment]
 
-end_date = "2021-09-28"
-
 ## Data Sources
 
 [data_sources]
@@ -16,8 +14,8 @@ from_expression = """ (
   FROM
     `moz-fx-data-shared-prod`.telemetry.main
   WHERE
-    DATE(submission_timestamp) >= '2021-08-31'
-    AND normalized_channel in ('nightly')
+    DATE(submission_timestamp) >= '2022-02-14'
+    AND normalized_channel in ('release')
     AND payload.info.session_id not in (
         SELECT
           session_id
@@ -26,8 +24,8 @@ from_expression = """ (
         WHERE
           event_category = 'normandy'
           AND event_method = 'enroll'
-          AND submission_date >= '2021-08-31'
-          AND event_string_value = 'bug-1726656-pref-tab-unloading-nightly-93-94')
+          AND submission_date >= '2022-02-14'
+          AND event_string_value = 'tab-unloading-v2-windows-release')
           )
 """
 experiments_column_type = "native"
@@ -49,8 +47,8 @@ from_expression = """
         COALESCE(SUM(IF(REGEXP_CONTAINS(payload.process_type, 'content')
             AND NOT REGEXP_CONTAINS(COALESCE(payload.metadata.ipc_channel_error, ''), 'ShutDownKill'), 1,0)), 0) AS sum_content_crashes,
     FROM `moz-fx-data-shared-prod.telemetry_stable.crash_v4`
-    WHERE DATE(submission_timestamp) >= '2021-08-31'
-        AND normalized_channel in ('nightly')
+    WHERE DATE(submission_timestamp) >= '2022-02-14'
+        AND normalized_channel in ('release')
         AND payload.session_id not in (
             SELECT
             session_id
@@ -59,8 +57,8 @@ from_expression = """
             WHERE
             event_category = 'normandy'
             AND event_method = 'enroll'
-            AND submission_date >= '2021-08-31'
-            AND event_string_value = 'bug-1726656-pref-tab-unloading-nightly-93-94'
+            AND submission_date >= '2022-02-14'
+            AND event_string_value = 'tab-unloading-v2-windows-release'
         )
     GROUP BY
         1, 2,
@@ -73,8 +71,8 @@ from_expression = """
             ANY_VALUE(environment.experiments) AS experiments,
         SUM((COALESCE(payload.processes.parent.scalars.browser_engagement_active_ticks, 0)*5) / 3600) AS sum_active_s,
         FROM `moz-fx-data-shared-prod`.telemetry.main
-        WHERE DATE(submission_timestamp) >= '2021-08-31'
-            AND normalized_channel in ('nightly')
+        WHERE DATE(submission_timestamp) >= '2022-02-14'
+            AND normalized_channel in ('release')
             AND payload.info.session_id not in (
                 SELECT
                     session_id
@@ -83,14 +81,36 @@ from_expression = """
                 WHERE
                     event_category = 'normandy'
                     AND event_method = 'enroll'
-                    AND events.submission_date >= '2021-08-31'
-                    AND event_string_value = 'bug-1726656-pref-tab-unloading-nightly-93-94'
+                    AND events.submission_date >= '2022-02-14'
+                    AND event_string_value = 'tab-unloading-v2-windows-release'
             )
         GROUP BY 1, 2
     ) m
     ON m.client_id = cr.client_id
     AND m.submission_date = cr.submission_date
 )
+"""
+experiments_column_type = "native"
+
+## crash: removing session corresponding to enrollment
+[data_sources.crash_hour]
+from_expression = """
+(
+  SELECT
+    cr.*,
+    DATE(cr.submission_timestamp) AS submission_date,
+    cr.environment.experiments,
+    COALESCE(m.payload.processes.parent.scalars.browser_engagement_active_ticks, 0)*5 as active_s
+  FROM
+    `moz-fx-data-shared-prod.telemetry_stable.crash_v4` cr
+    INNER JOIN  `moz-fx-data-shared-prod`.telemetry_stable.main_v4 m
+      ON m.client_id = cr.client_id
+      AND DATE(m.submission_timestamp) = DATE(cr.submission_timestamp)
+    WHERE DATE(m.submission_timestamp) >= '2022-02-14'
+    AND DATE(cr.submission_timestamp) >= '2022-02-14'
+    AND m.normalized_channel = 'release'
+    AND cr.normalized_channel = 'release'
+    )
 """
 experiments_column_type = "native"
 
@@ -101,7 +121,7 @@ experiments_column_type = "native"
 overall = [
   'oom_crashes_per_hour', 'main_crashes_per_hour',
   'content_crashes_per_hour', 'uri_cnt',
-  'subsession_length', 'active_hrs',
+  'subsession_length', 'active_hrs','checkerboard_severity', 'checkerboard_severity_count_per_hour',
   'memory_total', 'tab_open_event_count',
   'max_concurrent_tab_count', 'tab_unload_cnt',
   'tab_reload_cnt', 'tab_pinned_event_count',
@@ -112,6 +132,7 @@ overall = [
 
 weekly = [
   'oom_crashes_per_hour', 'main_crashes_per_hour',
+  'checkerboard_severity', 'checkerboard_severity_count_per_hour',
   'content_crashes_per_hour', 'uri_cnt',
   'subsession_length', 'active_hrs',
   'memory_total', 'tab_open_event_count',
@@ -159,6 +180,48 @@ bigger_is_better = false
     pre_treatments = ["remove_nulls"]
 
 
+[metrics.checkerboard_severity]
+    select_expression = '{{agg_histogram_mean("payload.processes.gpu.histograms.checkerboard_severity")}}'
+    data_source = 'main'
+    bigger_is_better = false
+
+#        [metrics.checkerboard_severity.statistics.bootstrap_mean]
+#        pre_treatments = ["remove_nulls"]
+
+        [metrics.checkerboard_severity.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.checkerboard_severity.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.checkerboard_severity.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+   [metrics.checkerboard_severity_count_per_hour]
+    select_expression = """SAFE_DIVIDE(
+                                SUM(COALESCE((SELECT SUM(value) FROM UNNEST(mozfun.hist.extract(payload.processes.gpu.histograms.checkerboard_severity).values)), 0)),
+                                SUM(COALESCE(payload.processes.parent.scalars.browser_engagement_active_ticks, 0))*5/3600
+                                )
+                                """
+    data_source = 'main'
+    bigger_is_better = false
+
+#        [metrics.checkerboard_severity_count_per_hour.statistics.bootstrap_mean]
+#        pre_treatments = ["remove_nulls"]
+
+        [metrics.checkerboard_severity_count_per_hour.statistics.deciles]
+        pre_treatments = ["remove_nulls"]
+
+        [metrics.checkerboard_severity_count_per_hour.statistics.kernel_density_estimate]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+
+        [metrics.checkerboard_severity_count_per_hour.statistics.empirical_cdf]
+        pre_treatments = ["remove_nulls"]
+        log_space = true
+        
 [metrics.content_crashes_per_hour]
 select_expression = """
     SAFE_DIVIDE(
