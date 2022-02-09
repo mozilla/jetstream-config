@@ -1,6 +1,7 @@
 [experiment]
 
 [metrics]
+daily = ["opt_int_rate"]
 weekly = ["opt_in_rate"]
 overall = ["opt_in_rate"]
 
