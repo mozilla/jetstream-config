@@ -1,4 +1,26 @@
 [experiment]
+segments = ["made_a_modal_selection"]
+
+[segments.data_sources.clients_daily_window]
+from_expression = """(
+  SELECT
+    *
+  FROM
+    `moz-fx-data-shared-prod.telemetry.clients_daily`
+)"""
+window_start = 0
+window_end = 28 
+
+[segments.made_a_modal_selection]
+select_expression = """
+  COALESCE(CAST(MAX(
+    CASE WHEN user_pref_browser_urlbar_quicksuggest_onboarding_dialog_choice IS NOT NULL
+         THEN 1
+         ELSE 0
+    END
+  ) AS BOOL), FALSE)
+"""
+data_source = "clients_daily_window"
 
 [metrics]
 daily = ["opt_in_rate", "bypass_rate"]
