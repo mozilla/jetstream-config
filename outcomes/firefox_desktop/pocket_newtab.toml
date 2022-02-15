@@ -59,7 +59,7 @@ bigger_is_better = false
 friendly_name = "New Tab search bar searches"
 description = "Number of searches performed in New Tab search bar."
 select_expression = "SUM(search_count_urlbar_handoff)"
-data_source = "search_clients_engines_sources_daily"
+data_source = "clients_daily"
 statistics = { bootstrap_mean = {} }
 
 [data_sources.as_events]
