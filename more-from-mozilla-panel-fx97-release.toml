@@ -2,9 +2,21 @@
 
 [metrics]
 
-overall = ['visited_about_preferences', 'clicked_on_default_rally_call_to_action']
-weekly = ['visited_about_preferences', 'clicked_on_default_rally_call_to_action']
-daily = ['visited_about_preferences', 'clicked_on_default_rally_call_to_action']
+overall = [
+    'visited_about_preferences',
+    'visited_about_preferences_paneSearchResults',
+    'visited_about_preferences_panePrivacy',
+    'visited_about_preferences_paneGeneral',
+    'visited_about_preferences_paneSync',
+    'visited_about_preferences_paneHome',
+    'visited_about_preferences_paneSearch',
+    'visited_about_preferences_paneMoreFromMozilla',
+    'visited_about_preferences_paneContainers',
+    'visited_about_preferences_paneExperimental',
+    'clicked_on_default_rally_call_to_action',
+    'clicked_on_default_mobile_call_to_action',
+    'clicked_on_default_rally_VPN_to_action'
+]
 
 [data_sources.preference_pane_interactions]
 from_expression = """
@@ -18,7 +30,8 @@ from_expression = """
             CROSS JOIN UNNEST(payload.processes.parent.keyed_scalars.browser_ui_interaction_preferences_pane_More_From_Mozilla) AS p
         WHERE 
             SUBSTR(application.version, 0, 2) >= '97'
-            AND normalized_channel = 'beta'
+            AND normalized_channel = 'release'
+            AND udf.get_key(environment.experiments, 'more-from-mozilla-panel-fx97-release') IS NOT NULL
     )
 """
 experiments_column_type = "native"
@@ -30,7 +43,7 @@ description = "Fraction of users that visited one of the sections of about:prefe
 data_source = "events"
 select_expression = """
     COALESCE(MAX(
-        CASE WHEN normalized_channel = 'beta'
+        CASE WHEN normalized_channel = 'release'
           AND event_category = 'aboutpreferences'
           AND event_method = 'show'
           AND event_object IN ('initial',
@@ -39,17 +52,211 @@ select_expression = """
          ELSE FALSE END), false)"""
 bigger_is_better = true
 
-[metrics.visited_about_preferences.statistics.binomial]
+[metrics.visited_about_preferences.statistics.count]
 
+
+[metrics.visited_about_preferences_paneSearchResults]
+friendly_name = "about:preferences Visits"
+description = "Fraction of users that visited about:preferences paneSearchResults"
+data_source = "events"
+select_expression = """
+    COALESCE(MAX(
+        CASE WHEN normalized_channel = 'release'
+          AND event_category = 'aboutpreferences'
+          AND event_method = 'show'
+          AND event_object IN ('initial',
+                          'click','hash')
+          AND event_string_value = 'paneSearchResults'
+         THEN TRUE
+         ELSE FALSE END), false)"""
+bigger_is_better = true
+
+[metrics.visited_about_preferences_paneSearchResults.statistics.count]
+
+
+[metrics.visited_about_preferences_panePrivacy]
+friendly_name = "about:preferences Visits"
+description = "Fraction of users that visited about:preferences panePrivacy"
+data_source = "events"
+select_expression = """
+    COALESCE(MAX(
+        CASE WHEN normalized_channel = 'release'
+          AND event_category = 'aboutpreferences'
+          AND event_method = 'show'
+          AND event_object IN ('initial',
+                          'click','hash')
+          AND event_string_value = 'panePrivacy'
+         THEN TRUE
+         ELSE FALSE END), false)"""
+bigger_is_better = true
+
+[metrics.visited_about_preferences_panePrivacy.statistics.count]
+
+
+[metrics.visited_about_preferences_paneGeneral]
+friendly_name = "about:preferences Visits"
+description = "Fraction of users that visited about:preferences paneGeneral"
+data_source = "events"
+select_expression = """
+    COALESCE(MAX(
+        CASE WHEN normalized_channel = 'release'
+          AND event_category = 'aboutpreferences'
+          AND event_method = 'show'
+          AND event_object IN ('initial',
+                          'click','hash')
+          AND event_string_value = 'paneGeneral'
+         THEN TRUE
+         ELSE FALSE END), false)"""
+bigger_is_better = true
+
+[metrics.visited_about_preferences_paneGeneral.statistics.count]
+
+
+[metrics.visited_about_preferences_paneSync]
+friendly_name = "about:preferences Visits"
+description = "Fraction of users that visited about:preferences paneSync"
+data_source = "events"
+select_expression = """
+    COALESCE(MAX(
+        CASE WHEN normalized_channel = 'release'
+          AND event_category = 'aboutpreferences'
+          AND event_method = 'show'
+          AND event_object IN ('initial',
+                          'click','hash')
+          AND event_string_value = 'paneSync'
+         THEN TRUE
+         ELSE FALSE END), false)"""
+bigger_is_better = true
+
+[metrics.visited_about_preferences_paneSync.statistics.count]
+
+
+[metrics.visited_about_preferences_paneHome]
+friendly_name = "about:preferences Visits"
+description = "Fraction of users that visited about:preferences paneHome"
+data_source = "events"
+select_expression = """
+    COALESCE(MAX(
+        CASE WHEN normalized_channel = 'release'
+          AND event_category = 'aboutpreferences'
+          AND event_method = 'show'
+          AND event_object IN ('initial',
+                          'click','hash')
+          AND event_string_value = 'paneHome'
+         THEN TRUE
+         ELSE FALSE END), false)"""
+bigger_is_better = true
+
+[metrics.visited_about_preferences_paneHome.statistics.count]
+
+
+[metrics.visited_about_preferences_paneSearch]
+friendly_name = "about:preferences Visits"
+description = "Fraction of users that visited about:preferences paneSearch"
+data_source = "events"
+select_expression = """
+    COALESCE(MAX(
+        CASE WHEN normalized_channel = 'release'
+          AND event_category = 'aboutpreferences'
+          AND event_method = 'show'
+          AND event_object IN ('initial',
+                          'click','hash')
+          AND event_string_value = 'paneSearch'
+         THEN TRUE
+         ELSE FALSE END), false)"""
+bigger_is_better = true
+
+[metrics.visited_about_preferences_paneSearch.statistics.count]
+
+
+[metrics.visited_about_preferences_paneMoreFromMozilla]
+friendly_name = "about:preferences Visits"
+description = "Fraction of users that visited about:preferences paneMoreFromMozilla"
+data_source = "events"
+select_expression = """
+    COALESCE(MAX(
+        CASE WHEN normalized_channel = 'release'
+          AND event_category = 'aboutpreferences'
+          AND event_method = 'show'
+          AND event_object IN ('initial',
+                          'click','hash')
+          AND event_string_value = 'paneMoreFromMozilla'
+         THEN TRUE
+         ELSE FALSE END), false)"""
+bigger_is_better = true
+
+[metrics.visited_about_preferences_paneMoreFromMozilla.statistics.count]
+
+
+[metrics.visited_about_preferences_paneContainers]
+friendly_name = "about:preferences Visits"
+description = "Fraction of users that visited about:preferences paneContainers"
+data_source = "events"
+select_expression = """
+    COALESCE(MAX(
+        CASE WHEN normalized_channel = 'release'
+          AND event_category = 'aboutpreferences'
+          AND event_method = 'show'
+          AND event_object IN ('initial',
+                          'click','hash')
+          AND event_string_value = 'paneContainers'
+         THEN TRUE
+         ELSE FALSE END), false)"""
+bigger_is_better = true
+
+[metrics.visited_about_preferences_paneContainers.statistics.count]
+
+
+[metrics.visited_about_preferences_paneExperimental]
+friendly_name = "about:preferences Visits"
+description = "Fraction of users that visited about:preferences paneExperimental"
+data_source = "events"
+select_expression = """
+    COALESCE(MAX(
+        CASE WHEN normalized_channel = 'release'
+          AND event_category = 'aboutpreferences'
+          AND event_method = 'show'
+          AND event_object IN ('initial',
+                          'click','hash')
+          AND event_string_value = 'paneExperimental'
+         THEN TRUE
+         ELSE FALSE END), false)"""
+bigger_is_better = true
+
+[metrics.visited_about_preferences_paneExperimental.statistics.count]
 
 
 [metrics.clicked_on_default_rally_call_to_action]
 friendly_name = "Clicked on Default Rally Call to Action"
-description = "Fraction of users that clicked on the default Rally call to actions"
+description = "Fraction of users that clicked on the default Rally call to action"
 data_source = 'preference_pane_interactions'
 select_expression = """COALESCE(MAX(
                 CASE WHEN pane = 'default-mozillaRally'
                 THEN true ELSE false END), false)"""
 bigger_is_better = true
 
-[metrics.clicked_on_default_rally_call_to_action.statistics.binomial]
+[metrics.clicked_on_default_rally_call_to_action.statistics.count]
+
+
+[metrics.clicked_on_default_mobile_call_to_action]
+friendly_name = "Clicked on Default Rally Call to Action"
+description = "Fraction of users that clicked on the default Mobile call to action"
+data_source = 'preference_pane_interactions'
+select_expression = """COALESCE(MAX(
+                CASE WHEN pane = 'default-fxMobile'
+                THEN true ELSE false END), false)"""
+bigger_is_better = true
+
+[metrics.clicked_on_default_mobile_call_to_action.statistics.count]
+
+
+[metrics.clicked_on_default_VPN_call_to_action]
+friendly_name = "Clicked on Default VPN Call to Action"
+description = "Fraction of users that clicked on the default VPN call to action"
+data_source = 'preference_pane_interactions'
+select_expression = """COALESCE(MAX(
+                CASE WHEN pane = 'default-mozillaVPN'
+                THEN true ELSE false END), false)"""
+bigger_is_better = true
+
+[metrics.clicked_on_default_VPN_call_to_action.statistics.count]
