@@ -1,5 +1,5 @@
 friendly_name = "Spotlight Engagement - not experiment specific"
-description = "Usage and engagement metrics for the Spotlight feature."
+description = "Usage and engagement metrics for the Spotlight feature - for ALL engagement with Spotlight feature, not experiment specific "
 
 [metrics.spotlight_impressions]
 friendly_name = "Spotlight Impressions"
