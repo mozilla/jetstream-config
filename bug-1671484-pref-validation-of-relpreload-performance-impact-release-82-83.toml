@@ -125,22 +125,22 @@ overall = [
 
     ## Mean Time to First Interaction (Preload)
 
-    [metrics.time_to_first_interaction_preload_ms]
-    select_expression = '{{agg_histogram_mean("payload.histograms.time_to_first_interaction_preload_ms")}}'
-    data_source = 'main'
-
-        [metrics.time_to_first_interaction_preload_ms.statistics.bootstrap_mean]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.time_to_first_interaction_preload_ms.statistics.deciles]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.time_to_first_interaction_preload_ms.statistics.kernel_density_estimate]
-        pre_treatments = ["remove_nulls"]
-
-        [metrics.time_to_first_interaction_preload_ms.statistics.empirical_cdf]
-        pre_treatments = ["remove_nulls"]
-        log_space = true
+    #[metrics.time_to_first_interaction_preload_ms]
+    #select_expression = '{{agg_histogram_mean("payload.histograms.time_to_first_interaction_preload_ms")}}'
+    #data_source = 'main'
+    #
+    #    [metrics.time_to_first_interaction_preload_ms.statistics.bootstrap_mean]
+    #    pre_treatments = ["remove_nulls"]
+    #
+    #    [metrics.time_to_first_interaction_preload_ms.statistics.deciles]
+    #    pre_treatments = ["remove_nulls"]
+    #
+    #    [metrics.time_to_first_interaction_preload_ms.statistics.kernel_density_estimate]
+    #    pre_treatments = ["remove_nulls"]
+    #
+    #    [metrics.time_to_first_interaction_preload_ms.statistics.empirical_cdf]
+    #    pre_treatments = ["remove_nulls"]
+    #    log_space = true
 
     ## Mean Time to First Interaction (No Preload)
 
