@@ -1,12 +1,13 @@
 friendly_name = "Firefox Suggest"
-description = "Usage and engagement metrics for Firefox Suggest."
+description = "Usage & engagement metrics and revenue proxies for Firefox Suggest."
 
 [metrics.urlbar_search_count]
-select_expression = "SUM(CASE WHEN source in ('urlbar', 'urlbar-searchmode') THEN COALESCE(sap, 0) ELSE 0 END)"
+select_expression = "SUM(CASE WHEN source in ('urlbar', 'urlbar-searchmode', 'urlbar-handoff') THEN COALESCE(sap, 0) ELSE 0 END)"
 data_source = "search_clients_engines_sources_daily"
-description = "Number of searches performed in the urlbar, including search mode"
+description = "Number of searches performed in the urlbar, including search mode and handoff"
+friendly_name = "urlbar searches"
 exposure_basis = ["exposures", "enrollments"]
-[metrics.urlbar_search_count.statistics.bootstrap_mean]
+statistics = { deciles = {}, bootstrap_mean = {} }
 
 [metrics.autofill_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_autofill_sum) x), 0))"
@@ -71,3 +72,50 @@ description = "Number of unknown types selected from the urlbar"
 exposure_basis = ["exposures", "enrollments"]
 [metrics.unknown_count.statistics.bootstrap_mean]
 
+[metrics.google_ad_click_per_display_rate]
+select_expression = """
+  SAFE_DIVIDE(
+    sum(case when normalized_engine = 'Google' then ad_click else 0 end),
+    sum(case when normalized_engine = 'Google' then search_with_ads else 0 end)
+  )
+"""
+data_source = "search_clients_engines_sources_daily"
+description = "Ad clicks per display rate for Google search engine. Revenue proxy."
+exposure_basis = ["exposures", "enrollments"]
+[metrics.google_ad_click_per_display_rate.statistics.bootstrap_mean]
+
+[metrics.google_ad_click_rate]
+select_expression = """
+  SAFE_DIVIDE(
+    sum(case when normalized_engine = 'Google' then ad_click else 0 end),
+    sum(case when normalized_engine = 'Google' then sap else 0 end)
+  )
+"""
+data_source = "search_clients_engines_sources_daily"
+description = "Ad clicks rate for Google search engine. Revenue proxy."
+exposure_basis = ["exposures", "enrollments"]
+[metrics.google_ad_click_rate.statistics.bootstrap_mean]
+
+[metrics.bing_ad_click_per_display_rate]
+select_expression = """
+  SAFE_DIVIDE(
+    sum(case when normalized_engine = 'Bing' then ad_click else 0 end),
+    sum(case when normalized_engine = 'Bing' then search_with_ads else 0 end)
+  )
+"""
+data_source = "search_clients_engines_sources_daily"
+description = "Ad clicks per display rate for Bing search engine. Revenue proxy."
+exposure_basis = ["exposures", "enrollments"]
+[metrics.bing_ad_click_per_display_rate.statistics.bootstrap_mean]
+
+[metrics.bing_ad_click_rate]
+select_expression = """
+  SAFE_DIVIDE(
+    sum(case when normalized_engine = 'Bing' then ad_click else 0 end),
+    sum(case when normalized_engine = 'Bing' then sap else 0 end)
+  )
+"""
+data_source = "search_clients_engines_sources_daily"
+description = "Ad clicks rate for Bing search engine. Revenue proxy."
+exposure_basis = ["exposures", "enrollments"]
+[metrics.bing_ad_click_rate.statistics.bootstrap_mean]
