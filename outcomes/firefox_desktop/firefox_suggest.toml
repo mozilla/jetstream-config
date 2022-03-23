@@ -7,7 +7,7 @@ data_source = "search_clients_engines_sources_daily"
 description = "Number of searches performed in the urlbar, including search mode and handoff"
 friendly_name = "urlbar searches"
 exposure_basis = ["exposures", "enrollments"]
-[metrics.urlbar_search_count.statistics.bootstrap_mean]
+statistics = { deciles = {}, bootstrap_mean = {} }
 
 [metrics.autofill_count]
 select_expression = "SUM(COALESCE((SELECT SUM(x.value) FROM UNNEST(scalar_parent_urlbar_picked_autofill_sum) x), 0))"
