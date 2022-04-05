@@ -27,6 +27,7 @@ overall = [
   "qualified_cumulative_days_of_use",
 ]
 
+
 [metrics.active_hours.statistics.bootstrap_mean]
 [metrics.active_hours.statistics.deciles]
 
