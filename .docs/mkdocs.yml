@@ -29,3 +29,5 @@ nav:
       - ... | metrics/**.md
   - Data Sources:
       - ... | data_sources/**.md
+  - Default Configs:
+      - ... | default_configs/**.md

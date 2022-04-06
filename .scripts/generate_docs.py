@@ -39,6 +39,7 @@ def generate():
     generate_metrics_docs(out_dir / "docs")
     generate_datasource_docs(out_dir / "docs")
     generate_outcome_docs(out_dir / "docs")
+    generate_default_config_docs(out_dir / "docs")
 
 
 def generate_metrics_docs(out_dir: Path):
@@ -170,6 +171,67 @@ def generate_outcome_docs(out_dir: Path):
                     statistics=statistics_per_metric,
                 )
             )
+
+
+def generate_default_config_docs(out_dir: Path):
+    """Generates docs for default configs."""
+    file_loader = FileSystemLoader(TEMPLATES_DIR)
+    env = Environment(loader=file_loader)
+    default_config_template = env.get_template("default_config.md")
+
+    for default_config_file in DEFAULTS_DIR.glob("*.toml"):
+        dummy_experiment = experimenter.Experiment(
+            experimenter_slug="dummy-experiment",
+            normandy_slug="dummy_experiment",
+            type="v6",
+            status="Live",
+            branches=[],
+            end_date=None,
+            reference_branch="control",
+            is_high_population=False,
+            start_date=datetime.now(),
+            proposed_enrollment=14,
+            app_id=config.PLATFORM_CONFIGS[default_config_file.stem].app_id
+            if default_config_file.stem in config.PLATFORM_CONFIGS
+            else "firefox_desktop",
+            app_name=default_config_file.stem,
+        )
+
+        spec = config.AnalysisSpec.from_dict(toml.load(default_config_file))
+        conf = spec.resolve(dummy_experiment)
+
+        summaries = [
+            summary for _, summaries in conf.metrics.items() for summary in summaries
+        ]
+        # deduplicate metrics
+        metrics = []
+        for metric in summaries:
+            if metric.metric not in metrics:
+                metrics.append(metric.metric)
+
+        data_sources = {m.data_source for m in metrics}
+
+        statistics_per_metric = {}
+        for metric in metrics:
+            statistics = [
+                summary.statistic.name()
+                for summary in summaries
+                if summary.metric.name == metric.name
+            ]
+            statistics_per_metric[metric.name] = statistics
+
+        default_config_doc = (
+            out_dir / "default_configs" / (default_config_file.stem + ".md")
+        )
+        default_config_doc.parent.mkdir(parents=True, exist_ok=True)
+        default_config_doc.write_text(
+            default_config_template.render(
+                platform=default_config_file.stem,
+                metrics=metrics,
+                data_sources=data_sources,
+                statistics=statistics_per_metric,
+            )
+        )
 
 
 if __name__ == "__main__":
