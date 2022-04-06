@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 from os import stat_result
 import statistics
+from mozanalysis.metrics import Metric, DataSource
 from jetstream import config, experimenter, AnalysisPeriod
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
@@ -35,7 +36,70 @@ def generate():
         shutil.rmtree(out_dir)
     shutil.copytree(DOCS_DIR, out_dir)
 
+    generate_metrics_docs(out_dir / "docs")
+    generate_datasource_docs(out_dir / "docs")
     generate_outcome_docs(out_dir / "docs")
+
+
+def generate_metrics_docs(out_dir: Path):
+    """Generates docs for default metrics."""
+    file_loader = FileSystemLoader(TEMPLATES_DIR)
+    env = Environment(loader=file_loader)
+    metrics_template = env.get_template("metrics.md")
+
+    for app_name, platform in config.PLATFORM_CONFIGS.items():
+        metric_names = [
+            metric
+            for metric in dir(platform.metrics_module)
+            if not metric.startswith("__")
+            and metric != "Metric"
+            and metric != "DataSource"
+        ]
+        metrics = [getattr(platform.metrics_module, metric) for metric in metric_names]
+        metrics = [metric for metric in metrics if isinstance(metric, Metric)]
+
+        metrics_doc = out_dir / "metrics" / (app_name + ".md")
+        metrics_doc.parent.mkdir(parents=True, exist_ok=True)
+        metrics_doc.write_text(
+            metrics_template.render(
+                metrics=metrics,
+                platform=app_name,
+            )
+        )
+
+
+def generate_datasource_docs(out_dir: Path):
+    """Generates docs for default data sources."""
+    file_loader = FileSystemLoader(TEMPLATES_DIR)
+    env = Environment(loader=file_loader)
+    datasources_template = env.get_template("datasources.md")
+
+    for app_name, platform in config.PLATFORM_CONFIGS.items():
+        datasource_names = [
+            datasource
+            for datasource in dir(platform.metrics_module)
+            if not datasource.startswith("__")
+            and datasource != "Metric"
+            and datasource != "DataSource"
+        ]
+        datasources = [
+            getattr(platform.metrics_module, datasource)
+            for datasource in datasource_names
+        ]
+        datasources = [
+            datasource
+            for datasource in datasources
+            if isinstance(datasource, DataSource)
+        ]
+
+        datasources_doc = out_dir / "data_sources" / (app_name + ".md")
+        datasources_doc.parent.mkdir(parents=True, exist_ok=True)
+        datasources_doc.write_text(
+            datasources_template.render(
+                datasources=datasources,
+                platform=app_name,
+            )
+        )
 
 
 def generate_outcome_docs(out_dir: Path):

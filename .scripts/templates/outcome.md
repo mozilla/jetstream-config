@@ -1,5 +1,3 @@
-## [`{{ slug }}` - {{ outcome_name }}](#{{ slug }})
-
 {% if outcome_description -%}
 {{ outcome_description | trim }}
 {% endif %}
@@ -7,11 +5,11 @@
 [Source](https://github.com/mozilla/jetstream-config/blob/main/outcomes/{{ platform }}/{{ slug }}.toml)  |  [Edit](https://github.com/mozilla/jetstream-config/edit/main/outcomes/{{ platform }}/{{ slug }}.toml)
 
 
-### Metrics
+## Metrics
 
 {% for metric in metrics %}
 
-#### `{{ metric.name }}` 
+### `{{ metric.name }}` 
 
 **{%- if metric.friendly_name -%}{{ metric.friendly_name }} {% endif %}**
 
@@ -36,11 +34,11 @@ Statistics: {% for statistic in statistics[metric.name] %}`{{ statistic }}`{% if
 {% endfor %}
 
 {% if data_sources %}
-### Data Sources
+## Data Sources
 
 {% for datasource in data_sources %}
 
-#### [`{{ datasource.name }}` {%- if datasource.friendly_name -%}- {{ datasource.friendly_name }}{%- endif -%}](#{{ datasource.name }})
+### [`{{ datasource.name }}` {%- if datasource.friendly_name -%}- {{ datasource.friendly_name }}{%- endif -%}](#{{ datasource.name }})
 
 {% if datasource.description %}
 {{ datasource.description | trim }}
