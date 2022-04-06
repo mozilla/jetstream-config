@@ -89,7 +89,7 @@ jobs:
           command: |
             python3.8 -m venv venv/
             venv/bin/pip install -r .scripts/requirements.txt
-            PATH="venv/bin:$PATH" .scripts/generate_docs \
+            venv/bin/python3 .scripts/generate_docs.py \
               --output_dir=generated_docs/
             cd generated_docs/
             PATH="../venv/bin:$PATH" mkdocs gh-deploy \
