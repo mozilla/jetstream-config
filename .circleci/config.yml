@@ -77,16 +77,20 @@ jobs:
             echo "Analysis Errors can be accessed via Redash: https://sql.telemetry.mozilla.org/dashboard/jetstream-errors?p_experiment=%25"
             exit 1
           fi
-    docs:
-      docker:
-        - image: python:3.8
-      steps:
-        - checkout
+  docs:
+    docker:
+      - image: python:3.8
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: "71:3e:9b:a6:8e:19:28:5e:e0:67:b8:c3:18:33:ce:9d"
       - run:
           name: Build and deploy docs
           command: |
+            python3.8 -m venv venv/
+            venv/bin/pip install -r .scripts/requirements.txt
             PATH="venv/bin:$PATH" .scripts/generate_docs \
-               --output_dir=generated_docs/
+              --output_dir=generated_docs/
             cd generated_docs/
             PATH="../venv/bin:$PATH" mkdocs gh-deploy \
               -m "[ci skip] Deployed {sha} with MkDocs version: {version}"
