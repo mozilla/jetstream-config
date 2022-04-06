@@ -83,7 +83,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: "71:3e:9b:a6:8e:19:28:5e:e0:67:b8:c3:18:33:ce:9d"
+          fingerprints: "98:ba:de:b1:23:71:8d:0a:c2:98:98:ac:e8:97:ae:0d"
       - run:
           name: Build and deploy docs
           command: |
