@@ -3,6 +3,8 @@ daily = ["retained"]
 weekly = [
     "retained",
     "active_hours",
+    "search_count",
+    "serp_ad_clicks",
     "tagged_sap_searches",
     "total_uri_count",
     "days_of_use",
