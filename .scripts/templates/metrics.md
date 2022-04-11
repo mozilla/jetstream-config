@@ -21,4 +21,6 @@ Data Source: [`{{ metric.data_source.name }}`](https://mozilla.github.io/jetstre
 ```
 </details>
 
+---
+
 {% endfor %}
