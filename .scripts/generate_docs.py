@@ -203,6 +203,20 @@ def generate_default_config_docs(out_dir: Path):
         summaries = [
             summary for _, summaries in conf.metrics.items() for summary in summaries
         ]
+
+        metrics_analysis_periods = {}
+
+        for period, summaries in conf.metrics.items():
+            for summary in summaries:
+                if summary.metric.name not in metrics_analysis_periods:
+                    metrics_analysis_periods[summary.metric.name] = {
+                        period.mozanalysis_label
+                    }
+                else:
+                    metrics_analysis_periods[summary.metric.name].add(
+                        period.mozanalysis_label
+                    )
+
         # deduplicate metrics
         metrics = []
         for metric in summaries:
@@ -230,6 +244,7 @@ def generate_default_config_docs(out_dir: Path):
                 metrics=metrics,
                 data_sources=data_sources,
                 statistics=statistics_per_metric,
+                metrics_analysis_periods=metrics_analysis_periods,
             )
         )
 
