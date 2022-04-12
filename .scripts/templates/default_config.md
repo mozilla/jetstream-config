@@ -8,11 +8,13 @@ Metrics and statistics that get computed for every `{{ platform }}` experiment.
 
 ### `{{ metric.name }}` 
 
-**{%- if metric.friendly_name -%}{{ metric.friendly_name }} {% endif %}**
+{% if metric.friendly_name %}**{{ metric.friendly_name }}**{% endif %}
 
 {% if metric.description -%}
 {{ metric.description | trim }}
 {%- endif %}
+
+Analysis Periods: {% for period in metrics_analysis_periods[metric.name] %} `{{ period }}` {% if not loop.last %}, {% endif %} {% endfor %}
 
 Data Source: [`{{ metric.data_source.name }}`](#{{ metric.data_source.name }})
 
