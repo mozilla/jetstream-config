@@ -1,0 +1,22 @@
+[experiment]
+
+segments = ['more_than_10_tabs', 'less_than_10_tabs']
+
+## Segments
+
+[segments]
+
+[segments.more_than_10_tabs]
+select_expression = """
+    MAX(mozfun.map.get_key(metrics.labeled_counter.tabs_open, "normal-tab") 
+        + mozfun.map.get_key(metrics.labeled_counter.tabs_open, "private-tab")) > 10
+"""
+data_source = "metrics"
+
+[segments.less_than_10_tabs]
+select_expression = """
+    MAX(mozfun.map.get_key(metrics.labeled_counter.tabs_open, "normal-tab") 
+        + mozfun.map.get_key(metrics.labeled_counter.tabs_open, "private-tab")) <= 10
+"""
+data_source = "metrics"
+
