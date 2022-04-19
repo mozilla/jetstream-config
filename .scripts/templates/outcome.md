@@ -17,6 +17,8 @@
 {{ metric.description | trim }}
 {%- endif %}
 
+Analysis Period: `weekly`, `overall`
+
 Data Source: [`{{ metric.data_source.name }}`](#{{ metric.data_source.name }})
 
 Statistics: {% for statistic in statistics[metric.name] %}`{{ statistic }}`{% if not loop.last %}, {% endif %}{% endfor %}
