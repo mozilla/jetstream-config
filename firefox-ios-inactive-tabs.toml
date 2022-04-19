@@ -1,0 +1,93 @@
+[experiment]
+
+segments = ["has_10_plus_tabs"]
+
+[segments.has_10_plus_tabs]
+select_expression = 'MAX(max_tabs) >= 10'
+data_source = "daily_max_tabs"
+
+[metrics]
+overall = ["week_1_retention", "week_3_retention"]
+
+[metrics.week_1_retention]
+select_expression = "LOGICAL_OR(retention.day_27.active_in_week_1)"
+data_source = "retention"
+friendly_name = "Retention Week 1"
+description = "Percentage of clients that are active on week 1"
+[metrics.week_1_retention.statistics.binomial]
+
+[metrics.week_3_retention]
+select_expression = "LOGICAL_OR(retention.day_27.active_in_week_3)"
+data_source = "retention"
+friendly_name = "Retention Week 3"
+description = "Percentage of clients that are active on week 3"
+[metrics.week_3_retention.statistics.binomial]
+
+## Data Sources
+[segments.data_sources.daily_max_tabs]
+from_expression = """(
+    SELECT
+        date as submission_date,
+        client_id,
+        MAX(average_tabs) AS max_tabs
+    FROM (
+        SELECT
+            date,
+            seq,
+            c.client_id,
+            1.0 * MAX(tabs_cumulative_count) / COUNT(1) AS average_tabs
+        FROM
+            (
+                SELECT
+                    DATE(submission_timestamp) as date,
+                    client_info.client_id,
+                    ping_info.seq,
+                    SAFE.PARSE_TIMESTAMP('%FT%H:%M%Ez', ping_info.start_time) AS start_time,
+                    SAFE.PARSE_TIMESTAMP('%FT%H:%M%Ez', ping_info.end_time) AS end_time,
+                    metrics.counter.tabs_cumulative_count
+                FROM
+                    `mozdata.firefox_ios.metrics`
+                WHERE
+                    DATE(submission_timestamp) BETWEEN DATE_SUB("{{experiment.start_date_str}}", INTERVAL 15 DAY) AND "{{experiment.last_enrollment_date_str}}"
+                    AND normalized_channel = 'release'
+            ) c
+        LEFT JOIN (
+                SELECT
+                    client_info.client_id,
+                    submission_timestamp
+                FROM
+                    `mozdata.firefox_ios.baseline`
+                WHERE
+                    DATE(submission_timestamp) BETWEEN DATE_SUB("{{experiment.start_date_str}}", INTERVAL 15 DAY) AND "{{experiment.last_enrollment_date_str}}"
+                    AND ping_info.reason='inactive'
+                    AND normalized_channel = 'release'
+            ) b
+        ON
+            c.client_id = b.client_id
+            AND submission_timestamp BETWEEN start_time AND end_time
+        GROUP BY 1, 2, 3
+    )
+    GROUP BY 1, 2
+)"""
+window_start = -14
+window_end = 0
+
+
+[data_sources.retention]
+from_expression = """(
+SELECT
+  retention.day_27.metric_date as submission_date,
+  client_id,
+  retention.day_27.active_in_week_1,
+  retention.day_27.active_in_week_3
+FROM (
+  SELECT
+    client_id,
+    mozfun.bits28.retention(days_seen_bits, submission_date) AS retention,
+  FROM
+    mozdata.firefox_ios.baseline_clients_last_seen 
+  WHERE
+    mozfun.bits28.active_in_range(days_seen_bits, -27, 1) = TRUE
+)
+WHERE retention.day_27.active_in_week_0
+)"""
