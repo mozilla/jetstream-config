@@ -12,10 +12,16 @@ overall = ["week_1_retention", "week_3_retention"]
 [metrics.week_1_retention]
 select_expression = "LOGICAL_OR(retention.day_27.active_in_week_1)"
 data_source = "retention"
+friendly_name = "Retention Week 1"
+description = "Percentage of clients that are active on week 1"
+[metrics.week_1_retention.statistics.binomial]
 
 [metrics.week_3_retention]
 select_expression = "LOGICAL_OR(retention.day_27.active_in_week_3)"
 data_source = "retention"
+friendly_name = "Retention Week 3"
+description = "Percentage of clients that are active on week 3"
+[metrics.week_3_retention.statistics.binomial]
 
 ## Data Sources
 [segments.data_sources.daily_max_tabs]
