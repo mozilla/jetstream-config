@@ -1,39 +1,41 @@
+### outcome properties
 friendly_name = "Spotlight Engagement - not experiment specific"  # TODO: is the not experiment specific still accurate?
 description = "Usage and engagement metrics for the Spotlight feature - for ALL engagement with Spotlight feature, not experiment specific "
 
+
+### parameters definition
 [parameters]
 
 [parameters.message_id]
 friendly_name = "Message ID associated with the experiment"
 description = "ID of the spotlight message associated with this experiment"
-default = ""
+default = "'AND DIV(7, 0)' -- Failed to specify a value for message_id"
 
 [parameters.branch]
 friendly_name = "Branch name associated with the experiment"
 description = "Branch name associated with this experiment's message id"
-default = ""
+default = "'AND DIV(11, 0)' -- Failed to specify a value for branch_id"
 
 
+### metrics definition
 [metrics.spotlight_impressions]
 friendly_name = "Spotlight Impressions"
 description = "How often users saw Spotlight during an analysis window"
-select_expression = "COUNTIF(event = 'IMPRESSION' AND message_id = '{{parameters.message_id}}' AND e.branch = '{{parameters.branch}}')"
+select_expression = "COUNTIF(event = 'IMPRESSION' AND message_id = '{{ parameters.message_id }}' AND e.branch = '{{ parameters.branch }}')"
 data_source = "spotlight"
 statistics = { bootstrap_mean = {} }
 
 [metrics.spotlight_clicks]
 friendly_name = "Spotlight Clicks"
 description = "How often users clicked Spotlight during an analysis window"
-select_expression = "COUNTIF(event = 'CLICK' AND message_id = '{{parameters.message_id}}' AND e.branch = '{{parameters.branch}}')"
-
+select_expression = "COUNTIF(event = 'CLICK' AND message_id = '{{ parameters.message_id }}' AND e.branch = '{{ parameters.branch }}')"
 data_source = "spotlight"
 statistics = { bootstrap_mean = {} }
 
 [metrics.spotlight_dismisses]
 friendly_name = "Spotlight Dismisses"
 description = "How often users dismissed Spotlight during an analysis window"
-select_expression = "COUNTIF(event = 'DISMISS' AND message_id = '{{parameters.message_id}}' AND e.branch = '{{parameters.branch}}')"
-
+select_expression = "COUNTIF(event = 'DISMISS' AND message_id = '{{ parameters.message_id }}' AND e.branch = '{{ parameters.branch }}')"
 data_source = "spotlight"
 statistics = { bootstrap_mean = {} }
 
