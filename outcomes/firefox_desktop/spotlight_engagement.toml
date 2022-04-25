@@ -1,5 +1,5 @@
 ### outcome properties
-friendly_name = "Spotlight Engagement - not experiment specific"  # TODO: is the not experiment specific still accurate?
+friendly_name = "Spotlight Engagement"
 description = "Usage and engagement metrics for the Spotlight feature - for ALL engagement with Spotlight feature, not experiment specific "
 
 
