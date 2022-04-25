@@ -608,15 +608,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#as_events" class="md-nav__link">
-    as_events
+  <a href="#clients_daily" class="md-nav__link">
+    clients_daily
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#clients_daily" class="md-nav__link">
-    clients_daily
+  <a href="#as_events" class="md-nav__link">
+    as_events
   </a>
   
 </li>
@@ -1334,15 +1334,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#as_events" class="md-nav__link">
-    as_events
+  <a href="#clients_daily" class="md-nav__link">
+    clients_daily
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#clients_daily" class="md-nav__link">
-    clients_daily
+  <a href="#as_events" class="md-nav__link">
+    as_events
   </a>
   
 </li>
@@ -1468,6 +1468,17 @@
 
 <hr />
 <h2 id="data-sources">Data Sources</h2>
+<h3 id="clients_daily"><a href="#clients_daily"><code>clients_daily</code></a></h3>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">mozdata.telemetry.clients_daily
+</code></pre>
+
+</details>
+
+<hr />
 <h3 id="as_events"><a href="#as_events"><code>as_events</code></a></h3>
 <details>
 <summary>Definition:</summary>
@@ -1479,17 +1490,6 @@
         DATE(submission_timestamp) AS submission_date
     FROM mozdata.activity_stream.events
     )
-</code></pre>
-
-</details>
-
-<hr />
-<h3 id="clients_daily"><a href="#clients_daily"><code>clients_daily</code></a></h3>
-<details>
-<summary>Definition:</summary>
-
-
-<pre><code class="language-sql">mozdata.telemetry.clients_daily
 </code></pre>
 
 </details>
