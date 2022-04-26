@@ -95,27 +95,3 @@ data_source = "search_clients_engines_sources_daily"
 description = "Ad clicks rate for Google search engine. Revenue proxy."
 exposure_basis = ["exposures", "enrollments"]
 [metrics.google_ad_click_rate.statistics.bootstrap_mean]
-
-[metrics.bing_ad_click_per_display_rate]
-select_expression = """
-  SAFE_DIVIDE(
-    sum(case when normalized_engine = 'Bing' then ad_click else 0 end),
-    sum(case when normalized_engine = 'Bing' then search_with_ads else 0 end)
-  )
-"""
-data_source = "search_clients_engines_sources_daily"
-description = "Ad clicks per display rate for Bing search engine. Revenue proxy."
-exposure_basis = ["exposures", "enrollments"]
-[metrics.bing_ad_click_per_display_rate.statistics.bootstrap_mean]
-
-[metrics.bing_ad_click_rate]
-select_expression = """
-  SAFE_DIVIDE(
-    sum(case when normalized_engine = 'Bing' then ad_click else 0 end),
-    sum(case when normalized_engine = 'Bing' then sap else 0 end)
-  )
-"""
-data_source = "search_clients_engines_sources_daily"
-description = "Ad clicks rate for Bing search engine. Revenue proxy."
-exposure_basis = ["exposures", "enrollments"]
-[metrics.bing_ad_click_rate.statistics.bootstrap_mean]
