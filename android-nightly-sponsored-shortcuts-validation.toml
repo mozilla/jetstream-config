@@ -4,7 +4,7 @@
 
 # interested in users who are eligible for treatment in both branches: those that open homescreen
 # also interested in retention rates for new users
-segments = ["opened_homescreen", "new_or_resurrected_v3"]
+segments = ["opened_homescreen"] #, "new_or_resurrected_fenix"]
 
 [segments.data_sources.events_unnested]
 from_expression = """(
@@ -27,6 +27,27 @@ select_expression = """
   ) AS BOOL), FALSE)
 """
 data_source = "events_unnested"
+
+
+# new_or_resurrected_v3 segment not available for fenix
+# have to create manually for fenix
+#[segments.data_sources.fenix_clients_last_seen]
+#from_expression = """(
+#  SELECT
+#    *
+#  FROM
+#    `mozdata.fenix.baseline_clients_last_seen`
+#  WHERE 
+#)"""
+#window_start = 0
+#window_end = 0 
+
+# new_or_resurrected variable DNE for Fenix
+#[segments.new_or_resurrected_fenix]
+#select_expression = """
+#  LOGICAL_OR(COALESCE(is_new_or_resurrected_v3, TRUE))
+#"""
+#data_source = "events_unnested"
 
 
 
