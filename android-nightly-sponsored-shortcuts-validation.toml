@@ -55,9 +55,9 @@ data_source = "events_unnested"
 
 [metrics]
 daily = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_impressions", "pocket_clicks"]
+	"pocket_story_impressions", "pocket_story_clicks"]
 weekly = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_impressions", "pocket_clicks"]
+	"pocket_story_impressions", "pocket_story_clicks"]
 overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
 	"pocket_story_impressions", "pocket_story_clicks"]
 
