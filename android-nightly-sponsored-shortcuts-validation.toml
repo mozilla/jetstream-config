@@ -70,8 +70,8 @@ friendly_name = "Sponsored Tiles Impressions"
 description = "Number of times Contile Sponsored Tiles are shown."
 select_expression = """
       COUNTIF(
-          event_category = 'top_sites'
-          AND event_name = 'contile_impression'
+          event.category = 'top_sites'
+          AND event.name = 'contile_impression'
       )
 """
 data_source = "events"   
@@ -84,8 +84,8 @@ friendly_name = "Sponsored Tiles Clicks"
 description = "Number of times user clicked a Contile Sponsored Tile."
 select_expression = """
       COUNTIF(
-          event_category = 'top_sites'
-          AND event_name = 'contile_click'
+          event.category = 'top_sites'
+          AND event.name = 'contile_click'
       )
 """
 data_source = "events" 
@@ -117,8 +117,8 @@ friendly_name = "Pocket Impressions"
 description = "Number of times Pocket recommended stories are shown on the home screen."
 select_expression = """
       COUNTIF(
-          event_category = 'pocket'
-          AND event_name = 'home_recs_shown'
+          event.category = 'pocket'
+          AND event.name = 'home_recs_shown'
       )
 """
 data_source = "events"  
@@ -131,8 +131,8 @@ friendly_name = "Pocket Story Clicks"
 description = "Number of times user tapped a Pocket recommended story to be opened."
 select_expression = """
       COUNTIF(
-          event_category = 'pocket'
-          AND event_name = 'home_recs_story_clicked'
+          event.category = 'pocket'
+          AND event.name = 'home_recs_story_clicked'
       )
 """
 data_source = "events" 
