@@ -9,6 +9,8 @@ segments = ["opened_homescreen"] #, "new_or_resurrected_fenix"]
 [segments.data_sources.events_unnested]
 from_expression = """(
   SELECT
+    client_info.client_id as client_id,
+    CAST(submission_timestamp as DATE) as submission_date,
     *
   FROM
     `mozdata.fenix.events_unnested`
@@ -53,9 +55,9 @@ data_source = "events_unnested"
 
 [metrics]
 daily = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
+	"pocket_impressions", "pocket_clicks"]
 weekly = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
+	"pocket_impressions", "pocket_clicks"]
 overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
 	"pocket_story_impressions", "pocket_story_clicks"]
 
@@ -74,7 +76,8 @@ select_expression = """
 """
 data_source = "events"   
 statistics = { bootstrap_mean = {}, deciles = {} }
-
+#[metrics.pocket_story_impressions.statistics.bootstrap_mean]
+#[metrics.pocket_story_impressions.statistics.deciles]
 
 [metrics.spoc_tiles_clicks]
 friendly_name = "Sponsored Tiles Clicks"
@@ -87,6 +90,8 @@ select_expression = """
 """
 data_source = "events" 
 statistics = { bootstrap_mean = {}, deciles = {} }
+#[metrics.pocket_story_clicks.statistics.bootstrap_mean]
+#[metrics.pocket_story_clicks.statistics.deciles]
 
 
 [metrics.spoc_tiles_disable_rate]
@@ -118,7 +123,8 @@ select_expression = """
 """
 data_source = "events"  
 statistics = { bootstrap_mean = {}, deciles = {} } 
-
+#[metrics.pocket_story_impressions.statistics.bootstrap_mean]
+#[metrics.pocket_story_impressions.statistics.deciles]
 
 [metrics.pocket_story_clicks]
 friendly_name = "Pocket Story Clicks"
@@ -131,4 +137,5 @@ select_expression = """
 """
 data_source = "events" 
 statistics = { bootstrap_mean = {}, deciles = {} }
-
+#[metrics.pocket_story_clicks.statistics.bootstrap_mean]
+#[metrics.pocket_story_clicks.statistics.deciles]
