@@ -31,111 +31,20 @@ select_expression = """
 data_source = "events_unnested"
 
 
-# new_or_resurrected_v3 segment not available for fenix
-# have to create manually for fenix
-#[segments.data_sources.fenix_clients_last_seen]
-#from_expression = """(
-#  SELECT
-#    *
-#  FROM
-#    `mozdata.fenix.baseline_clients_last_seen`
-#  WHERE 
-#)"""
-#window_start = 0
-#window_end = 0 
-
-# new_or_resurrected variable DNE for Fenix
-#[segments.new_or_resurrected_fenix]
-#select_expression = """
-#  LOGICAL_OR(COALESCE(is_new_or_resurrected_v3, TRUE))
-#"""
-#data_source = "events_unnested"
-
-
-
 [metrics]
-daily = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
-weekly = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
-overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
+daily = ["new_profile_retention"]
+
+weekly = ["new_profile_retention"]
 
 
+### New Profile Retention
 
-### Sponsored Tiles Metrics
-
-[metrics.spoc_tiles_impressions]
-friendly_name = "Sponsored Tiles Impressions"
-description = "Number of times Contile Sponsored Tiles are shown."
-select_expression = """
-      COUNTIF(
-          event.category = 'top_sites'
-          AND event.name = 'contile_impression'
-      )
+[metrics.new_profile_retention]
+friendly_name = "New Profile Retention"
+description = "New profiles defined as those first seen during the first week (enrollment period) of the experiment."
+select_expression = """COALESCE(COUNT(
+	CASE WHEN PARSE_DATETIME('%Y %m %d %H:%M', REPLACE(REPLACE(client_info.first_run_date, '+', ' '), '-', ' ')) between '2022-03-16' and '2022-03-22'
+	THEN document_id ELSE NULL END), 0) > 0
 """
-data_source = "events"   
-statistics = { bootstrap_mean = {}, deciles = {} }
-#[metrics.pocket_story_impressions.statistics.bootstrap_mean]
-#[metrics.pocket_story_impressions.statistics.deciles]
-
-[metrics.spoc_tiles_clicks]
-friendly_name = "Sponsored Tiles Clicks"
-description = "Number of times user clicked a Contile Sponsored Tile."
-select_expression = """
-      COUNTIF(
-          event.category = 'top_sites'
-          AND event.name = 'contile_click'
-      )
-"""
-data_source = "events" 
-statistics = { bootstrap_mean = {}, deciles = {} }
-#[metrics.pocket_story_clicks.statistics.bootstrap_mean]
-#[metrics.pocket_story_clicks.statistics.deciles]
-
-
-[metrics.spoc_tiles_disable_rate]
-select_expression = """   
-  MAX(
-    CAST(
-       metrics.boolean.customize_home_contile AS int )
-  )
-"""
-data_source = "metrics" 
-bigger_is_better = false
-friendly_name = "Sponsored Tiles Disable Rate"
-description = "Fraction of users who disable Contile Sponsored Tiles"
-[metrics.spoc_tiles_disable_rate.statistics.binomial]
-
-
-
-
-### Pocket Metrics
-
-[metrics.pocket_story_impressions]
-friendly_name = "Pocket Impressions"
-description = "Number of times Pocket recommended stories are shown on the home screen."
-select_expression = """
-      COUNTIF(
-          event.category = 'pocket'
-          AND event.name = 'home_recs_shown'
-      )
-"""
-data_source = "events"  
-statistics = { bootstrap_mean = {}, deciles = {} } 
-#[metrics.pocket_story_impressions.statistics.bootstrap_mean]
-#[metrics.pocket_story_impressions.statistics.deciles]
-
-[metrics.pocket_story_clicks]
-friendly_name = "Pocket Story Clicks"
-description = "Number of times user tapped a Pocket recommended story to be opened."
-select_expression = """
-      COUNTIF(
-          event.category = 'pocket'
-          AND event.name = 'home_recs_story_clicked'
-      )
-"""
-data_source = "events" 
-statistics = { bootstrap_mean = {}, deciles = {} }
-#[metrics.pocket_story_clicks.statistics.bootstrap_mean]
-#[metrics.pocket_story_clicks.statistics.deciles]
+data_source = "baseline"
+[metrics.new_profile_retention.statistics.binomial]
