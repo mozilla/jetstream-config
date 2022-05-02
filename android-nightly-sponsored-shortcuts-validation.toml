@@ -56,7 +56,13 @@ select_expression = """COALESCE(COUNT(
 data_source = "baseline"
 [metrics.new_profile_retention.statistics.binomial]
 
-
+[metrics]
+daily = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
+weekly = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
+overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
 
 ### Sponsored Tiles Metrics
 
@@ -72,7 +78,6 @@ select_expression = """
 data_source = "events"   
 statistics = { bootstrap_mean = {}, deciles = {} }
 
-
 [metrics.spoc_tiles_clicks]
 friendly_name = "Sponsored Tiles Clicks"
 description = "Number of times user clicked a Contile Sponsored Tile."
@@ -84,7 +89,6 @@ select_expression = """
 """
 data_source = "events" 
 statistics = { bootstrap_mean = {}, deciles = {} }
-
 
 [metrics.spoc_tiles_disable_rate]
 select_expression = """   
@@ -115,7 +119,6 @@ select_expression = """
 """
 data_source = "events"  
 statistics = { bootstrap_mean = {}, deciles = {} } 
-
 
 [metrics.pocket_story_clicks]
 friendly_name = "Pocket Story Clicks"
