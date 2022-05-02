@@ -65,3 +65,54 @@ deciles = {}
 bootstrap_mean = {}
 empirical_cdf = { log_space = true }
 kernel_density_estimate = { log_space = true }
+
+[metrics.saw_pip_toggle]
+friendly_name = "Saw Picture in Picture Toggle"
+description = "Fraction of clients that saw the PiP toggle"
+select_expression = """
+    LOGICAL_OR(
+        event_category = "pictureinpicture"
+        AND event_method = "saw_toggle"
+    )
+"""
+data_source = "events"
+statistics = { binomial = {} }
+
+[metrics.saw_pip_toggle_first_time]
+friendly_name = "Saw Picture in Picture Toggle for First Time"
+description = "Fraction of clients that saw the PiP toggle for the First Time"
+select_expression = """
+    LOGICAL_OR(
+        event_category = "pictureinpicture"
+        AND event_method = "saw_toggle"
+        AND mozfun.map.get_key(event_map_values, 'firstTime') = 'true'
+    )
+"""
+data_source = "events"
+statistics = { binomial = {} }
+
+[metrics.opened_pip_on_first_time]
+friendly_name = "Opened Picture in Picture Toggle at First Time Exposure"
+description = "Fraction of clients that opened the PiP toggle at First Time Exposure"
+select_expression = """
+    LOGICAL_OR(
+        event_category = "pictureinpicture"
+        AND event_method = "opened_method"
+        AND mozfun.map.get_key(event_map_values, 'firstTimeToggle') = 'true'
+    )
+"""
+data_source = "events"
+statistics = { binomial = {} }
+
+[metrics.opened_pip_more_than_once]
+friendly_name = "Opened Picture in Picture Toggle at Least Twice"
+description = "Fraction of clients that opened the PiP toggle more than once"
+select_expression = """
+    LOGICAL_OR(
+        event_category = "pictureinpicture"
+        AND event_method = "opened_method"
+        AND mozfun.map.get_key(event_map_values, 'firstTimeToggle') = 'false'
+    )
+"""
+data_source = "events"
+statistics = { binomial = {} }
