@@ -76,8 +76,7 @@ select_expression = """
 """
 data_source = "events"   
 statistics = { bootstrap_mean = {}, deciles = {} }
-#[metrics.pocket_story_impressions.statistics.bootstrap_mean]
-#[metrics.pocket_story_impressions.statistics.deciles]
+
 
 [metrics.spoc_tiles_clicks]
 friendly_name = "Sponsored Tiles Clicks"
@@ -90,8 +89,6 @@ select_expression = """
 """
 data_source = "events" 
 statistics = { bootstrap_mean = {}, deciles = {} }
-#[metrics.pocket_story_clicks.statistics.bootstrap_mean]
-#[metrics.pocket_story_clicks.statistics.deciles]
 
 
 [metrics.spoc_tiles_disable_rate]
@@ -123,8 +120,7 @@ select_expression = """
 """
 data_source = "events"  
 statistics = { bootstrap_mean = {}, deciles = {} } 
-#[metrics.pocket_story_impressions.statistics.bootstrap_mean]
-#[metrics.pocket_story_impressions.statistics.deciles]
+
 
 [metrics.pocket_story_clicks]
 friendly_name = "Pocket Story Clicks"
@@ -137,5 +133,3 @@ select_expression = """
 """
 data_source = "events" 
 statistics = { bootstrap_mean = {}, deciles = {} }
-#[metrics.pocket_story_clicks.statistics.bootstrap_mean]
-#[metrics.pocket_story_clicks.statistics.deciles]
