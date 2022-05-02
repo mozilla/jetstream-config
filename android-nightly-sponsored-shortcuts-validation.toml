@@ -32,17 +32,10 @@ data_source = "events_unnested"
 
 
 [metrics]
-daily = ["new_profile_retention",
-	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
+daily = ["new_profile_retention"]
 
-weekly = ["new_profile_retention",
-	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
+weekly = ["new_profile_retention"]
 
-overall = ["retained", "new_profile_retention",
-	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
 
 ### New Profile Retention
 
