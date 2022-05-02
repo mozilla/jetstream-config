@@ -31,35 +31,29 @@ select_expression = """
 data_source = "events_unnested"
 
 
-# new_or_resurrected_v3 segment not available for fenix
-# have to create manually for fenix
-#[segments.data_sources.fenix_clients_last_seen]
-#from_expression = """(
-#  SELECT
-#    *
-#  FROM
-#    `mozdata.fenix.baseline_clients_last_seen`
-#  WHERE 
-#)"""
-#window_start = 0
-#window_end = 0 
-
-# new_or_resurrected variable DNE for Fenix
-#[segments.new_or_resurrected_fenix]
-#select_expression = """
-#  LOGICAL_OR(COALESCE(is_new_or_resurrected_v3, TRUE))
-#"""
-#data_source = "events_unnested"
-
-
-
 [metrics]
-daily = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+daily = ["new_profile_retention",
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
 	"pocket_story_impressions", "pocket_story_clicks"]
-weekly = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+
+weekly = ["new_profile_retention",
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
 	"pocket_story_impressions", "pocket_story_clicks"]
-overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+
+overall = ["retained", "new_profile_retention",
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
 	"pocket_story_impressions", "pocket_story_clicks"]
+
+### New Profile Retention
+
+[metrics.new_profile_retention]
+friendly_name = "New Profile Retention"
+description = "New profiles defined as those first seen during the first week (enrollment period) of the experiment."
+select_expression = "COALESCE(COUNT(
+	CASE WHEN PARSE_DATETIME('%Y %m %d %H:%M', REPLACE(REPLACE(client_info.first_run_date, "+", " "), "-", " ")) between '2022-03-16' and '2022-03-22'
+	THEN document_id ELSE NULL END), 0) > 0"
+data_source = "baseline"
+[metrics.new_profile_retention.statistics.binomial]
 
 
 
