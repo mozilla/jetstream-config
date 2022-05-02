@@ -49,9 +49,10 @@ overall = ["retained", "new_profile_retention",
 [metrics.new_profile_retention]
 friendly_name = "New Profile Retention"
 description = "New profiles defined as those first seen during the first week (enrollment period) of the experiment."
-select_expression = "COALESCE(COUNT(
+select_expression = """COALESCE(COUNT(
 	CASE WHEN PARSE_DATETIME('%Y %m %d %H:%M', REPLACE(REPLACE(client_info.first_run_date, '+', ' '), '-', ' ')) between '2022-03-16' and '2022-03-22'
-	THEN document_id ELSE NULL END), 0) > 0"
+	THEN document_id ELSE NULL END), 0) > 0
+"""
 data_source = "baseline"
 [metrics.new_profile_retention.statistics.binomial]
 
