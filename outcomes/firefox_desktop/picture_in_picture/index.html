@@ -546,6 +546,34 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#opened_pip_more_than_once" class="md-nav__link">
+    opened_pip_more_than_once
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opened_pip_on_first_time" class="md-nav__link">
+    opened_pip_on_first_time
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saw_pip_toggle_first_time" class="md-nav__link">
+    saw_pip_toggle_first_time
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saw_pip_toggle" class="md-nav__link">
+    saw_pip_toggle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#picture_in_picture_total_duration" class="md-nav__link">
     picture_in_picture_total_duration
   </a>
@@ -1279,6 +1307,34 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#opened_pip_more_than_once" class="md-nav__link">
+    opened_pip_more_than_once
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opened_pip_on_first_time" class="md-nav__link">
+    opened_pip_on_first_time
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saw_pip_toggle_first_time" class="md-nav__link">
+    saw_pip_toggle_first_time
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saw_pip_toggle" class="md-nav__link">
+    saw_pip_toggle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#picture_in_picture_total_duration" class="md-nav__link">
     picture_in_picture_total_duration
   </a>
@@ -1357,6 +1413,85 @@
 <p>Usage and engagement metrics for the video Picture-in-Picture feature.</p>
 <p><a href="https://github.com/mozilla/jetstream-config/blob/main/outcomes/firefox_desktop/picture_in_picture.toml">Source</a>  |  <a href="https://github.com/mozilla/jetstream-config/edit/main/outcomes/firefox_desktop/picture_in_picture.toml">Edit</a></p>
 <h2 id="metrics">Metrics</h2>
+<h3 id="opened_pip_more_than_once"><code>opened_pip_more_than_once</code></h3>
+<p><strong>Opened Picture in Picture Toggle at Least Twice </strong></p>
+<p>Fraction of clients that opened the PiP toggle more than once</p>
+<p>Analysis Period: <code>weekly</code>, <code>overall</code></p>
+<p>Data Source: <a href="#events"><code>events</code></a></p>
+<p>Statistics: <code>binomial</code></p>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">LOGICAL_OR(
+        event_category = &quot;pictureinpicture&quot;
+        AND event_method = &quot;opened_method&quot;
+        AND mozfun.map.get_key(event_map_values, 'firstTimeToggle') = 'false'
+    )
+</code></pre>
+
+</details>
+
+<hr />
+<h3 id="opened_pip_on_first_time"><code>opened_pip_on_first_time</code></h3>
+<p><strong>Opened Picture in Picture Toggle at First Time Exposure </strong></p>
+<p>Fraction of clients that opened the PiP toggle at First Time Exposure</p>
+<p>Analysis Period: <code>weekly</code>, <code>overall</code></p>
+<p>Data Source: <a href="#events"><code>events</code></a></p>
+<p>Statistics: <code>binomial</code></p>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">LOGICAL_OR(
+        event_category = &quot;pictureinpicture&quot;
+        AND event_method = &quot;opened_method&quot;
+        AND mozfun.map.get_key(event_map_values, 'firstTimeToggle') = 'true'
+    )
+</code></pre>
+
+</details>
+
+<hr />
+<h3 id="saw_pip_toggle_first_time"><code>saw_pip_toggle_first_time</code></h3>
+<p><strong>Saw Picture in Picture Toggle for First Time </strong></p>
+<p>Fraction of clients that saw the PiP toggle for the First Time</p>
+<p>Analysis Period: <code>weekly</code>, <code>overall</code></p>
+<p>Data Source: <a href="#events"><code>events</code></a></p>
+<p>Statistics: <code>binomial</code></p>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">LOGICAL_OR(
+        event_category = &quot;pictureinpicture&quot;
+        AND event_method = &quot;saw_toggle&quot;
+        AND mozfun.map.get_key(event_map_values, 'firstTime') = 'true'
+    )
+</code></pre>
+
+</details>
+
+<hr />
+<h3 id="saw_pip_toggle"><code>saw_pip_toggle</code></h3>
+<p><strong>Saw Picture in Picture Toggle </strong></p>
+<p>Fraction of clients that saw the PiP toggle</p>
+<p>Analysis Period: <code>weekly</code>, <code>overall</code></p>
+<p>Data Source: <a href="#events"><code>events</code></a></p>
+<p>Statistics: <code>binomial</code></p>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">LOGICAL_OR(
+        event_category = &quot;pictureinpicture&quot;
+        AND event_method = &quot;saw_toggle&quot;
+    )
+</code></pre>
+
+</details>
+
+<hr />
 <h3 id="picture_in_picture_total_duration"><code>picture_in_picture_total_duration</code></h3>
 <p><strong>Per-user total length of Picture in Picture sessions </strong></p>
 <p>The distribution of total user PiP session duration</p>
