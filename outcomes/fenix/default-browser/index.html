@@ -498,15 +498,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#metrics_1" class="md-nav__link">
-    metrics
+  <a href="#events" class="md-nav__link">
+    events
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#events" class="md-nav__link">
-    events
+  <a href="#metrics_1" class="md-nav__link">
+    metrics
   </a>
   
 </li>
@@ -520,6 +520,34 @@
   
 </nav>
       
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocket/" class="md-nav__link">
+        Pocket
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sponsored_tiles/" class="md-nav__link">
+        Sponsored tiles
+      </a>
     </li>
   
 
@@ -1292,15 +1320,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#metrics_1" class="md-nav__link">
-    metrics
+  <a href="#events" class="md-nav__link">
+    events
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#events" class="md-nav__link">
-    events
+  <a href="#metrics_1" class="md-nav__link">
+    metrics
   </a>
   
 </li>
@@ -1375,22 +1403,6 @@
 
 <hr />
 <h2 id="data-sources">Data Sources</h2>
-<h3 id="metrics_1"><a href="#metrics"><code>metrics</code></a></h3>
-<details>
-<summary>Definition:</summary>
-
-
-<pre><code class="language-sql">(
-                SELECT
-                    p.*,
-                    DATE(p.submission_timestamp) AS submission_date
-                FROM `moz-fx-data-shared-prod.{dataset}.metrics` p
-            )
-</code></pre>
-
-</details>
-
-<hr />
 <h3 id="events"><a href="#events"><code>events</code></a></h3>
 <details>
 <summary>Definition:</summary>
@@ -1405,6 +1417,22 @@
                     `moz-fx-data-shared-prod.{dataset}.events` p
                 CROSS JOIN
                     UNNEST(p.events) AS event
+            )
+</code></pre>
+
+</details>
+
+<hr />
+<h3 id="metrics_1"><a href="#metrics"><code>metrics</code></a></h3>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">(
+                SELECT
+                    p.*,
+                    DATE(p.submission_timestamp) AS submission_date
+                FROM `moz-fx-data-shared-prod.{dataset}.metrics` p
             )
 </code></pre>
 
@@ -1440,13 +1468,13 @@
       
       
         
-        <a href="../../firefox_desktop/firefox_suggest/" class="md-footer__link md-footer__link--next" aria-label="Next: Firefox suggest" rel="next">
+        <a href="../pocket/" class="md-footer__link md-footer__link--next" aria-label="Next: Pocket" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Firefox suggest
+              Pocket
             </div>
           </div>
           <div class="md-footer__button md-icon">
