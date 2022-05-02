@@ -15,3 +15,5 @@ No additional review is necessary to land configurations.
 Learn how to write a Jetstream configuration at <https://experimenter.info/jetstream/configuration>.
 
 Learn more about Outcomes at <https://experimenter.info/jetstream/outcomes>.
+
+See what outcomes and pre-defined metrics are available at https://mozilla.github.io/jetstream-config
