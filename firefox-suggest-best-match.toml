@@ -40,5 +40,3 @@ select_expression = """
   ) AS BOOL), FALSE)
 """
 data_source = "events_unnested"
-
-
