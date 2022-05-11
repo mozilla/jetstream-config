@@ -25,8 +25,8 @@ from_expression = """(
                     DATE(submission_timestamp) as date,
                     client_info.client_id,
                     ping_info.seq,
-                    SAFE.PARSE_TIMESTAMP('%FT%H:%M%Ez', ping_info.start_time) AS start_time,
-                    SAFE.PARSE_TIMESTAMP('%FT%H:%M%Ez', ping_info.end_time) AS end_time,
+                    ping_info.parsed_start_time AS start_time,
+                    ping_info.parsed_end_time AS end_time,
                     metrics.counter.tabs_cumulative_count
                 FROM
                     `mozdata.firefox_ios.metrics`
@@ -47,9 +47,9 @@ from_expression = """(
             ) b
         ON
             c.client_id = b.client_id
-            AND SAFE.PARSE_TIMESTAMP('%FT%H:%M%Ez', b.ping_info.start_time) BETWEEN start_time AND end_time
-            AND SAFE.PARSE_TIMESTAMP('%FT%H:%M%Ez', b.ping_info.end_time) BETWEEN start_time AND end_time
-        GROUP BY 1, 2, 3
+            AND b.ping_info.parsed_start_time BETWEEN c.start_time AND c.end_time
+            AND b.ping_info.parsed_end_time BETWEEN c.start_time AND c.end_time
+            GROUP BY 1, 2, 3
     )
     GROUP BY 1, 2
 )"""
