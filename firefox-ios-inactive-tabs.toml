@@ -37,7 +37,7 @@ from_expression = """(
         LEFT JOIN (
                 SELECT
                     client_info.client_id,
-                    submission_timestamp
+                    ping_info
                 FROM
                     `mozdata.firefox_ios.baseline`
                 WHERE
@@ -47,7 +47,8 @@ from_expression = """(
             ) b
         ON
             c.client_id = b.client_id
-            AND submission_timestamp BETWEEN start_time AND end_time
+            AND SAFE.PARSE_TIMESTAMP('%FT%H:%M%Ez', b.ping_info.start_time) BETWEEN start_time AND end_time
+            AND SAFE.PARSE_TIMESTAMP('%FT%H:%M%Ez', b.ping_info.end_time) BETWEEN start_time AND end_time
         GROUP BY 1, 2, 3
     )
     GROUP BY 1, 2
