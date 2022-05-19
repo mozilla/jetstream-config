@@ -10,7 +10,7 @@ description = "Usage and engagement metrics for the Spotlight feature - for ALL 
 friendly_name = "Message ID associated with the experiment"
 description = "ID of the spotlight message associated with this experiment"
 default = "'AND DIV(7, 0)' -- Failed to specify a value for message_id"
-distinct_by_branch = false
+distinct_by_branch = true
 
 
 ### metrics definition
