@@ -498,15 +498,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#events" class="md-nav__link">
-    events
+  <a href="#metrics_1" class="md-nav__link">
+    metrics
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#metrics_1" class="md-nav__link">
-    metrics
+  <a href="#events" class="md-nav__link">
+    events
   </a>
   
 </li>
@@ -1320,15 +1320,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#events" class="md-nav__link">
-    events
+  <a href="#metrics_1" class="md-nav__link">
+    metrics
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#metrics_1" class="md-nav__link">
-    metrics
+  <a href="#events" class="md-nav__link">
+    events
   </a>
   
 </li>
@@ -1403,6 +1403,22 @@
 
 <hr />
 <h2 id="data-sources">Data Sources</h2>
+<h3 id="metrics_1"><a href="#metrics"><code>metrics</code></a></h3>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">(
+                SELECT
+                    p.*,
+                    DATE(p.submission_timestamp) AS submission_date
+                FROM `moz-fx-data-shared-prod.{dataset}.metrics` p
+            )
+</code></pre>
+
+</details>
+
+<hr />
 <h3 id="events"><a href="#events"><code>events</code></a></h3>
 <details>
 <summary>Definition:</summary>
@@ -1417,22 +1433,6 @@
                     `moz-fx-data-shared-prod.{dataset}.events` p
                 CROSS JOIN
                     UNNEST(p.events) AS event
-            )
-</code></pre>
-
-</details>
-
-<hr />
-<h3 id="metrics_1"><a href="#metrics"><code>metrics</code></a></h3>
-<details>
-<summary>Definition:</summary>
-
-
-<pre><code class="language-sql">(
-                SELECT
-                    p.*,
-                    DATE(p.submission_timestamp) AS submission_date
-                FROM `moz-fx-data-shared-prod.{dataset}.metrics` p
             )
 </code></pre>
 
