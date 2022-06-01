@@ -32,9 +32,16 @@ data_source = "events_unnested"
 
 
 [metrics]
-daily = ["new_profile_retention"]
+daily = ["new_profile_retention", 
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
 
-weekly = ["new_profile_retention"]
+weekly = ["new_profile_retention", 
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
+
+overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
 
 
 ### New Profile Retention
@@ -48,3 +55,72 @@ select_expression = """COALESCE(COUNT(
 """
 data_source = "baseline"
 [metrics.new_profile_retention.statistics.binomial]
+
+#### Copied rest of metrics from files in jetstream-config/outcomes/fenix
+#### Metrics are not set to render for all experiments by default
+
+[metrics.spoc_tiles_impressions]
+friendly_name = "Sponsored Tiles Impressions"
+description = "Number of times Contile Sponsored Tiles are shown."
+select_expression = """
+      COUNTIF(
+          event.category = 'top_sites'
+          AND event.name = 'contile_impression'
+      )
+"""
+data_source = "events"   
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+
+[metrics.spoc_tiles_clicks]
+friendly_name = "Sponsored Tiles Clicks"
+description = "Number of times user clicked a Contile Sponsored Tile."
+select_expression = """
+      COUNTIF(
+          event.category = 'top_sites'
+          AND event.name = 'contile_click'
+      )
+"""
+data_source = "events" 
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+
+[metrics.spoc_tiles_disable_rate]
+select_expression = """   
+  MAX(
+    CAST(
+       metrics.boolean.customize_home_contile AS int )
+  )
+"""
+data_source = "metrics" 
+bigger_is_better = false
+friendly_name = "Sponsored Tiles Disable Rate"
+description = "Fraction of users who disable Contile Sponsored Tiles"
+[metrics.spoc_tiles_disable_rate.statistics.binomial]
+
+[metrics.pocket_story_impressions]
+friendly_name = "Pocket Impressions"
+description = "Number of times Pocket recommended stories are shown on the home screen."
+select_expression = """
+      COUNTIF(
+          event.category = 'pocket'
+          AND event.name = 'home_recs_shown'
+      )
+"""
+data_source = "events"  
+statistics = { bootstrap_mean = {}, deciles = {} } 
+
+
+[metrics.pocket_story_clicks]
+friendly_name = "Pocket Story Clicks"
+description = "Number of times user tapped a Pocket recommended story to be opened."
+select_expression = """
+      COUNTIF(
+          event.category = 'pocket'
+          AND event.name = 'home_recs_story_clicked'
+      )
+"""
+data_source = "events" 
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+
