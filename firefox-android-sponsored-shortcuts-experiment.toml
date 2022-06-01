@@ -24,7 +24,9 @@ select_expression = """
   COALESCE(CAST(MAX(
     CASE WHEN event_category = 'home_screen'
            AND event_name = 'home_screen_displayed' 
-	         AND metadata.geo.country IN ('US', 'GB', 'DE', 'FR', 'AU', 'CA', 'ES', 'IT', 'IN', 'JP', 'BR', 'MX')
+
+	   AND metadata.geo.country IN ('US', 'GB', 'DE', 'FR', 'AU', 'CA', 'ES', 'IT', 'IN', 'JP', 'BR', 'MX')
+
          THEN 1
          ELSE 0
     END
