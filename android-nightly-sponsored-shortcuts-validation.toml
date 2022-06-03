@@ -86,10 +86,10 @@ statistics = { bootstrap_mean = {}, deciles = {} }
 
 [metrics.spoc_tiles_disable_rate]
 select_expression = """   
-  MAX(
+  COALESCE(MAX(
     CAST(
        metrics.boolean.customize_home_contile AS int )
-  )
+  ),0)
 """
 data_source = "metrics" 
 bigger_is_better = false
