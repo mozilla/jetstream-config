@@ -1353,10 +1353,10 @@
 <summary>Definition:</summary>
 
 
-<pre><code class="language-sql">COUNTIF(
+<pre><code class="language-sql">COALESCE(COUNTIF(
           event.category = 'pocket'
           AND event.name = 'home_recs_story_clicked'
-      )
+      ),0)
 </code></pre>
 
 </details>
@@ -1372,10 +1372,10 @@
 <summary>Definition:</summary>
 
 
-<pre><code class="language-sql">COUNTIF(
+<pre><code class="language-sql">COALESCE(COUNTIF(
           event.category = 'pocket'
           AND event.name = 'home_recs_shown'
-      )
+      ),0)
 </code></pre>
 
 </details>
