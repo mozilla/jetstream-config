@@ -9,9 +9,9 @@ description = "Usage and engagement metrics for the Spotlight feature - for ALL 
 [parameters.message_id]
 friendly_name = "Message ID associated with the experiment"
 description = "ID of the spotlight message associated with this experiment"
-default = "NULL"
+# only used for validation; needs to be specified for each experiment
+default = { test-branch = "test-message-id"}
 distinct_by_branch = true
-value.branch_a = ""
 
 
 ### metrics definition
@@ -41,14 +41,13 @@ from_expression = """
 (SELECT
     client_id,
     event,
+    message_id,
     experiments,
     DATE(submission_timestamp) AS submission_date
 FROM
     mozdata.messaging_system.spotlight
 CROSS JOIN
     UNNEST(experiments) AS experiment
-WHERE
-    message_id = CONCAT(experiment.key, ':', experiment.value.branch)
 )
 """
 experiments_column_type = "native"
