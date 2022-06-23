@@ -64,8 +64,8 @@ friendly_name = "Sponsored Tiles Impressions"
 description = "Number of times Contile Sponsored Tiles are shown."
 select_expression = """
       COALESCE(COUNTIF(
-          event.category = 'top_site'
-          AND event.name = 'contile_impression'
+          events.category = 'top_site'
+          AND events.name = 'contile_impression'
       ),0)
 """
 data_source = "events"   
@@ -77,8 +77,8 @@ friendly_name = "Sponsored Tiles Clicks"
 description = "Number of times user clicked a Contile Sponsored Tile."
 select_expression = """
       COALESCE(COUNTIF(
-          event.category = 'top_site'
-          AND event.name = 'contile_click'
+          events.category = 'top_site'
+          AND events.name = 'contile_click'
       ),0)
 """
 data_source = "events" 
@@ -89,8 +89,8 @@ statistics = { bootstrap_mean = {}, deciles = {} }
 select_expression = """   
   COALESCE(COUNTIF(
           events.category = 'top_site'
-          AND event.name = 'contextual_menu'
-          AND event.extra.value = "settings"
+          AND events.name = 'contextual_menu'
+          AND events.extra.value = "settings"
   ),0)
 """
 data_source = "metrics" 
@@ -104,8 +104,8 @@ friendly_name = "Pocket Impressions"
 description = "Number of times Pocket recommended stories are shown on the home screen."
 select_expression = """
       COALESCE(COUNTIF(
-          event.category = 'pocket'
-          AND event.name = 'section_impressions'
+          events.category = 'pocket'
+          AND events.name = 'section_impressions'
       ),0)
 """
 data_source = "metrics"  
@@ -117,8 +117,8 @@ friendly_name = "Pocket Story Clicks"
 description = "Number of times user tapped a Pocket recommended story to be opened."
 select_expression = """
       COALESCE(COUNTIF(
-          event.category = 'pocket'
-          AND event.name = 'open_story_origin'
+          events.category = 'pocket'
+          AND events.name = 'open_story_origin'
       ),0)
 """
 data_source = "metrics" 
