@@ -1,0 +1,126 @@
+# experiment: firefox-ios-homepage-experiment-sponsored-shortcuts
+[experiment]
+
+# interested in users who are eligible for treatment in both branches: those that open homescreen
+# these users also need to be in the countries where advertisements are live
+# at first, this will just be the US
+segments = ["opened_homescreen_in_US"] 
+
+[segments.data_sources.metrics]
+from_expression = """(
+  SELECT
+    client_info.client_id as client_id,
+    CAST(submission_timestamp as DATE) as submission_date,
+    *
+  FROM
+    `mozdata.firefox_ios.metrics`
+)"""
+window_start = 0
+window_end = 28 
+
+[segments.opened_homescreen_in_US]
+select_expression = """
+  COALESCE(CAST(MAX(
+    CASE metrics.labeled_counter.firefox_home_page_firefox_homepage_origin IS NOT NULL
+	   AND metadata.geo.country IN ('US')
+         THEN 1
+         ELSE 0
+    END
+  ) AS BOOL), FALSE)
+"""
+data_source = "metrics"
+
+
+[metrics]
+daily = ["new_profile_retention", 
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
+
+weekly = ["new_profile_retention", 
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
+
+overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
+
+
+### New Profile Retention
+
+[metrics.new_profile_retention]
+friendly_name = "New Profile Retention"
+description = "New profiles defined as those first seen during the first week (enrollment period) of the experiment."
+select_expression = """COALESCE(COUNT(
+	CASE WHEN PARSE_DATETIME('%Y %m %d %H:%M', REPLACE(REPLACE(client_info.first_run_date, '+', ' '), '-', ' ')) between '2022-06-07' and '2022-06-13'
+	THEN document_id ELSE NULL END), 0) > 0
+"""
+data_source = "baseline"
+[metrics.new_profile_retention.statistics.binomial]
+
+#### Copied rest of metrics from files in jetstream-config/outcomes/fenix
+#### Metrics are not set to render for all experiments by default
+
+[metrics.spoc_tiles_impressions]
+friendly_name = "Sponsored Tiles Impressions"
+description = "Number of times Contile Sponsored Tiles are shown."
+select_expression = """
+      COALESCE(COUNTIF(
+          events.category = 'top_site'
+          AND events.name = 'contile_impression'
+      ),0)
+"""
+data_source = "events"   
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+
+[metrics.spoc_tiles_clicks]
+friendly_name = "Sponsored Tiles Clicks"
+description = "Number of times user clicked a Contile Sponsored Tile."
+select_expression = """
+      COALESCE(COUNTIF(
+          events.category = 'top_site'
+          AND events.name = 'contile_click'
+      ),0)
+"""
+data_source = "events" 
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+
+[metrics.spoc_tiles_disable_rate]
+select_expression = """   
+  COALESCE(COUNTIF(
+          events.category = 'top_site'
+          AND events.name = 'contextual_menu'
+          AND event.extra.value = "settings"
+  ),0)
+"""
+data_source = "metrics" 
+bigger_is_better = false
+friendly_name = "Sponsored Tiles Disable Rate"
+description = "Fraction of users who disable Contile Sponsored Tiles"
+[metrics.spoc_tiles_disable_rate.statistics.binomial]
+
+[metrics.pocket_story_impressions]
+friendly_name = "Pocket Impressions"
+description = "Number of times Pocket recommended stories are shown on the home screen."
+select_expression = """
+      COALESCE(COUNTIF(
+          events.category = 'pocket'
+          AND events.name = 'section_impressions'
+      ),0)
+"""
+data_source = "metrics"  
+statistics = { bootstrap_mean = {}, deciles = {} } 
+
+
+[metrics.pocket_story_clicks]
+friendly_name = "Pocket Story Clicks"
+description = "Number of times user tapped a Pocket recommended story to be opened."
+select_expression = """
+      COALESCE(COUNTIF(
+          event.category = 'pocket'
+          AND event.name = 'open_story_origin'
+      ),0)
+"""
+data_source = "metrics" 
+statistics = { bootstrap_mean = {}, deciles = {} }
+
