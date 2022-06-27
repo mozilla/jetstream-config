@@ -1,7 +1,7 @@
 [experiment]
 [metrics]
-weekly = []
-overall = []
+weekly = ["autofill_impressions", "adaptive_autofill_impressions", "autofill_ctr"]
+overall = ["autofill_impressions", "adaptive_autofill_impressions", "autofill_ctr"]
 
 [metrics.autofill_impressions]
 select_expression = """
