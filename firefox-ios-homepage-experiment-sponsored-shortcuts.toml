@@ -11,7 +11,6 @@ from_expression = """(
   SELECT
     p.client_info.client_id as client_id,
     CAST(p.submission_timestamp as DATE) as submission_date,
-    p.ping_info.experiments as experiments,
     p.metrics.counter.pocket_section_impressions,
     s.value as pocket_story_clicks,
     CASE WHEN metrics.labeled_counter.firefox_home_page_firefox_homepage_origin IS NOT NULL
@@ -21,6 +20,7 @@ from_expression = """(
   FROM `mozdata.firefox_ios.metrics` p
   CROSS JOIN UNNEST(p.metrics.labeled_counter.pocket_open_story_origin) s
 )"""
+experiments_column_type = "native"
 
 [data_sources.events_new]
 from_expression = """(
@@ -30,13 +30,13 @@ SELECT
    unnest_lev1.category as event_category,
    unnest_lev1.name as event_name,
    unnest_lev2.value as event_extra_value,
-   unnest_lev1.ping_info.experiments as experiments,
    unnest_lev1.*
 FROM (SELECT *
   	FROM `mozdata.firefox_ios.events` p
   	CROSS JOIN UNNEST(p.events) s) unnest_lev1
 CROSS JOIN UNNEST(unnest_lev1.extra) unnest_lev2
 )"""
+experiments_column_type = "native"
 
 
 [segments.data_sources.metrics]
