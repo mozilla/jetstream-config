@@ -27,15 +27,15 @@ data_source = "metrics"
 
 [metrics]
 daily = ["new_profile_retention", 
-	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_section_impressions", "pocket_story_clicks"]
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate"] --,
+	--"pocket_section_impressions", "pocket_story_clicks"]
 
 weekly = ["new_profile_retention", 
-	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_section_impressions", "pocket_story_clicks"]
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate"]--,
+	--"pocket_section_impressions", "pocket_story_clicks"]
 
-overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_section_impressions", "pocket_story_clicks"]
+overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate"]--,
+	--"pocket_section_impressions", "pocket_story_clicks"]
 
 
 ### New Profile Retention
