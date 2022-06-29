@@ -25,17 +25,13 @@ from_expression = """(
 [data_sources.events_new]
 from_expression = """(
 SELECT 
-  unnest_lev1.client_id,
-  unnest_lev1.submission_date,
-  unnest_lev1.category as event_category,
-  unnest_lev1.name as event_name,
-  unnest_lev2.value as event_extra_value,
-  unnest_lev1.*
-FROM (SELECT
-    		p.client_info.client_id as client_id,
-    		CAST(p.submission_timestamp as DATE) as submission_date,
-    		s.*,
-		p.*
+   unnest_lev1.client_info.client_id as client_id,
+   CAST(unnest_lev1.submission_timestamp as DATE) as submission_date,
+   unnest_lev1.category as event_category,
+   unnest_lev1.name as event_name,
+   unnest_lev2.value as event_extra_value,
+   unnest_lev1.*
+FROM (SELECT *
   	FROM `mozdata.firefox_ios.events` p
   	CROSS JOIN UNNEST(p.events) s) unnest_lev1
 CROSS JOIN UNNEST(unnest_lev1.extra) unnest_lev2
