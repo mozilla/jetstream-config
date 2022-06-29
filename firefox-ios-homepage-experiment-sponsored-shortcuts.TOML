@@ -9,11 +9,12 @@ segments = ["opened_homescreen_in_US"]
 [segments.data_sources.metrics]
 from_expression = """(
   SELECT
-    client_info.client_id as client_id,
-    CAST(submission_timestamp as DATE) as submission_date,
-    *
-  FROM
-    `mozdata.firefox_ios.metrics`
+    p.client_info.client_id as client_id,
+    CAST(p.submission_timestamp as DATE) as submission_date,
+    p.metrics.counter.pocket_section_impressions,
+    s.value as pocket_story_clicks
+  FROM `mozdata.firefox_ios.metrics` p
+  CROSS JOIN UNNEST(p.metrics.labeled_counter.pocket_open_story_origin) s
 )"""
 window_start = 0
 window_end = 28 
@@ -34,14 +35,14 @@ data_source = "metrics"
 [metrics]
 daily = ["new_profile_retention", 
 	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
+	"pocket_section_impressions", "pocket_story_clicks"]
 
 weekly = ["new_profile_retention", 
 	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
+	"pocket_section_impressions", "pocket_story_clicks"]
 
 overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
-	"pocket_story_impressions", "pocket_story_clicks"]
+	"pocket_section_impressions", "pocket_story_clicks"]
 
 
 ### New Profile Retention
@@ -93,19 +94,18 @@ select_expression = """
           AND events.extra.value = "settings"
   ),0)
 """
-data_source = "metrics" 
+data_source = "events" 
 bigger_is_better = false
 friendly_name = "Sponsored Tiles Disable Rate"
 description = "Fraction of users who disable Contile Sponsored Tiles"
 [metrics.spoc_tiles_disable_rate.statistics.binomial]
 
-[metrics.pocket_story_impressions]
+[metrics.pocket_section_impressions]
 friendly_name = "Pocket Impressions"
-description = "Number of times Pocket recommended stories are shown on the home screen."
+description = "Number of times Pocket content is shown on the home screen."
 select_expression = """
-      COALESCE(COUNTIF(
-          events.category = 'pocket'
-          AND events.name = 'section_impressions'
+      COALESCE(SUM(
+          pocket_section_impressions
       ),0)
 """
 data_source = "metrics"  
@@ -114,11 +114,10 @@ statistics = { bootstrap_mean = {}, deciles = {} }
 
 [metrics.pocket_story_clicks]
 friendly_name = "Pocket Story Clicks"
-description = "Number of times user tapped a Pocket recommended story to be opened."
+description = "Number of times user clicked on a Pocket story."
 select_expression = """
-      COALESCE(COUNTIF(
-          events.category = 'pocket'
-          AND events.name = 'open_story_origin'
+      COALESCE(SUM(
+          pocket_story_clicks
       ),0)
 """
 data_source = "metrics" 
