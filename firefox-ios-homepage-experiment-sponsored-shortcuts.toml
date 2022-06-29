@@ -12,7 +12,10 @@ from_expression = """(
     p.client_info.client_id as client_id,
     CAST(p.submission_timestamp as DATE) as submission_date,
     p.metrics.counter.pocket_section_impressions,
-    s.value as pocket_story_clicks
+    s.value as pocket_story_clicks,
+    CASE WHEN metrics.labeled_counter.firefox_home_page_firefox_homepage_origin IS NOT NULL
+	   AND metadata.geo.country IN ('US')
+         THEN 1 ELSE 0 END as inUS
   FROM `mozdata.firefox_ios.metrics` p
   CROSS JOIN UNNEST(p.metrics.labeled_counter.pocket_open_story_origin) s
 )"""
@@ -21,13 +24,7 @@ window_end = 28
 
 [segments.opened_homescreen_in_US]
 select_expression = """
-  COALESCE(CAST(MAX(
-    CASE WHEN metrics.labeled_counter.firefox_home_page_firefox_homepage_origin IS NOT NULL
-	   AND metadata.geo.country IN ('US')
-         THEN 1
-         ELSE 0
-    END
-  ) AS BOOL), FALSE)
+	COALESCE(CAST(MAX(inUS) AS BOOL), FALSE)
 """
 data_source = "metrics"
 
