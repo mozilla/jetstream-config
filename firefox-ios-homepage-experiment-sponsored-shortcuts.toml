@@ -11,6 +11,7 @@ from_expression = """(
   SELECT
     p.client_info.client_id as client_id,
     CAST(p.submission_timestamp as DATE) as submission_date,
+    p.ping_info.experiments as experiments,
     p.metrics.counter.pocket_section_impressions,
     s.value as pocket_story_clicks,
     CASE WHEN metrics.labeled_counter.firefox_home_page_firefox_homepage_origin IS NOT NULL
@@ -20,7 +21,7 @@ from_expression = """(
   FROM `mozdata.firefox_ios.metrics` p
   CROSS JOIN UNNEST(p.metrics.labeled_counter.pocket_open_story_origin) s
 )"""
-experiments_column_type = "native"
+
 
 [segments.data_sources.metrics]
 from_expression = """(
