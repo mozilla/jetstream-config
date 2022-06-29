@@ -118,7 +118,7 @@ statistics = { bootstrap_mean = {}, deciles = {} }
 select_expression = """   
   COALESCE(COUNTIF(
           event_category = 'top_site'
-          event_name = 'contextual_menu'
+          AND event_name = 'contextual_menu'
           AND event_extra_value = "settings"
   ),0)
 """
