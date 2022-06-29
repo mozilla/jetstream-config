@@ -111,8 +111,8 @@ statistics = { bootstrap_mean = {}, deciles = {} }
 friendly_name = "Pocket Story Clicks"
 description = "Number of times user clicked on a Pocket story."
 select_expression = """
-      COALESCE(`mozfun.map.get_key`(metrics.labeled_counter.pocket_open_story_origin, 'zero-search'),0) + 
-		COALESCE(`mozfun.map.get_key`(metrics.labeled_counter.pocket_open_story_origin, 'origin-other'),0)
+      SUM(COALESCE(`mozfun.map.get_key`(metrics.labeled_counter.pocket_open_story_origin, 'zero-search'),0) + 
+		COALESCE(`mozfun.map.get_key`(metrics.labeled_counter.pocket_open_story_origin, 'origin-other'),0))
 """
 data_source = "metrics" 
 statistics = { bootstrap_mean = {}, deciles = {} }
