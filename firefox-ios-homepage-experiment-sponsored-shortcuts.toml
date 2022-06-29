@@ -22,6 +22,25 @@ from_expression = """(
   CROSS JOIN UNNEST(p.metrics.labeled_counter.pocket_open_story_origin) s
 )"""
 
+[data_sources.events_new]
+from_expression = """(
+SELECT 
+  unnest_lev1.client_id,
+  unnest_lev1.submission_date,
+  unnest_lev1.category as event_category,
+  unnest_lev1.name as event_name,
+  unnest_lev2.value as event_extra_value,
+  unnest_lev1.*
+FROM (SELECT
+    		p.client_info.client_id as client_id,
+    		CAST(p.submission_timestamp as DATE) as submission_date,
+    		s.*,
+		p.*
+  	FROM `mozdata.firefox_ios.events` p
+  	CROSS JOIN UNNEST(p.events) s) unnest_lev1
+CROSS JOIN UNNEST(unnest_lev1.extra) unnest_lev2
+)"""
+
 
 [segments.data_sources.metrics]
 from_expression = """(
@@ -98,12 +117,12 @@ statistics = { bootstrap_mean = {}, deciles = {} }
 [metrics.spoc_tiles_disable_rate]
 select_expression = """   
   COALESCE(COUNTIF(
-          event.category = 'top_site'
-          AND event.name = 'contextual_menu'
-          AND event.extra.value = "settings"
+          event_category = 'top_site'
+          event_name = 'contextual_menu'
+          AND event_extra_value = "settings"
   ),0)
 """
-data_source = "events" 
+data_source = "events_new" 
 bigger_is_better = false
 friendly_name = "Sponsored Tiles Disable Rate"
 description = "Fraction of users who disable Contile Sponsored Tiles"
