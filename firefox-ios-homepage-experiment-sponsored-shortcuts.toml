@@ -27,12 +27,15 @@ data_source = "metrics"
 
 [metrics]
 daily = ["new_profile_retention", 
-	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate"] 
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"] 
 
 weekly = ["new_profile_retention", 
-	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate"]
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
 
-overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate"]
+overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"pocket_story_impressions", "pocket_story_clicks"]
 
 
 ### New Profile Retention
@@ -92,5 +95,25 @@ description = "Fraction of users who disable Contile Sponsored Tiles"
 [metrics.spoc_tiles_disable_rate.statistics.binomial]
 
 
+[metrics.pocket_section_impressions]
+friendly_name = "Pocket Impressions"
+description = "Number of times Pocket content is shown on the home screen."
+select_expression = """
+      COALESCE(SUM(
+          metrics.counter.pocket_section_impressions
+      ),0)
+"""
+data_source = "metrics"  
+statistics = { bootstrap_mean = {}, deciles = {} } 
 
+
+[metrics.pocket_story_clicks]
+friendly_name = "Pocket Story Clicks"
+description = "Number of times user clicked on a Pocket story."
+select_expression = """
+      COALESCE(`mozfun.map.get_key`(metrics.labeled_counter.pocket_open_story_origin, 'zero-search'),0) + 
+		COALESCE(`mozfun.map.get_key`(metrics.labeled_counter.pocket_open_story_origin, 'origin-other'),0)
+"""
+data_source = "metrics" 
+statistics = { bootstrap_mean = {}, deciles = {} }
 
