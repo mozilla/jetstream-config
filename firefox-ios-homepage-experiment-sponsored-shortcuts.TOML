@@ -30,6 +30,7 @@ SELECT
    unnest_lev1.category as event_category,
    unnest_lev1.name as event_name,
    unnest_lev2.value as event_extra_value,
+   unnest_lev1.ping_info.experiments as experiments,
    unnest_lev1.*
 FROM (SELECT *
   	FROM `mozdata.firefox_ios.events` p
