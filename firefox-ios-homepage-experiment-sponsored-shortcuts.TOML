@@ -16,12 +16,11 @@ from_expression = """(
     CASE WHEN metrics.labeled_counter.firefox_home_page_firefox_homepage_origin IS NOT NULL
 	   AND metadata.geo.country IN ('US')
          THEN 1 ELSE 0 END as inUS,
-    *
+    p.*
   FROM `mozdata.firefox_ios.metrics` p
   CROSS JOIN UNNEST(p.metrics.labeled_counter.pocket_open_story_origin) s
 )"""
-window_start = 0
-window_end = 28 
+experiments_column_type = "native"
 
 [segments.data_sources.metrics]
 from_expression = """(
@@ -33,8 +32,6 @@ from_expression = """(
          THEN 1 ELSE 0 END as inUS
   FROM `mozdata.firefox_ios.metrics` p
 )"""
-window_start = 0
-window_end = 28 
 
 [segments.opened_homescreen_in_US]
 select_expression = """
