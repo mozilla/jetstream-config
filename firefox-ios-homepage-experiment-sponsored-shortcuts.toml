@@ -6,7 +6,7 @@
 # at first, this will just be the US
 segments = ["opened_homescreen_in_US"] 
 
-[data_sources.metrics]
+[data_sources.metrics_new]
 from_expression = """(
   SELECT
     p.client_info.client_id as client_id,
@@ -121,7 +121,7 @@ select_expression = """
           pocket_section_impressions
       ),0)
 """
-data_source = "metrics"  
+data_source = "metrics_new"  
 statistics = { bootstrap_mean = {}, deciles = {} } 
 
 
@@ -133,6 +133,6 @@ select_expression = """
           pocket_story_clicks
       ),0)
 """
-data_source = "metrics" 
+data_source = "metrics_new" 
 statistics = { bootstrap_mean = {}, deciles = {} }
 
