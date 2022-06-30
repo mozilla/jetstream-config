@@ -1395,10 +1395,11 @@
 <summary>Definition:</summary>
 
 
-<pre><code class="language-sql">COALESCE(COUNTIF(
+<pre><code class="language-sql">COALESCE(MAX(CASE WHEN
           event.category = 'top_site'
           AND event.name = 'contextual_menu'
           AND `mozfun.map.get_key`(event.extra, 'type') = 'settings'
+    THEN 1 ELSE 0 END
   ),0)
 </code></pre>
 
