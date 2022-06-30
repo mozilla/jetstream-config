@@ -643,15 +643,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#main" class="md-nav__link">
-    main
+  <a href="#events" class="md-nav__link">
+    events
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#events" class="md-nav__link">
-    events
+  <a href="#main" class="md-nav__link">
+    main
   </a>
   
 </li>
@@ -753,6 +753,34 @@
     <li class="md-nav__item">
       <a href="../../firefox_ios/default_browser/" class="md-nav__link">
         Default browser
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../firefox_ios/pocket/" class="md-nav__link">
+        Pocket
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../firefox_ios/sponsored_tiles/" class="md-nav__link">
+        Sponsored tiles
       </a>
     </li>
   
@@ -1404,15 +1432,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#main" class="md-nav__link">
-    main
+  <a href="#events" class="md-nav__link">
+    events
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#events" class="md-nav__link">
-    events
+  <a href="#main" class="md-nav__link">
+    main
   </a>
   
 </li>
@@ -1604,6 +1632,17 @@
 
 <hr />
 <h2 id="data-sources">Data Sources</h2>
+<h3 id="events"><a href="#events"><code>events</code></a></h3>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">mozdata.telemetry.events
+</code></pre>
+
+</details>
+
+<hr />
 <h3 id="main"><a href="#main"><code>main</code></a></h3>
 <details>
 <summary>Definition:</summary>
@@ -1616,17 +1655,6 @@
                     environment.experiments
                 FROM `moz-fx-data-shared-prod`.telemetry_stable.main_v4
             )
-</code></pre>
-
-</details>
-
-<hr />
-<h3 id="events"><a href="#events"><code>events</code></a></h3>
-<details>
-<summary>Definition:</summary>
-
-
-<pre><code class="language-sql">mozdata.telemetry.events
 </code></pre>
 
 </details>
