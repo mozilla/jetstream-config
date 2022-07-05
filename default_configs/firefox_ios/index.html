@@ -1149,6 +1149,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#serp_ad_clicks" class="md-nav__link">
+    serp_ad_clicks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#search_count" class="md-nav__link">
     search_count
   </a>
@@ -1326,6 +1333,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#serp_ad_clicks" class="md-nav__link">
+    serp_ad_clicks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#search_count" class="md-nav__link">
     search_count
   </a>
@@ -1397,10 +1411,26 @@
 <p>Metrics and statistics that get computed for every <code>firefox_ios</code> experiment.</p>
 <p><a href="https://github.com/mozilla/jetstream-config/blob/main/defaults/firefox_ios.toml">Source</a>  |  <a href="https://github.com/mozilla/jetstream-config/edit/main/defaults/firefox_ios.toml">Edit</a></p>
 <h2 id="metrics">Metrics</h2>
+<h3 id="serp_ad_clicks"><code>serp_ad_clicks</code></h3>
+<p><strong>Ad Clicks</strong></p>
+<p>Number of ad clicks on a search engine results page.</p>
+<p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
+<p>Data Source: <a href="#mobile_search_clients_engines_sources_daily"><code>mobile_search_clients_engines_sources_daily</code></a></p>
+<p>Statistics: <code>bootstrap_mean</code>, <code>deciles</code></p>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">COALESCE(SUM(ad_click), 0)
+</code></pre>
+
+</details>
+
+<hr />
 <h3 id="search_count"><code>search_count</code></h3>
 <p><strong>SAP search count</strong></p>
 <p>Number of searches performed through a Search Access Point.</p>
-<p>Analysis Periods:  <code>overall</code>  </p>
+<p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
 <p>Data Source: <a href="#mobile_search_clients_engines_sources_daily"><code>mobile_search_clients_engines_sources_daily</code></a></p>
 <p>Statistics: <code>bootstrap_mean</code>, <code>deciles</code></p>
 <details>
