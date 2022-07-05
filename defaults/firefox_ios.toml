@@ -55,7 +55,7 @@ data_source = "mobile_search_clients_engines_sources_daily"
 
 [metrics.serp_ad_clicks.statistics]
 deciles = {}
-
+bootstrap_mean = {}
 ##
 
 [data_sources.mobile_search_clients_engines_sources_daily]
