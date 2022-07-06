@@ -1,0 +1,18 @@
+[experiment]
+
+[metrics]
+weekly = ["history_clicks"]
+overall = ["history_clicks"]
+
+[metrics.history_clicks]
+friendly_name = "History clicks"
+description = "History clicks from search results"
+select_expression = """
+      COALESCE(COUNTIF(
+          event.category = 'awesomebar'
+          AND event.name = 'search_result_tap'
+          AND event.extra[SAFE_OFFSET(0)].value = 'history-item'
+      ),0)
+"""
+data_source = "events"   
+statistics = { bootstrap_mean = {}, deciles = {} }
