@@ -200,7 +200,7 @@ def generate_default_config_docs(out_dir: Path):
         spec = config.AnalysisSpec.from_dict(toml.load(default_config_file))
         conf = spec.resolve(dummy_experiment)
 
-        summaries = [
+        metric_summaries = [
             summary for _, summaries in conf.metrics.items() for summary in summaries
         ]
 
@@ -219,7 +219,7 @@ def generate_default_config_docs(out_dir: Path):
 
         # deduplicate metrics
         metrics = []
-        for metric in summaries:
+        for metric in metric_summaries:
             if metric.metric not in metrics:
                 metrics.append(metric.metric)
 
@@ -229,10 +229,10 @@ def generate_default_config_docs(out_dir: Path):
         for metric in metrics:
             statistics = [
                 summary.statistic.name()
-                for summary in summaries
+                for summary in metric_summaries
                 if summary.metric.name == metric.name
             ]
-            statistics_per_metric[metric.name] = statistics
+            statistics_per_metric[metric.name] = set(statistics)
 
         default_config_doc = (
             out_dir / "default_configs" / (default_config_file.stem + ".md")
