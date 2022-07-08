@@ -860,6 +860,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qualified_cumulative_days_of_use" class="md-nav__link">
+    qualified_cumulative_days_of_use
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#search_count" class="md-nav__link">
     search_count
   </a>
@@ -1453,6 +1460,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qualified_cumulative_days_of_use" class="md-nav__link">
+    qualified_cumulative_days_of_use
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#search_count" class="md-nav__link">
     search_count
   </a>
@@ -1674,6 +1688,24 @@ Learn more in the
                 AND source = 'CARDGRID'
                 AND JSON_EXTRACT_SCALAR(value, '$.card_type') = 'spoc'
             )
+</code></pre>
+
+</details>
+
+<hr />
+<h2 id="qualified_cumulative_days_of_use">qualified_cumulative_days_of_use</h2>
+<p><strong>QCDOU</strong></p>
+<p>The number of days in the interval that each client sent a main ping,
+given that the client had &gt;0 active hours and &gt;0 URIs loaded.</p>
+<p>Data Source: <a href="https://mozilla.github.io/jetstream-config/data_sources/firefox_desktop/#clients_daily"><code>clients_daily</code></a></p>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">COUNTIF(
+        active_hours_sum &gt; 0 AND
+        scalar_parent_browser_engagement_total_uri_count_normal_and_private_mode_sum &gt; 0
+      )
 </code></pre>
 
 </details>

@@ -1253,13 +1253,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#normandy_events" class="md-nav__link">
-    normandy_events
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#clients_daily" class="md-nav__link">
     clients_daily
   </a>
@@ -1269,6 +1262,13 @@
           <li class="md-nav__item">
   <a href="#search_clients_engines_sources_daily" class="md-nav__link">
     search_clients_engines_sources_daily
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#normandy_events" class="md-nav__link">
+    normandy_events
   </a>
   
 </li>
@@ -1521,13 +1521,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#normandy_events" class="md-nav__link">
-    normandy_events
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#clients_daily" class="md-nav__link">
     clients_daily
   </a>
@@ -1537,6 +1530,13 @@
           <li class="md-nav__item">
   <a href="#search_clients_engines_sources_daily" class="md-nav__link">
     search_clients_engines_sources_daily
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#normandy_events" class="md-nav__link">
+    normandy_events
   </a>
   
 </li>
@@ -1588,7 +1588,7 @@
 <h3 id="retained"><code>retained</code></h3>
 <p><strong>Retained</strong></p>
 <p>Records whether a client submitted any pings (i.e. used Firefox).</p>
-<p>Analysis Periods:  <code>daily</code> ,   <code>weekly</code>  </p>
+<p>Analysis Periods:  <code>weekly</code> ,   <code>daily</code>  </p>
 <p>Data Source: <a href="#clients_daily"><code>clients_daily</code></a></p>
 <p>Statistics: <code>binomial</code></p>
 <details>
@@ -1603,15 +1603,19 @@
 <hr />
 <h3 id="qualified_cumulative_days_of_use"><code>qualified_cumulative_days_of_use</code></h3>
 <p><strong>QCDOU</strong></p>
-<p>Qualified Cumulative Days of Use</p>
-<p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
+<p>The number of days in the interval that each client sent a main ping,
+given that the client had &gt;0 active hours and &gt;0 URIs loaded.</p>
+<p>Analysis Periods:  <code>weekly</code> ,   <code>overall</code>  </p>
 <p>Data Source: <a href="#clients_daily"><code>clients_daily</code></a></p>
 <p>Statistics: <code>deciles</code>, <code>bootstrap_mean</code></p>
 <details>
 <summary>Definition:</summary>
 
 
-<pre><code class="language-sql">COUNTIF(active_hours_sum &gt; 0 AND scalar_parent_browser_engagement_total_uri_count_normal_and_private_mode_sum &gt; 0)
+<pre><code class="language-sql">COUNTIF(
+        active_hours_sum &gt; 0 AND
+        scalar_parent_browser_engagement_total_uri_count_normal_and_private_mode_sum &gt; 0
+      )
 </code></pre>
 
 </details>
@@ -1623,7 +1627,7 @@
 Search Access Points.
 Learn more in the
 <a href="https://docs.telemetry.mozilla.org/datasets/search.html">search data documentation</a>.</p>
-<p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
+<p>Analysis Periods:  <code>weekly</code> ,   <code>overall</code>  </p>
 <p>Data Source: <a href="#search_clients_engines_sources_daily"><code>search_clients_engines_sources_daily</code></a></p>
 <p>Statistics: <code>deciles</code>, <code>bootstrap_mean</code></p>
 <details>
@@ -1640,7 +1644,7 @@ Learn more in the
 <p><strong>URIs visited</strong></p>
 <p>Counts the total number of URIs visited.
 Includes within-page navigation events (e.g. to anchors).</p>
-<p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
+<p>Analysis Periods:  <code>weekly</code> ,   <code>overall</code>  </p>
 <p>Data Source: <a href="#clients_daily"><code>clients_daily</code></a></p>
 <p>Statistics: <code>deciles</code>, <code>bootstrap_mean</code></p>
 <details>
@@ -1656,9 +1660,9 @@ Includes within-page navigation events (e.g. to anchors).</p>
 <h3 id="days_of_use"><code>days_of_use</code></h3>
 <p><strong>Days of use</strong></p>
 <p>The number of days in the interval that each client sent a main ping.</p>
-<p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
+<p>Analysis Periods:  <code>weekly</code> ,   <code>overall</code>  </p>
 <p>Data Source: <a href="#clients_daily"><code>clients_daily</code></a></p>
-<p>Statistics: <code>bootstrap_mean</code>, <code>deciles</code>, <code>empirical_cdf</code></p>
+<p>Statistics: <code>deciles</code>, <code>empirical_cdf</code>, <code>bootstrap_mean</code></p>
 <details>
 <summary>Definition:</summary>
 
@@ -1673,7 +1677,7 @@ Includes within-page navigation events (e.g. to anchors).</p>
 <p><strong>Ad clicks</strong></p>
 <p>Counts clicks on ads on search engine result pages with a Mozilla
 partner tag.</p>
-<p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
+<p>Analysis Periods:  <code>weekly</code> ,   <code>overall</code>  </p>
 <p>Data Source: <a href="#search_clients_engines_sources_daily"><code>search_clients_engines_sources_daily</code></a></p>
 <p>Statistics: <code>deciles</code>, <code>bootstrap_mean</code></p>
 <details>
@@ -1691,7 +1695,7 @@ partner tag.</p>
 <p>Measures the amount of time (in 5-second increments) during which
 Firefox received user input from a keyboard or mouse. The Firefox
 window does not need to be focused.</p>
-<p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
+<p>Analysis Periods:  <code>weekly</code> ,   <code>overall</code>  </p>
 <p>Data Source: <a href="#clients_daily"><code>clients_daily</code></a></p>
 <p>Statistics: <code>deciles</code>, <code>bootstrap_mean</code></p>
 <details>
@@ -1799,22 +1803,6 @@ Learn more in the
 
 <hr />
 <h2 id="data-sources">Data Sources</h2>
-<h3 id="normandy_events"><a href="#normandy_events"><code>normandy_events</code></a></h3>
-<details>
-<summary>Definition:</summary>
-
-
-<pre><code class="language-sql">(
-        SELECT
-            *
-        FROM mozdata.telemetry.events
-        WHERE event_category = 'normandy'
-    )
-</code></pre>
-
-</details>
-
-<hr />
 <h3 id="clients_daily"><a href="#clients_daily"><code>clients_daily</code></a></h3>
 <details>
 <summary>Definition:</summary>
@@ -1832,6 +1820,22 @@ Learn more in the
 
 
 <pre><code class="language-sql">mozdata.search.search_clients_engines_sources_daily
+</code></pre>
+
+</details>
+
+<hr />
+<h3 id="normandy_events"><a href="#normandy_events"><code>normandy_events</code></a></h3>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">(
+        SELECT
+            *
+        FROM mozdata.telemetry.events
+        WHERE event_category = 'normandy'
+    )
 </code></pre>
 
 </details>
