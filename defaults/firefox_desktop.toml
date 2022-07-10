@@ -75,11 +75,5 @@ description = "Indicates whether the client configured separate search engines f
 
 [metrics.unenroll.statistics.binomial]
 
-[metrics.qualified_cumulative_days_of_use]
-select_expression = "COUNTIF(active_hours_sum > 0 AND scalar_parent_browser_engagement_total_uri_count_normal_and_private_mode_sum > 0)"
-data_source = "clients_daily"
-friendly_name = "QCDOU"
-description = "Qualified Cumulative Days of Use"
-
 [metrics.qualified_cumulative_days_of_use.statistics.bootstrap_mean]
 [metrics.qualified_cumulative_days_of_use.statistics.deciles]
