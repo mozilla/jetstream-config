@@ -27,7 +27,7 @@ friendly_name = "Normal and Private URI counts"
 description = "A counter of URIs visited by the user in the current session, including page reloads"
 select_expression = """
   COALESCE(
-    SUM(events_normal_and_private_uri_count)
+    SUM(metrics.counter.events_normal_and_private_uri_count)
   ,0)
 """
 data_source = "metrics" 
