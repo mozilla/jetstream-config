@@ -65,7 +65,7 @@ from_expression = """(
   FROM
     `moz-fx-data-shared-prod.search_derived.mobile_search_clients_daily_v1`
   WHERE
-    app_name = 'Android Focus Glean'
+    app_name = 'Focus Android Glean'
     AND submission_date >= '2022-01-01'
 )"""
 experiments_column_type = "simple"
