@@ -30,7 +30,7 @@ statistics = { bootstrap_mean = {}, deciles = {} }
 
 [metrics.spoc_tiles_preference_toggled]
 select_expression = """   
-  COALESCE(COUNTIF(CASE WHEN
+  COALESCE(SUM(CASE WHEN
           event.category = 'preferences'
           AND event.name = 'changed'
           AND `mozfun.map.get_key`(event.extra, 'preference') = 'sponsoredTiles'
