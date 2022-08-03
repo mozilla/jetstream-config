@@ -705,8 +705,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#spoc_tiles_disable_rate" class="md-nav__link">
-    spoc_tiles_disable_rate
+  <a href="#spoc_tiles_preference_toggled" class="md-nav__link">
+    spoc_tiles_preference_toggled
   </a>
   
 </li>
@@ -1335,8 +1335,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#spoc_tiles_disable_rate" class="md-nav__link">
-    spoc_tiles_disable_rate
+  <a href="#spoc_tiles_preference_toggled" class="md-nav__link">
+    spoc_tiles_preference_toggled
   </a>
   
 </li>
@@ -1399,20 +1399,20 @@
 <p>Metrics that describe Sponsored Tiles usage</p>
 <p><a href="https://github.com/mozilla/jetstream-config/blob/main/outcomes/firefox_ios/sponsored_tiles.toml">Source</a>  |  <a href="https://github.com/mozilla/jetstream-config/edit/main/outcomes/firefox_ios/sponsored_tiles.toml">Edit</a></p>
 <h2 id="metrics">Metrics</h2>
-<h3 id="spoc_tiles_disable_rate"><code>spoc_tiles_disable_rate</code></h3>
-<p><strong>Sponsored Tiles Disable Rate </strong></p>
-<p>Fraction of users who disable Contile Sponsored Tiles</p>
+<h3 id="spoc_tiles_preference_toggled"><code>spoc_tiles_preference_toggled</code></h3>
+<p><strong>Sponsored Tiles Preference Toggled </strong></p>
+<p>Number of times Contile Sponsored Tiles setting is flipped.</p>
 <p>Analysis Period: <code>weekly</code>, <code>overall</code></p>
 <p>Data Source: <a href="#events"><code>events</code></a></p>
-<p>Statistics: <code>binomial</code></p>
+<p>Statistics: <code>deciles</code>, <code>bootstrap_mean</code></p>
 <details>
 <summary>Definition:</summary>
 
 
-<pre><code class="language-sql">COALESCE(MAX(CASE WHEN
-          event.category = 'top_site'
-          AND event.name = 'contextual_menu'
-          AND `mozfun.map.get_key`(event.extra, 'type') = 'settings'
+<pre><code class="language-sql">COALESCE(SUM(CASE WHEN
+          event.category = 'preferences'
+          AND event.name = 'changed'
+          AND `mozfun.map.get_key`(event.extra, 'preference') = 'sponsoredTiles'
     THEN 1 ELSE 0 END
   ),0)
 </code></pre>
