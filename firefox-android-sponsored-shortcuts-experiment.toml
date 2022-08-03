@@ -1,5 +1,6 @@
 # experiment: firefox-android-sponsored-shortcuts-experiment
 # launched May 10, 2022
+
 [experiment]
 end_date = "2022-06-28"
 enrollment_period = 14
