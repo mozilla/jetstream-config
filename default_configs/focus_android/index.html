@@ -1225,15 +1225,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#baseline" class="md-nav__link">
-    baseline
+  <a href="#mobile_search_clients_engines_sources_daily" class="md-nav__link">
+    mobile_search_clients_engines_sources_daily
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#mobile_search_clients_engines_sources_daily" class="md-nav__link">
-    mobile_search_clients_engines_sources_daily
+  <a href="#baseline" class="md-nav__link">
+    baseline
   </a>
   
 </li>
@@ -1402,15 +1402,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#baseline" class="md-nav__link">
-    baseline
+  <a href="#mobile_search_clients_engines_sources_daily" class="md-nav__link">
+    mobile_search_clients_engines_sources_daily
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#mobile_search_clients_engines_sources_daily" class="md-nav__link">
-    mobile_search_clients_engines_sources_daily
+  <a href="#baseline" class="md-nav__link">
+    baseline
   </a>
   
 </li>
@@ -1440,7 +1440,7 @@
 <p><a href="https://github.com/mozilla/jetstream-config/blob/main/defaults/focus_android.toml">Source</a>  |  <a href="https://github.com/mozilla/jetstream-config/edit/main/defaults/focus_android.toml">Edit</a></p>
 <h2 id="metrics">Metrics</h2>
 <h3 id="retained"><code>retained</code></h3>
-<p>Analysis Periods:  <code>daily</code> ,   <code>weekly</code>  </p>
+<p>Analysis Periods:  <code>weekly</code> ,   <code>daily</code>  </p>
 <p>Data Source: <a href="#baseline"><code>baseline</code></a></p>
 <p>Statistics: <code>binomial</code></p>
 <details>
@@ -1458,7 +1458,7 @@
 <p>Number of ad clicks on a search engine results page.</p>
 <p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
 <p>Data Source: <a href="#mobile_search_clients_engines_sources_daily"><code>mobile_search_clients_engines_sources_daily</code></a></p>
-<p>Statistics: <code>bootstrap_mean</code>, <code>deciles</code></p>
+<p>Statistics: <code>deciles</code>, <code>bootstrap_mean</code></p>
 <details>
 <summary>Definition:</summary>
 
@@ -1474,7 +1474,7 @@
 <p>Number of searches performed through a Search Access Point.</p>
 <p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
 <p>Data Source: <a href="#mobile_search_clients_engines_sources_daily"><code>mobile_search_clients_engines_sources_daily</code></a></p>
-<p>Statistics: <code>bootstrap_mean</code>, <code>deciles</code></p>
+<p>Statistics: <code>deciles</code>, <code>bootstrap_mean</code></p>
 <details>
 <summary>Definition:</summary>
 
@@ -1490,7 +1490,7 @@
 <p>The number of days in an observation window that clients used the browser.</p>
 <p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
 <p>Data Source: <a href="#baseline"><code>baseline</code></a></p>
-<p>Statistics: <code>empirical_cdf</code>, <code>bootstrap_mean</code>, <code>deciles</code></p>
+<p>Statistics: <code>deciles</code>, <code>empirical_cdf</code>, <code>bootstrap_mean</code></p>
 <details>
 <summary>Definition:</summary>
 
@@ -1504,7 +1504,7 @@
 <h3 id="active_hours"><code>active_hours</code></h3>
 <p>Analysis Periods:  <code>overall</code> ,   <code>weekly</code>  </p>
 <p>Data Source: <a href="#baseline"><code>baseline</code></a></p>
-<p>Statistics: <code>bootstrap_mean</code>, <code>deciles</code></p>
+<p>Statistics: <code>deciles</code>, <code>bootstrap_mean</code></p>
 <details>
 <summary>Definition:</summary>
 
@@ -1516,22 +1516,6 @@
 
 <hr />
 <h2 id="data-sources">Data Sources</h2>
-<h3 id="baseline"><a href="#baseline"><code>baseline</code></a></h3>
-<details>
-<summary>Definition:</summary>
-
-
-<pre><code class="language-sql">(
-                SELECT
-                    p.*,
-                    DATE(p.submission_timestamp) AS submission_date
-                FROM `moz-fx-data-shared-prod.{dataset}.baseline` p
-            )
-</code></pre>
-
-</details>
-
-<hr />
 <h3 id="mobile_search_clients_engines_sources_daily"><a href="#mobile_search_clients_engines_sources_daily"><code>mobile_search_clients_engines_sources_daily</code></a></h3>
 <details>
 <summary>Definition:</summary>
@@ -1546,6 +1530,22 @@
     app_name = 'Focus Android Glean'
     AND submission_date &gt;= '2022-01-01'
 )
+</code></pre>
+
+</details>
+
+<hr />
+<h3 id="baseline"><a href="#baseline"><code>baseline</code></a></h3>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">(
+                SELECT
+                    p.*,
+                    DATE(p.submission_timestamp) AS submission_date
+                FROM `moz-fx-data-shared-prod.{dataset}.baseline` p
+            )
 </code></pre>
 
 </details>
