@@ -6,6 +6,10 @@ select_expression = 'agg_sum("metrics.counter.events_total_uri_count")'
 friendly_name = "URIs visited"
 description = "Counts the number of URIs each client visited"
 
+[metrics.uri_count.statistics.bootstrap_mean]
+[metrics.uri_count.statistics.deciles]
+
+
 [metrics.user_reports_site_issue_count]
 data_source = "events"
 select_expression = """
@@ -14,6 +18,10 @@ select_expression = """
 """
 friendly_name = "Site issues reported"
 description = "Counts the number of times clients reported an issue with a site."
+
+[metrics.user_reports_site_issue_count.statistics.bootstrap_mean]
+[metrics.user_reports_site_issue_count.statistics.deciles]
+
 
 [metrics.user_reload_count]
 data_source = "events"
@@ -25,11 +33,19 @@ friendly_name = "Pages reloaded"
 description = "Counts the number of times a client reloaded a page."
 bigger_is_better = false
 
+[metrics.user_reload_count.statistics.bootstrap_mean]
+[metrics.user_reload_count.statistics.deciles]
+
+
 [metrics.baseline_ping_count]
 data_source = "baseline"
 select_expression = "COUNT(document_id)"
 friendly_name = "Baseline pings"
 description = "Counts the number of `baseline` pings received from each client."
+
+[metrics.baseline_ping_count.statistics.bootstrap_mean]
+[metrics.baseline_ping_count.statistics.deciles]
+
 
 [metrics.metric_ping_count]
 data_source = "metrics"
@@ -37,11 +53,17 @@ select_expression = "COUNT(document_id)"
 friendly_name = "Metrics pings"
 description = "Counts the number of `metrics` pings received from each client."
 
+[metrics.metric_ping_count.statistics.bootstrap_mean]
+[metrics.metric_ping_count.statistics.deciles]
+
+
 [metrics.first_run_date]
 data_source = "baseline"
 select_expression = "MIN(client_info.first_run_date)"
 friendly_name = "First run date"
 description = "The earliest first-run date reported by each client."
+
+[metrics.first_run_date.statistics.count]
 
 
 [data_sources]

@@ -10,6 +10,10 @@ description = """
 select_expression = 'agg_sum("active_hours_sum")'
 data_source = "clients_daily"
 
+[metrics.active_hours.statistics.bootstrap_mean]
+[metrics.active_hours.statistics.deciles]
+
+
 [metrics.uri_count]
 data_source = "clients_daily"
 select_expression = 'agg_sum("scalar_parent_browser_engagement_total_uri_count_sum")'
@@ -18,6 +22,10 @@ description = """
     Counts the total number of URIs visited.
     Includes within-page navigation events (e.g. to anchors).
 """
+
+[metrics.uri_count.statistics.bootstrap_mean]
+[metrics.uri_count.statistics.deciles]
+
 
 [metrics.search_count]
 data_source = "search_clients_engines_sources_daily"
@@ -28,7 +36,11 @@ description = """
     Search Access Points.
     Learn more in the
     [search data documentation](https://docs.telemetry.mozilla.org/datasets/search.html).
-""" 
+"""
+
+[metrics.search_count.statistics.bootstrap_mean]
+[metrics.search_count.statistics.deciles]
+
 
 [metrics.tagged_search_count]
 data_source = "search_clients_engines_sources_daily"
@@ -42,6 +54,10 @@ description = """
     [search data documentation](https://docs.telemetry.mozilla.org/datasets/search.html).
 """
 
+[metrics.tagged_search_count.statistics.bootstrap_mean]
+[metrics.tagged_search_count.statistics.deciles]
+
+
 [metrics.tagged_follow_on_search_count]
 data_source = "search_clients_engines_sources_daily"
 select_expression = 'agg_sum("tagged_follow_on")'
@@ -54,14 +70,22 @@ description = """
     [search data documentation](https://docs.telemetry.mozilla.org/datasets/search.html).
 """
 
+[metrics.tagged_follow_on_search_count.statistics.bootstrap_mean]
+[metrics.tagged_follow_on_search_count.statistics.deciles]
+
+
 [metrics.ad_clicks]
 data_source = "search_clients_engines_sources_daily"
 select_expression = 'agg_sum("ad_click")'
-friendly_name = "Ad clicks",
+friendly_name = "Ad clicks"
 description = """
     Counts clicks on ads on search engine result pages with a Mozilla
     partner tag.
 """
+
+[metrics.ad_clicks.statistics.bootstrap_mean]
+[metrics.ad_clicks.statistics.deciles]
+
 
 [metrics.searches_with_ads]
 data_source = "search_clients_engines_sources_daily"
@@ -74,6 +98,10 @@ description = """
     [search analysis documentation](https://mozilla-private.report/search-analysis-docs/book/in_content_searches.html).
 """
 
+[metrics.searches_with_ads.statistics.bootstrap_mean]
+[metrics.searches_with_ads.statistics.deciles]
+
+
 [metrics.organic_search_count]
 data_source = "search_clients_engines_sources_daily"
 select_expression = 'agg_sum("organic")'
@@ -84,6 +112,10 @@ description = """
     Learn more in the
     [search data documentation](https://docs.telemetry.mozilla.org/datasets/search.html).
 """
+
+[metrics.organic_search_count.statistics.bootstrap_mean]
+[metrics.organic_search_count.statistics.deciles]
+
 
 [metrics.unenroll]
 data_source = "normandy_events"
@@ -100,6 +132,9 @@ description = """
 """
 bigger_is_better = false
 
+[metrics.unenroll.statistics.binomial]
+
+
 [metrics.view_about_logins]
 data_source = "events"
 select_expression = '''agg_any(
@@ -113,8 +148,12 @@ description = """
     Counts the number of clients that viewed about:logins.
 """
 
+[metrics.view_about_logins.statistics.bootstrap_mean]
+[metrics.view_about_logins.statistics.deciles]
+
+
 [metrics.view_about_protections]
-data_source = events
+data_source = "events"
 select_expression = '''agg_any(
     """
             event_method = 'show'
@@ -125,6 +164,10 @@ friendly_name = "about:protections viewers"
 description = """
     Counts the number of clients that viewed about:protections.
 """
+
+[metrics.view_about_protections.statistics.bootstrap_mean]
+[metrics.view_about_protections.statistics.deciles]
+
 
 [metrics.connect_fxa]
 data_source = "events"
@@ -141,6 +184,10 @@ description = """
     the start of the experiment and remained connected.
 """
 
+[metrics.connect_fxa.statistics.bootstrap_mean]
+[metrics.connect_fxa.statistics.deciles]
+
+
 [metrics.pocket_rec_clicks]
 data_source = "activity_stream_events"
 select_expression = """COUNTIF(
@@ -152,6 +199,8 @@ friendly_name = "Clicked Pocket organic recs in New Tab"
 description = """
     Counts the number of Pocket rec clicks made by each client.
 """
+
+[metrics.pocket_rec_clicks.statistics.bootstrap_mean]
 
 [metrics.pocket_spoc_clicks]
 data_source = "activity_stream_events"
@@ -165,11 +214,21 @@ description = """
     Counts the number of Pocket sponsored content clicks made by each client.
 """
 
+[metrics.pocket_spoc_clicks.statistics.bootstrap_mean]
+
+
 [metrics.days_of_use]
 data_source = "clients_daily"
 select_expression = "COUNT(ds.submission_date)"
 friendly_name = "Days of use"
 description = "The number of days in the interval that each client sent a main ping."
+
+[metrics.days_of_use.statistics.bootstrap_mean]
+drop_highest = 0
+
+[metrics.days_of_use.statistics.deciles]
+[metrics.days_of_use.statistics.empirical_cdf]
+
 
 [metrics.qualified_cumulative_days_of_use]
 data_source = "clients_daily"
@@ -183,6 +242,10 @@ description = """
     given that the client had >0 active hours and >0 URIs loaded.
 """
 
+[metrics.qualified_cumulative_days_of_use.statistics.bootstrap_mean]
+[metrics.qualified_cumulative_days_of_use.statistics.deciles]
+
+
 [metrics.disable_pocket_clicks]
 data_source = "activity_stream_events"
 select_expression = """COUNTIF(
@@ -194,6 +257,9 @@ friendly_name = "Disabled Pocket in New Tab"
 description = """
     Counts the number of clicks to disable Pocket in New Tab made by each client.
 """
+
+[metrics.disable_pocket_clicks.statistics.bootstrap_mean]
+
 
 [metrics.disable_pocket_spocs_clicks]
 data_source = "activity_stream_events"
@@ -207,6 +273,8 @@ description = """
     Counts the number of clicks to disable Pocket sponsored content
     in New Tab made by each client.
 """
+
+[metrics.disable_pocket_spocs_clicks.statistics.bootstrap_mean]
 
 
 [data_sources]
@@ -290,7 +358,7 @@ description = """
 
 [segments.new_or_resurrected_v3]
 data_source = "clients_last_seen"
-select_expression = "LOGICAL_OR(COALESCE(is_new_or_resurrected_v3, TRUE))",
+select_expression = "LOGICAL_OR(COALESCE(is_new_or_resurrected_v3, TRUE))"
 friendly_name = "New or resurrected users (v3)"
 description = """
     Clients who used Firefox on none of the 27 days prior to enrolling.
