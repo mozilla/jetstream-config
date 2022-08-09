@@ -1,7 +1,6 @@
 # experiment: firefox-ios-homepage-experiment-sponsored-shortcuts
 [experiment]
 
-
 # interested in users who are eligible for treatment in both branches: those that open homescreen
 # these users also need to be in the countries where advertisements are live
 # at first, this will just be the US
