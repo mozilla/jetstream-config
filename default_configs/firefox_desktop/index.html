@@ -1253,15 +1253,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#normandy_events" class="md-nav__link">
-    normandy_events
+  <a href="#search_clients_engines_sources_daily" class="md-nav__link">
+    search_clients_engines_sources_daily
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#search_clients_engines_sources_daily" class="md-nav__link">
-    search_clients_engines_sources_daily
+  <a href="#normandy_events" class="md-nav__link">
+    normandy_events
   </a>
   
 </li>
@@ -1521,15 +1521,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#normandy_events" class="md-nav__link">
-    normandy_events
+  <a href="#search_clients_engines_sources_daily" class="md-nav__link">
+    search_clients_engines_sources_daily
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#search_clients_engines_sources_daily" class="md-nav__link">
-    search_clients_engines_sources_daily
+  <a href="#normandy_events" class="md-nav__link">
+    normandy_events
   </a>
   
 </li>
@@ -1588,7 +1588,7 @@
 <h3 id="retained"><code>retained</code></h3>
 <p><strong>Retained</strong></p>
 <p>Records whether a client submitted any pings (i.e. used Firefox).</p>
-<p>Analysis Periods:  <code>weekly</code> ,   <code>daily</code>  </p>
+<p>Analysis Periods:  <code>daily</code> ,   <code>weekly</code>  </p>
 <p>Data Source: <a href="#clients_daily"><code>clients_daily</code></a></p>
 <p>Statistics: <code>binomial</code></p>
 <details>
@@ -1662,7 +1662,7 @@ Includes within-page navigation events (e.g. to anchors).</p>
 <p>The number of days in the interval that each client sent a main ping.</p>
 <p>Analysis Periods:  <code>weekly</code> ,   <code>overall</code>  </p>
 <p>Data Source: <a href="#clients_daily"><code>clients_daily</code></a></p>
-<p>Statistics: <code>deciles</code>, <code>empirical_cdf</code>, <code>bootstrap_mean</code></p>
+<p>Statistics: <code>deciles</code>, <code>bootstrap_mean</code>, <code>empirical_cdf</code></p>
 <details>
 <summary>Definition:</summary>
 
@@ -1803,6 +1803,17 @@ Learn more in the
 
 <hr />
 <h2 id="data-sources">Data Sources</h2>
+<h3 id="search_clients_engines_sources_daily"><a href="#search_clients_engines_sources_daily"><code>search_clients_engines_sources_daily</code></a></h3>
+<details>
+<summary>Definition:</summary>
+
+
+<pre><code class="language-sql">mozdata.search.search_clients_engines_sources_daily
+</code></pre>
+
+</details>
+
+<hr />
 <h3 id="normandy_events"><a href="#normandy_events"><code>normandy_events</code></a></h3>
 <details>
 <summary>Definition:</summary>
@@ -1814,17 +1825,6 @@ Learn more in the
         FROM mozdata.telemetry.events
         WHERE event_category = 'normandy'
     )
-</code></pre>
-
-</details>
-
-<hr />
-<h3 id="search_clients_engines_sources_daily"><a href="#search_clients_engines_sources_daily"><code>search_clients_engines_sources_daily</code></a></h3>
-<details>
-<summary>Definition:</summary>
-
-
-<pre><code class="language-sql">mozdata.search.search_clients_engines_sources_daily
 </code></pre>
 
 </details>
