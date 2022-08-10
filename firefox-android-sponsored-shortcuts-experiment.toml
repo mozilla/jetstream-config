@@ -6,7 +6,7 @@ enrollment_period = 14
 
 # interested in users who are eligible for treatment in both branches: those that open homescreen
 # these users also need to be in the countries where advertisements are live
-segments = ["opened_homescreen_in_live_countries", "opened_homescreen_in_US"] 
+segments = ["opened_homescreen_in_US"] 
 
 [segments.data_sources.events_unnested]
 from_expression = """(
@@ -19,19 +19,6 @@ from_expression = """(
 )"""
 window_start = 0
 window_end = 28 
-
-[segments.opened_homescreen_in_live_countries]
-select_expression = """
-  COALESCE(CAST(MAX(
-    CASE WHEN event_category = 'home_screen'
-           AND event_name = 'home_screen_displayed' 
-	   AND metadata.geo.country IN ('US', 'GB', 'DE', 'FR', 'AU', 'CA', 'ES', 'IT', 'IN', 'JP', 'BR', 'MX')
-         THEN 1
-         ELSE 0
-    END
-  ) AS BOOL), FALSE)
-"""
-data_source = "events_unnested"
 
 [segments.opened_homescreen_in_US]
 select_expression = """
