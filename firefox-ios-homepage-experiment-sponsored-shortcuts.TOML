@@ -1,5 +1,6 @@
 # experiment: firefox-ios-homepage-experiment-sponsored-shortcuts
 [experiment]
+end_date = "2022-08-09"
 
 # interested in users who are eligible for treatment in both branches: those that open homescreen
 # these users also need to be in the countries where advertisements are live
