@@ -7,7 +7,7 @@ description = """
     Firefox received user input from a keyboard or mouse. The Firefox
     window does not need to be focused.
 """
-select_expression = 'agg_sum("active_hours_sum")'
+select_expression = '{{agg_sum("active_hours_sum")}}'
 data_source = "clients_daily"
 
 [metrics.active_hours.statistics.bootstrap_mean]
@@ -16,7 +16,7 @@ data_source = "clients_daily"
 
 [metrics.uri_count]
 data_source = "clients_daily"
-select_expression = 'agg_sum("scalar_parent_browser_engagement_total_uri_count_sum")'
+select_expression = '{{agg_sum("scalar_parent_browser_engagement_total_uri_count_sum")}}'
 friendly_name = "URIs visited"
 description = """
     Counts the total number of URIs visited.
@@ -29,7 +29,7 @@ description = """
 
 [metrics.search_count]
 data_source = "search_clients_engines_sources_daily"
-select_expression = 'agg_sum("sap")'
+select_expression = '{{agg_sum("sap")}}'
 friendly_name = "SAP searches"
 description = """
     Counts the number of searches a user performed through Firefox's
@@ -44,7 +44,7 @@ description = """
 
 [metrics.tagged_search_count]
 data_source = "search_clients_engines_sources_daily"
-select_expression = 'agg_sum("tagged_sap")'
+select_expression = '{{agg_sum("tagged_sap")}}'
 friendly_name = "Tagged SAP searches"
 description = """
     Counts the number of searches a user performed through Firefox's
@@ -60,7 +60,7 @@ description = """
 
 [metrics.tagged_follow_on_search_count]
 data_source = "search_clients_engines_sources_daily"
-select_expression = 'agg_sum("tagged_follow_on")'
+select_expression = '{{agg_sum("tagged_follow_on")}}'
 friendly_name = "Tagged follow-on searches"
 description = """
     Counts the number of follow-on searches with a Mozilla partner tag.
@@ -76,7 +76,7 @@ description = """
 
 [metrics.ad_clicks]
 data_source = "search_clients_engines_sources_daily"
-select_expression = 'agg_sum("ad_click")'
+select_expression = '{{agg_sum("ad_click")}}'
 friendly_name = "Ad clicks"
 description = """
     Counts clicks on ads on search engine result pages with a Mozilla
@@ -89,7 +89,7 @@ description = """
 
 [metrics.searches_with_ads]
 data_source = "search_clients_engines_sources_daily"
-select_expression = 'agg_sum("search_with_ads")'
+select_expression = '{{agg_sum("search_with_ads")}}'
 friendly_name = "Search result pages with ads"
 description = """
     Counts search result pages served with advertising.
@@ -104,7 +104,7 @@ description = """
 
 [metrics.organic_search_count]
 data_source = "search_clients_engines_sources_daily"
-select_expression = 'agg_sum("organic")'
+select_expression = '{{agg_sum("organic")}}'
 friendly_name = "Organic searches"
 description = """
     Counts organic searches, which are searches that are _not_ performed
@@ -119,13 +119,13 @@ description = """
 
 [metrics.unenroll]
 data_source = "normandy_events"
-select_expression='''agg_any(
+select_expression='''{{agg_any(
     """
         event_category = 'normandy'
         AND event_method = 'unenroll'
         AND event_string_value = '{experiment_slug}'
     """
-)'''
+)}}'''
 friendly_name = "Unenrollments"
 description = """
     Counts the number of clients with an experiment unenrollment event.
@@ -137,12 +137,12 @@ bigger_is_better = false
 
 [metrics.view_about_logins]
 data_source = "events"
-select_expression = '''agg_any(
+select_expression = '''{{agg_any(
     """
             event_method = 'open_management'
             AND event_category = 'pwmgr'
         """
-)'''
+)}}'''
 friendly_name = "about:logins viewers"
 description = """
     Counts the number of clients that viewed about:logins.
@@ -154,12 +154,12 @@ description = """
 
 [metrics.view_about_protections]
 data_source = "events"
-select_expression = '''agg_any(
+select_expression = '''{{agg_any(
     """
             event_method = 'show'
             AND event_object = 'protection_report'
         """
-)'''
+)}}'''
 friendly_name = "about:protections viewers"
 description = """
     Counts the number of clients that viewed about:protections.
@@ -171,12 +171,12 @@ description = """
 
 [metrics.connect_fxa]
 data_source = "events"
-select_expression = '''agg_any(
+select_expression = '''{{agg_any(
     """
             event_method = 'connect'
             AND event_object = 'account'
         """
-)'''
+)}}'''
 friendly_name = "Connected FxA"
 description = """
     Counts the number of clients that took action to connect to FxA.
@@ -349,7 +349,7 @@ experiments_column_type = "native"
 
 [segments.regular_users_v3]
 data_source = "clients_last_seen"
-select_expression = 'agg_any("is_regular_user_v3")'
+select_expression = '{{agg_any("is_regular_user_v3")}}'
 friendly_name = "Regular users (v3)"
 description = """
     Clients who used Firefox on at least 14 of the 27 days prior to enrolling.
@@ -366,7 +366,7 @@ description = """
 
 [segments.weekday_regular_v1]
 data_source = "clients_last_seen"
-select_expression = 'agg_any("is_weekday_regular_v1")'
+select_expression = '{{agg_any("is_weekday_regular_v1")}}'
 friendly_name = "Weekday regular users (v1)"
 description = """
     A subset of "regular users" who typically use Firefox on weekdays.
@@ -374,7 +374,7 @@ description = """
 
 [segments.allweek_regular_v1]
 data_source = "clients_last_seen"
-select_expression = 'agg_any("is_allweek_regular_v1")'
+select_expression = '{{agg_any("is_allweek_regular_v1")}}'
 friendly_name = "All-week regulars (v1)"
 description = """
     A subset of "regular users" that have used Firefox on weekends.
