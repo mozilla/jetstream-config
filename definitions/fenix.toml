@@ -2,7 +2,7 @@
 
 [metrics.uri_count]
 data_source = "baseline"
-select_expression = 'agg_sum("metrics.counter.events_total_uri_count")'
+select_expression = '{{agg_sum("metrics.counter.events_total_uri_count")}}'
 friendly_name = "URIs visited"
 description = "Counts the number of URIs each client visited"
 
