@@ -117,6 +117,8 @@ def generate_segment_docs(out_dir: Path):
 
         config = entity_from_path(app_config)
         segments = [segment for _, segment in config.spec.segments.definitions.items()]
+        if len(segments) == 0:
+            continue
 
         segments_doc = out_dir / "segments" / (app_config.stem + ".md")
         segments_doc.parent.mkdir(parents=True, exist_ok=True)
@@ -144,6 +146,8 @@ def generate_segment_data_sources_docs(out_dir: Path):
         data_sources = [
             segment for _, segment in config.spec.segments.data_sources.items()
         ]
+        if len(data_sources) == 0:
+            continue
 
         data_sources_doc = out_dir / "segment_data_sources" / (app_config.stem + ".md")
         data_sources_doc.parent.mkdir(parents=True, exist_ok=True)
