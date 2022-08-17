@@ -38,19 +38,19 @@ Statistics: {% for statistic in statistics[metric.name] %}`{{ statistic }}`{% if
 {% if data_sources %}
 ## Data Sources
 
-{% for datasource in data_sources %}
+{% for data_source in data_sources %}
 
-### [`{{ datasource.name }}` {%- if datasource.friendly_name -%}- {{ datasource.friendly_name }}{%- endif -%}](#{{ datasource.name }})
+### [`{{ data_source.name }}` {%- if data_source.friendly_name -%}- {{ data_source.friendly_name }}{%- endif -%}](#{{ data_source.name }})
 
-{% if datasource.description %}
-{{ datasource.description | trim }}
+{% if data_source.description %}
+{{ data_source.description | trim }}
 {% endif %}
 
 <details>
 <summary>Definition:</summary>
 
 ```sql
-{{ datasource._from_expr | trim }}
+{{ data_source._from_expr | trim }}
 ```
 </details>
 
