@@ -3,4 +3,4 @@ mkdocs==1.3.0
 mkdocs-awesome-pages-plugin==2.7.0
 mkdocs-material==8.2.8
 mkdocs-material-extensions==1.0.3
-mozilla-jetstream==2022.4.0
+mozilla-jetstream-config-parser==2022.8.9

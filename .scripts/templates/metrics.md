@@ -1,4 +1,4 @@
-Pre-defined metrics for `{{ platform }}` that can be used across all experiments. These metrics are defined in [mozanalysis](https://github.com/mozilla/mozanalysis/tree/main/src/mozanalysis/metrics)
+Pre-defined metrics for `{{ platform }}` that can be used across all experiments. These metrics are defined in [jetstream-config](https://github.com/mozilla/jetstream-config/blob/main/definitions/{{ platform }}.toml)
 
 {% for metric in metrics %}
 ## {{ metric.name }}
@@ -17,7 +17,7 @@ Data Source: [`{{ metric.data_source.name }}`](https://mozilla.github.io/jetstre
 <summary>Definition:</summary>
 
 ```sql
-{{ metric.select_expr | trim }}
+{{ metric.select_expression | trim }}
 ```
 </details>
 

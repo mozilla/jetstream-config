@@ -1,10 +1,11 @@
 """Generates documentation for outcomes and default metrics and datasets."""
 
 from argparse import ArgumentParser
-from os import stat_result
-import statistics
-from mozanalysis.metrics import Metric, DataSource
-from jetstream import config, experimenter, AnalysisPeriod
+from jetstream_config_parser.analysis import AnalysisSpec
+from jetstream_config_parser.config import entity_from_path, ConfigCollection
+from jetstream_config_parser.experiment import Experiment
+from jetstream_config_parser.metric import AnalysisPeriod
+from jetstream_config_parser.outcome import OutcomeSpec
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 from datetime import datetime
@@ -15,6 +16,8 @@ import toml
 ROOT = Path(__file__).parent.parent
 OUTCOME_DIR = ROOT / "outcomes"
 DEFAULTS_DIR = ROOT / "defaults"
+DEFINITIONS_DIR = ROOT / "definitions"
+FUNCTIONS_FILE = DEFINITIONS_DIR / "functions.toml"
 DOCS_DIR = ROOT / ".docs"
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 
@@ -25,6 +28,8 @@ parser.add_argument(
     required=True,
     help="Generated documentation is written to this output directory.",
 )
+
+_ConfigCollection = ConfigCollection.from_github_repo()
 
 
 def generate():
@@ -37,9 +42,12 @@ def generate():
     shutil.copytree(DOCS_DIR, out_dir)
 
     generate_metrics_docs(out_dir / "docs")
-    generate_datasource_docs(out_dir / "docs")
+    generate_data_source_docs(out_dir / "docs")
+    generate_segment_data_sources_docs(out_dir / "docs")
+    generate_segment_docs(out_dir / "docs")
     generate_outcome_docs(out_dir / "docs")
     generate_default_config_docs(out_dir / "docs")
+    generate_function_docs(out_dir / "docs")
 
 
 def generate_metrics_docs(out_dir: Path):
@@ -48,57 +56,105 @@ def generate_metrics_docs(out_dir: Path):
     env = Environment(loader=file_loader)
     metrics_template = env.get_template("metrics.md")
 
-    for app_name, platform in config.PLATFORM_CONFIGS.items():
-        metric_names = [
-            metric
-            for metric in dir(platform.metrics_module)
-            if not metric.startswith("__")
-            and metric != "Metric"
-            and metric != "DataSource"
-        ]
-        metrics = [getattr(platform.metrics_module, metric) for metric in metric_names]
-        metrics = [metric for metric in metrics if isinstance(metric, Metric)]
+    for app_config in DEFINITIONS_DIR.iterdir():
+        if app_config.suffix != ".toml":
+            continue
+        if app_config.name == "functions.toml":
+            continue
 
-        metrics_doc = out_dir / "metrics" / (app_name + ".md")
+        config = entity_from_path(app_config)
+        metrics = [metric for _, metric in config.spec.metrics.definitions.items()]
+
+        metrics_doc = out_dir / "metrics" / (app_config.stem + ".md")
         metrics_doc.parent.mkdir(parents=True, exist_ok=True)
         metrics_doc.write_text(
             metrics_template.render(
                 metrics=metrics,
-                platform=app_name,
+                platform=app_config.stem,
             )
         )
 
 
-def generate_datasource_docs(out_dir: Path):
+def generate_data_source_docs(out_dir: Path):
     """Generates docs for default data sources."""
     file_loader = FileSystemLoader(TEMPLATES_DIR)
     env = Environment(loader=file_loader)
-    datasources_template = env.get_template("datasources.md")
+    data_sources_template = env.get_template("data_sources.md")
 
-    for app_name, platform in config.PLATFORM_CONFIGS.items():
-        datasource_names = [
-            datasource
-            for datasource in dir(platform.metrics_module)
-            if not datasource.startswith("__")
-            and datasource != "Metric"
-            and datasource != "DataSource"
-        ]
-        datasources = [
-            getattr(platform.metrics_module, datasource)
-            for datasource in datasource_names
-        ]
-        datasources = [
-            datasource
-            for datasource in datasources
-            if isinstance(datasource, DataSource)
+    for app_config in DEFINITIONS_DIR.iterdir():
+        if app_config.suffix != ".toml":
+            continue
+        if app_config.name == "functions.toml":
+            continue
+
+        config = entity_from_path(app_config)
+        data_sources = [
+            data_source
+            for _, data_source in config.spec.data_sources.definitions.items()
         ]
 
-        datasources_doc = out_dir / "data_sources" / (app_name + ".md")
-        datasources_doc.parent.mkdir(parents=True, exist_ok=True)
-        datasources_doc.write_text(
-            datasources_template.render(
-                datasources=datasources,
-                platform=app_name,
+        data_sources_doc = out_dir / "data_sources" / (app_config.stem + ".md")
+        data_sources_doc.parent.mkdir(parents=True, exist_ok=True)
+        data_sources_doc.write_text(
+            data_sources_template.render(
+                data_sources=data_sources,
+                platform=app_config.stem,
+            )
+        )
+
+
+def generate_segment_docs(out_dir: Path):
+    """Generate docs for existing segments."""
+    file_loader = FileSystemLoader(TEMPLATES_DIR)
+    env = Environment(loader=file_loader)
+    segments_template = env.get_template("segments.md")
+
+    for app_config in DEFINITIONS_DIR.iterdir():
+        if app_config.suffix != ".toml":
+            continue
+        if app_config.name == "functions.toml":
+            continue
+
+        config = entity_from_path(app_config)
+        segments = [segment for _, segment in config.spec.segments.definitions.items()]
+        if len(segments) == 0:
+            continue
+
+        segments_doc = out_dir / "segments" / (app_config.stem + ".md")
+        segments_doc.parent.mkdir(parents=True, exist_ok=True)
+        segments_doc.write_text(
+            segments_template.render(
+                segments=segments,
+                platform=app_config.stem,
+            )
+        )
+
+
+def generate_segment_data_sources_docs(out_dir: Path):
+    """Generate docs for existing segment data sources."""
+    file_loader = FileSystemLoader(TEMPLATES_DIR)
+    env = Environment(loader=file_loader)
+    data_sources_template = env.get_template("segment_data_sources.md")
+
+    for app_config in DEFINITIONS_DIR.iterdir():
+        if app_config.suffix != ".toml":
+            continue
+        if app_config.name == "functions.toml":
+            continue
+
+        config = entity_from_path(app_config)
+        data_sources = [
+            segment for _, segment in config.spec.segments.data_sources.items()
+        ]
+        if len(data_sources) == 0:
+            continue
+
+        data_sources_doc = out_dir / "segment_data_sources" / (app_config.stem + ".md")
+        data_sources_doc.parent.mkdir(parents=True, exist_ok=True)
+        data_sources_doc.write_text(
+            data_sources_template.render(
+                data_sources=data_sources,
+                platform=app_config.stem,
             )
         )
 
@@ -110,7 +166,7 @@ def generate_outcome_docs(out_dir: Path):
     outcome_template = env.get_template("outcome.md")
 
     for platform_dir in OUTCOME_DIR.iterdir():
-        dummy_experiment = experimenter.Experiment(
+        dummy_experiment = Experiment(
             experimenter_slug="dummy-experiment",
             normandy_slug="dummy_experiment",
             type="v6",
@@ -121,15 +177,14 @@ def generate_outcome_docs(out_dir: Path):
             is_high_population=False,
             start_date=datetime.now(),
             proposed_enrollment=14,
-            app_id=config.PLATFORM_CONFIGS[platform_dir.name].app_id,
             app_name=platform_dir.name,
         )
 
         for outcome_file in platform_dir.glob("*.toml"):
-            spec = config.AnalysisSpec.from_dict({})
-            outcome_spec = config.OutcomeSpec.from_dict(toml.load(outcome_file))
+            spec = AnalysisSpec.from_dict({})
+            outcome_spec = OutcomeSpec.from_dict(toml.load(outcome_file))
             spec.merge_outcome(outcome_spec)
-            conf = spec.resolve(dummy_experiment)
+            conf = spec.resolve(dummy_experiment, _ConfigCollection)
 
             default_metrics = [m.name for m in outcome_spec.default_metrics]
             summaries = [summary for summary in conf.metrics[AnalysisPeriod.OVERALL]]
@@ -150,7 +205,7 @@ def generate_outcome_docs(out_dir: Path):
             statistics_per_metric = {}
             for metric in metrics:
                 statistics = [
-                    summary.statistic.name()
+                    summary.statistic.name
                     for summary in summaries
                     if summary.metric.name == metric.name
                 ]
@@ -180,7 +235,7 @@ def generate_default_config_docs(out_dir: Path):
     default_config_template = env.get_template("default_config.md")
 
     for default_config_file in DEFAULTS_DIR.glob("*.toml"):
-        dummy_experiment = experimenter.Experiment(
+        dummy_experiment = Experiment(
             experimenter_slug="dummy-experiment",
             normandy_slug="dummy_experiment",
             type="v6",
@@ -191,16 +246,13 @@ def generate_default_config_docs(out_dir: Path):
             is_high_population=False,
             start_date=datetime.now(),
             proposed_enrollment=14,
-            app_id=config.PLATFORM_CONFIGS[default_config_file.stem].app_id
-            if default_config_file.stem in config.PLATFORM_CONFIGS
-            else "firefox_desktop",
             app_name=default_config_file.stem,
         )
 
-        spec = config.AnalysisSpec.from_dict(toml.load(default_config_file))
-        conf = spec.resolve(dummy_experiment)
+        spec = AnalysisSpec.from_dict(toml.load(default_config_file))
+        conf = spec.resolve(dummy_experiment, _ConfigCollection)
 
-        summaries = [
+        metric_summaries = [
             summary for _, summaries in conf.metrics.items() for summary in summaries
         ]
 
@@ -219,7 +271,7 @@ def generate_default_config_docs(out_dir: Path):
 
         # deduplicate metrics
         metrics = []
-        for metric in summaries:
+        for metric in metric_summaries:
             if metric.metric not in metrics:
                 metrics.append(metric.metric)
 
@@ -228,11 +280,11 @@ def generate_default_config_docs(out_dir: Path):
         statistics_per_metric = {}
         for metric in metrics:
             statistics = [
-                summary.statistic.name()
-                for summary in summaries
+                summary.statistic.name
+                for summary in metric_summaries
                 if summary.metric.name == metric.name
             ]
-            statistics_per_metric[metric.name] = statistics
+            statistics_per_metric[metric.name] = set(statistics)
 
         default_config_doc = (
             out_dir / "default_configs" / (default_config_file.stem + ".md")
@@ -247,6 +299,22 @@ def generate_default_config_docs(out_dir: Path):
                 metrics_analysis_periods=metrics_analysis_periods,
             )
         )
+
+
+def generate_function_docs(out_dir):
+    file_loader = FileSystemLoader(TEMPLATES_DIR)
+    env = Environment(loader=file_loader)
+    functions_template = env.get_template("functions.md")
+
+    function_defintions = toml.load(FUNCTIONS_FILE)
+    functions = [
+        {"name": function_name, "definition": f["definition"]}
+        for function_name, f in function_defintions["functions"].items()
+    ]
+
+    functions_docs = out_dir / "functions.md"
+    functions_docs.parent.mkdir(parents=True, exist_ok=True)
+    functions_docs.write_text(functions_template.render(functions=functions))
 
 
 if __name__ == "__main__":

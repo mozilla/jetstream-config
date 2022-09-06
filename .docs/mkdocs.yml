@@ -29,5 +29,11 @@ nav:
       - ... | metrics/**.md
   - Data Sources:
       - ... | data_sources/**.md
+  - Segments:
+      - ... | segments/**.md
+  - Segment Data Sources:
+      - ... | segment_data_sources/**.md
   - Default Configs:
       - ... | default_configs/**.md
+  - Functions:
+      - ... | functions.md

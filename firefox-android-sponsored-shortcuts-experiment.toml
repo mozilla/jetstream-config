@@ -1,11 +1,12 @@
 # experiment: firefox-android-sponsored-shortcuts-experiment
 # launched May 10, 2022
 [experiment]
-
+end_date = "2022-06-28"
+enrollment_period = 14
 
 # interested in users who are eligible for treatment in both branches: those that open homescreen
 # these users also need to be in the countries where advertisements are live
-segments = ["opened_homescreen_in_live_countries"] 
+segments = ["opened_homescreen_in_US"] 
 
 [segments.data_sources.events_unnested]
 from_expression = """(
@@ -19,14 +20,12 @@ from_expression = """(
 window_start = 0
 window_end = 28 
 
-[segments.opened_homescreen_in_live_countries]
+[segments.opened_homescreen_in_US]
 select_expression = """
   COALESCE(CAST(MAX(
     CASE WHEN event_category = 'home_screen'
            AND event_name = 'home_screen_displayed' 
-
-	   AND metadata.geo.country IN ('US', 'GB', 'DE', 'FR', 'AU', 'CA', 'ES', 'IT', 'IN', 'JP', 'BR', 'MX')
-
+	   AND metadata.geo.country IN ('US')
          THEN 1
          ELSE 0
     END
@@ -36,14 +35,14 @@ data_source = "events_unnested"
 
 [metrics]
 daily = ["new_profile_retention", 
-	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate", "spoc_tiles_preference_toggled",
 	"pocket_story_impressions", "pocket_story_clicks"]
 
 weekly = ["new_profile_retention", 
-	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+	"spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",  "spoc_tiles_preference_toggled",
 	"pocket_story_impressions", "pocket_story_clicks"]
 
-overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",
+overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_rate",  "spoc_tiles_preference_toggled",
 	"pocket_story_impressions", "pocket_story_clicks"]
 
 
@@ -53,7 +52,7 @@ overall = ["spoc_tiles_impressions", "spoc_tiles_clicks", "spoc_tiles_disable_ra
 friendly_name = "New Profile Retention"
 description = "New profiles defined as those first seen during the first week (enrollment period) of the experiment."
 select_expression = """COALESCE(COUNT(
-	CASE WHEN PARSE_DATETIME('%Y %m %d %H:%M', REPLACE(REPLACE(client_info.first_run_date, '+', ' '), '-', ' ')) between '2022-04-06' and '2022-04-12'
+	CASE WHEN PARSE_DATETIME('%Y %m %d %H:%M', REPLACE(REPLACE(client_info.first_run_date, '+', ' '), '-', ' ')) between '2022-05-10' and '2022-05-16'
 	THEN document_id ELSE NULL END), 0) > 0
 """
 data_source = "baseline"
@@ -86,6 +85,21 @@ select_expression = """
 """
 data_source = "events" 
 statistics = { bootstrap_mean = {}, deciles = {} }
+
+[metrics.spoc_tiles_preference_toggled]
+select_expression = """   
+  COALESCE(SUM(CASE WHEN
+          event.category = 'customize_home'
+          AND event.name = 'preference_toggled'
+          AND `mozfun.map.get_key`(event.extra, 'preference_key') = 'contile'
+	THEN 1 ELSE 0 END
+  ),0)
+"""
+data_source = "events" 
+bigger_is_better = false
+friendly_name = "Sponsored Tiles Preference Toggled"
+description = "Number of times Contile Sponsored Tiles setting is flipped."
+statistics = { bootstrap_mean = {}, deciles = {} } 
 
 
 [metrics.spoc_tiles_disable_rate]
