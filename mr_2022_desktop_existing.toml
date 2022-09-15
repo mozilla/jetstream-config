@@ -1,0 +1,30 @@
+## EXPERIMENT SPECIFIC SETTINGS
+# [experiment]
+
+## NEW METRICS (uncomment below)
+# [metrics]
+
+
+## MODIFICATIONS TO DEFAULT DATA SOURCES TO ACCOUNT FOR EARLY ENROLLMENT
+# these cover all metrics in defaults/firefox_desktop.toml except unenrollment
+# which we do not override, to include unenrollment counts from prior to release
+[data_sources]
+
+[data_sources.clients_daily]
+from_expression = """(
+    SELECT 
+        p.*
+    FROM mozdata.telemetry.clients_daily p
+    WHERE mozfun.norm.extract_version(p.app_display_version, 'major') >= 106
+)"""
+
+[data_sources.search_clients_engines_sources_daily]
+from_expression = """(
+    SELECT 
+        p.*
+    FROM mozdata.search.search_clients_engines_sources_daily p
+    WHERE mozfun.norm.extract_version(p.app_display_version, 'major') >= 106
+)"""
+experiments_column_type = "none"
+
+## New data sources to support new metrics

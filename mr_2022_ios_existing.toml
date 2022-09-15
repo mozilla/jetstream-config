@@ -1,0 +1,52 @@
+## EXPERIMENT SPECIFIC
+# [experiment]
+
+## NEW METRICS (uncomment below)
+# [metrics]
+
+
+
+
+[data_sources]
+
+## MODIFICATIONS TO DEFAULT DATA SOURCES TO ACCOUNT FOR EARLY ENROLLMENT
+# these cover all metrics in defaults/firefox_ios.toml 
+[data_sources.baseline]
+from_expression = """(
+    SELECT
+        p.*,
+        DATE(p.submission_timestamp) AS submission_date
+    FROM `moz-fx-data-shared-prod.{dataset}.baseline` p
+    WHERE mozfun.norm.extract_version(p.client_info.app_display_version, 'major') >= 106        
+)"""
+client_id_column = "client_info.client_id"
+experiments_column_type = "glean"
+default_dataset = "org_mozilla_ios_firefox"
+
+[data_sources.events]
+from_expression = """(
+    SELECT
+        p.* EXCEPT (events),
+        DATE(p.submission_timestamp) AS submission_date,
+        event
+    FROM
+        `moz-fx-data-shared-prod.{dataset}.events` p
+    CROSS JOIN
+        UNNEST(p.events) AS event
+    WHERE mozfun.norm.extract_version(p.client_info.app_display_version, 'major') >= 106            
+)"""
+client_id_column = "client_info.client_id"
+experiments_column_type = "glean"
+default_dataset = "org_mozilla_ios_firefox"
+
+[data_sources.metrics]
+from_expression = """(
+    SELECT
+        p.*,
+        DATE(p.submission_timestamp) AS submission_date
+    FROM `moz-fx-data-shared-prod.{dataset}.metrics` p
+    WHERE mozfun.norm.extract_version(p.client_info.app_display_version, 'major') >= 106        
+)"""
+client_id_column = "client_info.client_id"
+experiments_column_type = "glean"
+default_dataset = "org_mozilla_ios_firefox"
