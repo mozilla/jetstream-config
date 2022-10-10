@@ -1,5 +1,23 @@
 ## EXPERIMENT SPECIFIC
-# [experiment]
+[experiment]
+# override enrollment query to pretend like enrollment happened on release day
+# so that the first analysis period will begin day of release, and not potentially up to a week before
+enrollment_query = """
+SELECT events.client_info.client_id AS client_id,
+    mozfun.map.get_key(e.extra, 'branch') AS branch,
+    DATE("2022-10-17") AS enrollment_date,
+    COUNT(events.submission_timestamp) AS num_enrollment_events
+FROM `moz-fx-data-shared-prod.org_mozilla_ios_firefox.events` events,
+UNNEST(events.events) AS e
+WHERE
+    events.client_info.client_id IS NOT NULL AND
+    DATE(events.submission_timestamp)
+    BETWEEN '2022-10-11' AND '2022-10-17'
+    AND e.category = "nimbus_events"
+    AND mozfun.map.get_key(e.extra, "experiment") = 'release-firefox-ios-mr-existing-user-onboarding'
+    AND e.name = 'enrollment'
+GROUP BY client_id, branch
+"""
 
 ## NEW METRICS (uncomment below)
 # [metrics]
