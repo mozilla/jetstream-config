@@ -16,7 +16,7 @@ segments = ['is_really_new']
 # first run feature. 
 
 [segments.data_sources.baseline_clients_last_seen]
-from_expression = "`moz-fx-data-shared-prod.org_mozilla_ios_firefox.baseline_clients_last_sceen`"
+from_expression = "`moz-fx-data-shared-prod.org_mozilla_ios_firefox.baseline_clients_last_seen`"
 
 [segments.is_really_new]
 select_expression = """
