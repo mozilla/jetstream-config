@@ -1,0 +1,48 @@
+## EXPERIMENT SPECIFIC SETTINGS
+[experiment]
+# override enrollment query to pretend like enrollment happened on release day
+# so that the first analysis period will begin day of release, and not potentially up to a week before
+enrollment_query = """
+SELECT
+    e.client_id,
+    `mozfun.map.get_key`(e.event_map_values, 'branch') AS branch,
+    DATE("2022-10-17") AS enrollment_date,
+    COUNT(e.submission_date) AS num_enrollment_events
+FROM
+    `moz-fx-data-shared-prod.telemetry.events` e
+WHERE
+    e.event_category = 'normandy'
+    AND e.event_method = 'enroll'
+    AND e.submission_date
+        BETWEEN '2022-10-11' AND '2022-10-17'
+    AND e.event_string_value = '106-major-release-firefox-existing-user-experience'
+GROUP BY e.client_id, branch
+"""
+
+## NEW METRICS (uncomment below)
+# [metrics]
+
+
+## MODIFICATIONS TO DEFAULT DATA SOURCES TO ACCOUNT FOR EARLY ENROLLMENT
+# these cover all metrics in defaults/firefox_desktop.toml except unenrollment
+# which we do not override, to include unenrollment counts from prior to release
+[data_sources]
+
+[data_sources.clients_daily]
+from_expression = """(
+    SELECT 
+        p.*
+    FROM mozdata.telemetry.clients_daily p
+    WHERE mozfun.norm.extract_version(p.app_display_version, 'major') >= 106
+)"""
+
+[data_sources.search_clients_engines_sources_daily]
+from_expression = """(
+    SELECT 
+        p.*
+    FROM mozdata.search.search_clients_engines_sources_daily p
+    WHERE mozfun.norm.extract_version(p.app_display_version, 'major') >= 106
+)"""
+experiments_column_type = "none"
+
+## New data sources to support new metrics

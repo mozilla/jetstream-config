@@ -1,0 +1,28 @@
+## EXPERIMENT SPECIFIC
+[experiment]
+segments = ['is_really_new']
+
+## NEW METRICS (uncomment below)
+# [metrics]
+
+## New data sources to support new metrics
+
+## SEGMENTS
+[segments]
+
+# A segment for users that are actually new. 
+# Filters out non-new users that were erroneously enrolled
+# as a result of technical limitations in the new mobile 
+# first run feature. 
+[segments.data_sources.baseline_clients_last_seen]
+from_expression = "`moz-fx-data-shared-prod.org_mozilla_firefox.baseline_clients_last_seen`"
+
+[segments.is_really_new]
+select_expression = """
+COALESCE(CAST(MAX(
+    CASE WHEN first_seen_date >= '2022-10-18'
+        AND mozfun.norm.extract_version(app_display_version, 'major') >= 106
+    THEN 1 ELSE 0 END
+    ) AS BOOL), FALSE)
+"""
+data_source = "baseline_clients_last_seen"
