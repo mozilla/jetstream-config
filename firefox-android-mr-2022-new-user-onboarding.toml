@@ -20,7 +20,7 @@ from_expression = "`moz-fx-data-shared-prod.org_mozilla_firefox.baseline_clients
 [segments.is_really_new]
 select_expression = """
 COALESCE(CAST(MAX(
-    CASE WHEN first_seen_date >= '<ADD EXPERIMENT LAUNCH DATE HERE>'
+    CASE WHEN first_seen_date >= '2022-10-18'
         AND mozfun.norm.extract_version(p.app_display_version, 'major') >= 106
     THEN 1 ELSE 0 END
     ) AS BOOL), FALSE)
