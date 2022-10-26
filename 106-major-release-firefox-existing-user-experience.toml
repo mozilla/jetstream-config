@@ -41,7 +41,7 @@ from_expression = """(
     SELECT 
         p.*
     FROM mozdata.search.search_clients_engines_sources_daily p
-    WHERE mozfun.norm.extract_version(p.app_display_version, 'major') >= 106
+    WHERE mozfun.norm.extract_version(p.app_version, 'major') >= 106
 )"""
 experiments_column_type = "none"
 
