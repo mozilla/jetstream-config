@@ -2,8 +2,33 @@
 [experiment]
 segments = ['is_really_new']
 
-## NEW METRICS (uncomment below)
-# [metrics]
+## NEW OR CHANGED METRICS
+[metrics]
+
+[metrics.active_hours.statistics.bootstrap_mean]
+drop_highest = 0.0
+
+[metrics.serp_ad_clicks.statistics.bootstrap_mean]
+drop_highest = 0.0
+
+[metrics.organic_searches.statistics.bootstrap_mean]
+drop_highest = 0.0
+
+[metrics.search_count.statistics.bootstrap_mean]
+drop_highest = 0.0
+
+[metrics.searches_with_ads.statistics.bootstrap_mean]
+drop_highest = 0.0
+
+[metrics.tagged_follow_on_searches.statistics.bootstrap_mean]
+drop_highest = 0.0
+
+[metrics.total_uri_count.statistics.bootstrap_mean]
+drop_highest = 0.0
+
+[metrics.days_of_use.statistics.bootstrap_mean]
+# this should be a no-op
+drop_highest = 0.0
 
 ## New data sources to support new metrics
 
