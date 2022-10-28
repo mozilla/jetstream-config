@@ -23,17 +23,17 @@ GROUP BY client_id, branch
 [metrics]
 
 [metrics.active_hours.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 [metrics.days_of_use.statistics.bootstrap_mean]
+# this should be a no-op
 drop_highest = 0.0
 
 [metrics.search_count.statistics.bootstrap_mean]
-# should be a no-op
-drop_highest = 0.0
+drop_highest = 0.0005
 
 [metrics.serp_ad_clicks.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 
 

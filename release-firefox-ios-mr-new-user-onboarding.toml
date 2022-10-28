@@ -6,17 +6,17 @@ segments = ['is_really_new']
 [metrics]
 
 [metrics.active_hours.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 [metrics.days_of_use.statistics.bootstrap_mean]
-drop_highest = 0.0
-
-[metrics.search_count.statistics.bootstrap_mean]
 # should be a no-op
 drop_highest = 0.0
 
+[metrics.search_count.statistics.bootstrap_mean]
+drop_highest = 0.0005
+
 [metrics.serp_ad_clicks.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 ## New data sources to support new metrics
 

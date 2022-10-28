@@ -6,25 +6,25 @@ segments = ['is_really_new']
 [metrics]
 
 [metrics.active_hours.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 [metrics.serp_ad_clicks.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 [metrics.organic_searches.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 [metrics.search_count.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 [metrics.searches_with_ads.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 [metrics.tagged_follow_on_searches.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 [metrics.total_uri_count.statistics.bootstrap_mean]
-drop_highest = 0.0
+drop_highest = 0.0005
 
 [metrics.days_of_use.statistics.bootstrap_mean]
 # this should be a no-op
