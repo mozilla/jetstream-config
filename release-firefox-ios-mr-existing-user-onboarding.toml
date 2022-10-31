@@ -18,6 +18,7 @@ WHERE
     AND e.name = 'enrollment'
 GROUP BY client_id, branch
 """
+enrollment_period = 7
 
 ## NEW OR CHANGED METRICS (uncomment below)
 [metrics]
