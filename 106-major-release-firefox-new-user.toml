@@ -2,6 +2,23 @@
 # [experiment]
 
 ## NEW METRICS (uncomment below)
-# [metrics]
+[metrics]
+weekly = ["opened_private_window", "days_opening_private_window"]
+overall = ["opened_private_window", "days_opening_private_window"]
+
+
+[metrics.opened_private_window]
+data_source = "clients_daily"
+select_expression = "MAX(dom_parentprocess_private_window_used)"
+
+[metrics.opened_private_window.statistics.binomial]
+
+
+[metrics.days_opening_private_window] 
+data_source = "clients_daily"
+select_expression = "SUM(CAST(dom_parentprocess_private_window_used AS int))"
+
+[metrics.days_opening_private_window.statistics.bootstrap_mean]
+drop_highest = 0.0
 
 ## New data sources to support new metrics
