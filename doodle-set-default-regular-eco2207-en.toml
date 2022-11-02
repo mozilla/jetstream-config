@@ -4,12 +4,12 @@ overall = ["is_pinned"]
 
 [metrics.is_pinned]
 data_source = "clients_daily"
-select_expression = "CAST(COALESCE(scalar_parent_os_environment_is_taskbar_pinned, FALSE) AS int)"
+select_expression = "CAST(COALESCE(LOGICAL_OR(scalar_parent_os_environment_is_taskbar_pinned), FALSE) AS int)"
 
 [metrics.is_pinned.statistics.binomial]
 
 [metrics.is_default]
 data_source = "clients_daily"
-select_expression = "CAST(COALESCE(is_default_browser, FALSE) AS int)"
+select_expression = "CAST(COALESCE(LOGICAL_OR(is_default_browser), FALSE) AS int)"
 
 [metrics.is_default.statistics.binomial]
