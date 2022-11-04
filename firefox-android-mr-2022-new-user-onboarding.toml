@@ -32,6 +32,14 @@ drop_highest = 0.0005
 # this should be a no-op
 drop_highest = 0.0
 
+[metrics.searches_with_ads]
+select_expression = "{{agg_sum('search_with_ads')}}"
+data_source = "mobile_search_clients_engines_sources_daily"
+
+[metrics.searches_with_ads.statistics]
+deciles = {}
+bootstrap_mean = {}
+
 ## New data sources to support new metrics
 
 ## SEGMENTS
