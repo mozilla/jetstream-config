@@ -22,6 +22,8 @@ GROUP BY client_id, branch
 ## NEW OR CHANGED METRICS
 [metrics]
 
+weekly = ["searches_with_ads"]
+
 [metrics.active_hours.statistics.bootstrap_mean]
 drop_highest = 0.0005
 
