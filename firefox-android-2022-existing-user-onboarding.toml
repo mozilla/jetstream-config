@@ -55,7 +55,6 @@ data_source = "mobile_search_clients_engines_sources_daily"
 
 [metrics.searches_with_ads.statistics]
 deciles = {}
-bootstrap_mean = {}
 
 [data_sources]
 
