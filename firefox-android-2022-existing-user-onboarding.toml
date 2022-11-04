@@ -101,7 +101,11 @@ experiments_column_type = "glean"
 default_dataset = "org_mozilla_firefox"
 
 [data_sources.mobile_search_clients_engines_sources_daily]
-from_expression = "mozdata.search.mobile_search_clients_engines_sources_daily"
+from_expression = """(
+    SELECT *
+    FROM mozdata.search.mobile_search_clients_engines_sources_daily
+    WHERE mozfun.norm.extract_version(app_version, 'major') >= 106 
+)"""
 experiments_column_type = "simple"
 
 ## New data sources to support new metrics
