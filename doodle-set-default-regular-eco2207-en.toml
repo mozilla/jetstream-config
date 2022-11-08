@@ -1,6 +1,6 @@
 [metrics]
 
-overall = ["is_pinned"]
+overall = ["is_pinned", "is_default"]
 
 [metrics.is_pinned]
 data_source = "clients_daily"
