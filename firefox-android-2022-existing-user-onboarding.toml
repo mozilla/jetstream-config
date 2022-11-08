@@ -22,6 +22,8 @@ GROUP BY client_id, branch
 ## NEW OR CHANGED METRICS
 [metrics]
 
+weekly = ["searches_with_ads"]
+
 [metrics.active_hours.statistics.bootstrap_mean]
 drop_highest = 0.0005
 
@@ -47,7 +49,12 @@ drop_highest = 0.0005
 # this should be a no-op
 drop_highest = 0.0
 
+[metrics.searches_with_ads]
+select_expression = "{{agg_sum('search_with_ads')}}"
+data_source = "mobile_search_clients_engines_sources_daily"
 
+[metrics.searches_with_ads.statistics]
+deciles = {}
 
 [data_sources]
 
@@ -92,5 +99,13 @@ from_expression = """(
 client_id_column = "client_info.client_id"
 experiments_column_type = "glean"
 default_dataset = "org_mozilla_firefox"
+
+[data_sources.mobile_search_clients_engines_sources_daily]
+from_expression = """(
+    SELECT *
+    FROM mozdata.search.mobile_search_clients_engines_sources_daily
+    WHERE mozfun.norm.extract_version(app_version, 'major') >= 106 
+)"""
+experiments_column_type = "simple"
 
 ## New data sources to support new metrics

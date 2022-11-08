@@ -5,6 +5,8 @@ segments = ['is_really_new']
 ## NEW OR CHANGED METRICS
 [metrics]
 
+weekly = ["searches_with_ads"]
+
 [metrics.active_hours.statistics.bootstrap_mean]
 drop_highest = 0.0005
 
@@ -30,6 +32,14 @@ drop_highest = 0.0005
 # this should be a no-op
 drop_highest = 0.0
 
+[metrics.searches_with_ads]
+select_expression = "{{agg_sum('search_with_ads')}}"
+data_source = "mobile_search_clients_engines_sources_daily"
+
+[metrics.searches_with_ads.statistics]
+deciles = {}
+
+
 ## New data sources to support new metrics
 
 ## SEGMENTS
@@ -51,3 +61,13 @@ COALESCE(CAST(MAX(
     ) AS BOOL), FALSE)
 """
 data_source = "baseline_clients_last_seen"
+
+[data_sources]
+
+[data_sources.mobile_search_clients_engines_sources_daily]
+from_expression = """(
+    SELECT *
+    FROM mozdata.search.mobile_search_clients_engines_sources_daily
+    WHERE mozfun.norm.extract_version(app_version, 'major') >= 106 
+)"""
+experiments_column_type = "simple"
