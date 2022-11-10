@@ -3,8 +3,8 @@
 
 ## NEW METRICS (uncomment below)
 [metrics]
-weekly = ["opened_private_window", "days_opening_private_window"]
-overall = ["opened_private_window", "days_opening_private_window"]
+weekly = ["opened_private_window", "days_opening_private_window", "private_uri_count"]
+overall = ["opened_private_window", "days_opening_private_window", "private_uri_count"]
 
 
 [metrics.opened_private_window]
@@ -20,5 +20,12 @@ select_expression = "COALESCE(SUM(CAST(dom_parentprocess_private_window_used AS 
 
 [metrics.days_opening_private_window.statistics.bootstrap_mean]
 drop_highest = 0.0
+
+[metrics.private_uri_count]
+data_source = "clients_daily"
+select_expression = "SUM(scalar_parent_browser_engagement_total_uri_count_normal_and_private_mode_sum) - SUM(scalar_parent_browser_engagement_total_uri_count_sum)"
+
+[metrics.private_uri_count.statistics.bootstrap_mean]
+drop_highest = 0.0005
 
 ## New data sources to support new metrics
