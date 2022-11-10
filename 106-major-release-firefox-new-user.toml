@@ -2,9 +2,6 @@
 # [experiment]
 
 ## NEW METRICS (uncomment below)
-<<<<<<< HEAD
-# [metrics]
-=======
 [metrics]
 weekly = ["opened_private_window", "days_opening_private_window"]
 overall = ["opened_private_window", "days_opening_private_window"]
@@ -23,6 +20,5 @@ select_expression = "COALESCE(SUM(CAST(dom_parentprocess_private_window_used AS 
 
 [metrics.days_opening_private_window.statistics.bootstrap_mean]
 drop_highest = 0.0
->>>>>>> 119229c9c699b769870268c33afc726a7f86697b
 
 ## New data sources to support new metrics
