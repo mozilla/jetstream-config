@@ -20,6 +20,7 @@ select_expression = "COALESCE(SUM(CAST(dom_parentprocess_private_window_used AS 
 
 [metrics.days_opening_private_window.statistics.bootstrap_mean]
 drop_highest = 0.0
+pre_treatments = ["remove_nulls"]
 
 [metrics.private_uri_count]
 data_source = "clients_daily"

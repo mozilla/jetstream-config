@@ -37,6 +37,7 @@ data_source = "clients_daily"
 select_expression = "SUM(CAST(dom_parentprocess_private_window_used AS int))"
 
 [metrics.days_opening_private_window.statistics.bootstrap_mean]
+pre_treatments = ["remove_nulls"]
 drop_highest = 0.0
 
 [metrics.private_uri_count]
