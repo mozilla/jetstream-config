@@ -18,6 +18,12 @@ WHERE
     AND e.event_string_value = '106-major-release-firefox-existing-user-experience'
 GROUP BY e.client_id, branch
 """
+start_date = "2022-10-17"
+enrollment_period = 1
+end_date = "2022-11-14"
+
+
+segments = ["was_active_after_update"]
 
 ## NEW METRICS (uncomment below)
 [metrics]
@@ -27,14 +33,14 @@ overall = ["opened_private_window", "days_opening_private_window", "private_uri_
 
 [metrics.opened_private_window]
 data_source = "clients_daily"
-select_expression = "MAX(dom_parentprocess_private_window_used)"
+select_expression = "COALESCE(MAX(dom_parentprocess_private_window_used), 0)"
 
 [metrics.opened_private_window.statistics.binomial]
 
 
 [metrics.days_opening_private_window] 
 data_source = "clients_daily"
-select_expression = "SUM(CAST(dom_parentprocess_private_window_used AS int))"
+select_expression = "COALESCE(SUM(CAST(dom_parentprocess_private_window_used AS int)), 0)"
 
 [metrics.days_opening_private_window.statistics.bootstrap_mean]
 pre_treatments = ["remove_nulls"]
@@ -42,7 +48,7 @@ drop_highest = 0.0
 
 [metrics.private_uri_count]
 data_source = "clients_daily"
-select_expression = "SUM(scalar_parent_browser_engagement_total_uri_count_normal_and_private_mode_sum) - SUM(scalar_parent_browser_engagement_total_uri_count_sum)"
+select_expression = "COALESCE(SUM(scalar_parent_browser_engagement_total_uri_count_normal_and_private_mode_sum) - SUM(scalar_parent_browser_engagement_total_uri_count_sum), 0)"
 
 [metrics.private_uri_count.statistics.bootstrap_mean]
 drop_highest = 0.0005
@@ -71,3 +77,19 @@ from_expression = """(
 experiments_column_type = "none"
 
 ## New data sources to support new metrics
+
+[segments]
+
+[segments.data_sources.clients_daily]
+from_expression = "`mozdata.telemetry.clients_daily`"
+
+[segments.was_active_after_update]
+select_expression = """(
+COALESCE(CAST(MAX(
+    CASE WHEN submission_date >= '2022-10-18' 
+        AND submission_date <= '2022-10-27'
+        AND mozfun.norm.extract_version(app_display_version, 'major') >= 106
+    THEN 1 ELSE 0 END
+    ) AS BOOL), FALSE)
+)"""
+data_source = "clients_daily"
