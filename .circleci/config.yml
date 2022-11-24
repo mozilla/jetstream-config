@@ -15,7 +15,7 @@ jobs:
           changed_files=$(git diff --name-only $BASE_COMMIT..$REVISION_COMMIT -- '*.toml' '*.toml.example')
           echo "Run validation on changed files: "
           echo $changed_files
-          jetstream validate_config $changed_files
+          jetstream validate_config --config_repos=https://github.com/mozilla/metric-hub --config_repos='.' $changed_files
   rerun:
     docker:
     - image: google/cloud-sdk
