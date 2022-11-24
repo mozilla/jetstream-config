@@ -29,22 +29,12 @@ binomial = {}
 
 ##
 
-[metrics.days_of_use]
-friendly_name = "Days of use"
-description = "The number of days in an observation window that clients used the browser."
-select_expression = "COUNT(DISTINCT DATE(submission_timestamp))"
-data_source = "baseline"
-
 [metrics.days_of_use.statistics]
 deciles = {}
 bootstrap_mean = { drop_highest=0 }
 empirical_cdf = {}
 
 ##
-
-[metrics.active_hours]
-select_expression = "COALESCE(SUM(metrics.timespan.glean_baseline_duration.value), 0) / 3600.0"
-data_source = "baseline"
 
 [metrics.active_hours.statistics]
 deciles = {}
@@ -72,12 +62,6 @@ bootstrap_mean = {}
 
 ##
 
-[metrics.search_count]
-friendly_name = "SAP search count"
-description = "Number of searches performed through a Search Access Point."
-select_expression = "{{agg_sum('search_count')}}"
-data_source = "mobile_search_clients_engines_sources_daily"
-
 [metrics.search_count.statistics]
 deciles = {}
 bootstrap_mean = {}
@@ -93,10 +77,6 @@ deciles = {}
 bootstrap_mean = {}
 
 ##
-
-[metrics.tagged_sap_searches]
-select_expression = "{{agg_sum('tagged_sap')}}"
-data_source = "mobile_search_clients_engines_sources_daily"
 
 [metrics.tagged_sap_searches.statistics]
 deciles = {}
@@ -121,9 +101,3 @@ data_source = "metrics"
 [metrics.total_uri_count.statistics]
 deciles = {}
 bootstrap_mean = {}
-
-##
-
-[data_sources.mobile_search_clients_engines_sources_daily]
-from_expression = "mozdata.search.mobile_search_clients_engines_sources_daily"
-experiments_column_type = "simple"
