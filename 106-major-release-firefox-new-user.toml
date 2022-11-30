@@ -1,5 +1,6 @@
 ## EXPERIMENT SPECIFIC
-# [experiment]
+[experiment]
+end_date = "2022-11-29"
 
 ## NEW METRICS (uncomment below)
 [metrics]
@@ -28,12 +29,6 @@ select_expression = "SUM(scalar_parent_browser_engagement_total_uri_count_normal
 
 [metrics.private_uri_count.statistics.bootstrap_mean]
 drop_highest = 0.0005
-
-[metrics.private_uri_count]
-data_source = "clients_daily"
-select_expression = "SUM(scalar_parent_browser_engagement_total_uri_count_normal_and_private_mode_sum) - SUM(scalar_parent_browser_engagement_total_uri_count_sum)"
-
-[metrics.private_uri_count.statistics.bootstrap_mean]
-drop_highest = 0.0005
+pre_treatments = ["remove_nulls"]
 
 ## New data sources to support new metrics
