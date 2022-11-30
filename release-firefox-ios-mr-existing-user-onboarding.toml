@@ -18,7 +18,9 @@ WHERE
     AND e.name = 'enrollment'
 GROUP BY client_id, branch
 """
+start_date = "2022-10-17"
 enrollment_period = 7
+end_date = "2022-11-21"
 
 ## NEW OR CHANGED METRICS (uncomment below)
 [metrics]
