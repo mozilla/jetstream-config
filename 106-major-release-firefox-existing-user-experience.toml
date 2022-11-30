@@ -16,11 +16,13 @@ WHERE
     AND e.submission_date
         BETWEEN '2022-10-11' AND '2022-10-17'
     AND e.event_string_value = '106-major-release-firefox-existing-user-experience'
+    -- AND e.sample_id < 10
 GROUP BY e.client_id, branch
 """
+
 start_date = "2022-10-17"
-enrollment_period = 1
-end_date = "2022-11-14"
+enrollment_period = 7
+end_date = "2022-11-21"
 
 
 segments = ["was_active_after_update"]
@@ -33,7 +35,7 @@ overall = ["opened_private_window", "days_opening_private_window", "private_uri_
 
 [metrics.opened_private_window]
 data_source = "clients_daily"
-select_expression = "COALESCE(MAX(dom_parentprocess_private_window_used), 0)"
+select_expression = "COALESCE(MAX(CAST(dom_parentprocess_private_window_used AS int)), 0)"
 
 [metrics.opened_private_window.statistics.binomial]
 
@@ -86,9 +88,7 @@ from_expression = "`mozdata.telemetry.clients_daily`"
 [segments.was_active_after_update]
 select_expression = """(
 COALESCE(CAST(MAX(
-    CASE WHEN submission_date >= '2022-10-18' 
-        AND submission_date <= '2022-10-27'
-        AND mozfun.norm.extract_version(app_display_version, 'major') >= 106
+    CASE WHEN mozfun.norm.extract_version(app_display_version, 'major') >= 106
     THEN 1 ELSE 0 END
     ) AS BOOL), FALSE)
 )"""
