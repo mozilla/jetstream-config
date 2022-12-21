@@ -35,9 +35,11 @@ jobs:
           # required for parsing kubectl pod statuses
           apt-get install jq -y
           apt-get install uuid-runtime
+          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
           export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
           echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
           gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+          gcloud components update
           gcloud config set project $GCLOUD_PROJECT
           gcloud container clusters get-credentials jetstream --zone us-central1-a --project $GCLOUD_PROJECT
     - run:
