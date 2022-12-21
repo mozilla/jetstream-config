@@ -16,8 +16,7 @@ from_expression = """
   SELECT
     cr.*,
     DATE(cr.submission_timestamp) AS submission_date,
-    cr.environment.experiments,
-    CO
+    cr.environment.experiments
   FROM
     `moz-fx-data-shared-prod.telemetry_stable.crash_v4` cr
     INNER JOIN  `moz-fx-data-shared-prod`.telemetry_stable.main_v4 m
