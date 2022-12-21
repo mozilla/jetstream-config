@@ -39,7 +39,6 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp.json"
           echo "$GCLOUD_SERVICE_KEY" > "$GOOGLE_APPLICATION_CREDENTIALS"
           gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-          gcloud components update -q
           gcloud config set project $GCLOUD_PROJECT
           gcloud container clusters get-credentials jetstream --zone us-central1-a --project $GCLOUD_PROJECT
     - run:
