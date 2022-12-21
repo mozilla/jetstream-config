@@ -17,7 +17,7 @@ from_expression = """
     cr.*,
     DATE(cr.submission_timestamp) AS submission_date,
     cr.environment.experiments,
-    CO
+    COALESCE(m.payload.processes.parent.scalars.browser_engagement_active_ticks, 0)*5 as active_s
   FROM
     `moz-fx-data-shared-prod.telemetry_stable.crash_v4` cr
     INNER JOIN  `moz-fx-data-shared-prod`.telemetry_stable.main_v4 m
