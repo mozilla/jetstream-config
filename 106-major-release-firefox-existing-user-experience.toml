@@ -22,7 +22,7 @@ GROUP BY e.client_id, branch
 
 start_date = "2022-10-17"
 enrollment_period = 7
-end_date = "2022-11-21"
+end_date = "2022-12-19"
 
 
 segments = ["was_active_after_update"]
@@ -88,7 +88,7 @@ from_expression = "`mozdata.telemetry.clients_daily`"
 [segments.was_active_after_update]
 select_expression = """(
 COALESCE(CAST(MAX(
-    CASE WHEN mozfun.norm.extract_version(app_display_version, 'major') >= 106
+    CASE WHEN mozfun.norm.extract_version(app_display_version, 'major') >= 106 AND submission_date >= '2022-10-17' AND submission_date <= '2022-10-24'
     THEN 1 ELSE 0 END
     ) AS BOOL), FALSE)
 )"""
