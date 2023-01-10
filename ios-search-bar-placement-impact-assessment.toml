@@ -6,8 +6,9 @@ overall = ["new_profile_activation"]
 
 [metrics.new_profile_activation]
 data_source = "new_profile_activation"
-select_expression = "SUM(activated) / SUM(new_profile)"
+select_expression = "COALESCE(SUM(activated))"
 
+[metrics.new_profile_activation.statistics.binomial]
 
 [data_sources]
 
