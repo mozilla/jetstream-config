@@ -1,6 +1,7 @@
 ## EXPERIMENT SPECIFIC
 [experiment]
 segments = ['is_really_new']
+end_date = "2022-01-02"
 
 ## NEW OR CHANGED METRICS (uncomment below)
 [metrics]
