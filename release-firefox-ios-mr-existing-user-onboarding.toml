@@ -18,7 +18,9 @@ WHERE
     AND e.name = 'enrollment'
 GROUP BY client_id, branch
 """
+start_date = "2022-10-17"
 enrollment_period = 7
+end_date = "2022-12-19"
 
 ## NEW OR CHANGED METRICS (uncomment below)
 [metrics]
@@ -84,3 +86,25 @@ experiments_column_type = "glean"
 default_dataset = "org_mozilla_ios_firefox"
 
 ## New data sources to support new metrics
+
+[segments]
+
+[segments.data_sources.baseline]
+from_expression = """(
+    SELECT
+        p.*,
+        DATE(p.submission_timestamp) AS submission_date
+    FROM `moz-fx-data-shared-prod.{dataset}.baseline` p
+)"""
+client_id_column = "client_info.client_id"
+experiments_column_type = "glean"
+default_dataset = "org_mozilla_ios_firefox"
+
+[segments.was_active_after_update]
+select_expression = """(
+COALESCE(CAST(MAX(
+    CASE WHEN mozfun.norm.extract_version(p.client_info.app_display_version, 'major') >= 106
+    THEN 1 ELSE 0 END
+    ) AS BOOL), FALSE)
+)"""
+data_source = "baseline"
