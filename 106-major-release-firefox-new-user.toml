@@ -1,6 +1,6 @@
 ## EXPERIMENT SPECIFIC
 [experiment]
-end_date = "2022-11-29"
+end_date = "2022-12-26"
 
 ## NEW METRICS (uncomment below)
 [metrics]
