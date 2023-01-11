@@ -11,6 +11,7 @@ weekly = [
   "uri_count",
   "search_count",
   "qualified_cumulative_days_of_use",
+  "is_default_browser",
 ]
 
 overall = [
@@ -25,6 +26,7 @@ overall = [
   "tagged_follow_on_search_count",
   "uri_count",
   "qualified_cumulative_days_of_use",
+  "is_default_browser",
 ]
 
 
@@ -77,3 +79,5 @@ description = "Indicates whether the client configured separate search engines f
 
 [metrics.qualified_cumulative_days_of_use.statistics.bootstrap_mean]
 [metrics.qualified_cumulative_days_of_use.statistics.deciles]
+
+[metrics.is_default_browser.statistics.binomial]
