@@ -11,7 +11,8 @@ select_expression = "COALESCE(SUM(google_tagged_searches) + SUM(bing_tagged_sear
 
 [metrics.search_content_urlbar_persisted.statistics.bootstrap_mean]
 
-
+#[metrics.my_other_metric]
+#data_source = "my_new_data_source"
 
 [data_sources]
 
@@ -36,3 +37,7 @@ from_expression = """(
 experiments_column_type = "native" # ?????
 friendly_name = "Main"
 description = "Main ping table"
+
+
+#[data_sources.my_new_data_source]
+# from_expression = ...
