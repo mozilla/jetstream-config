@@ -1,0 +1,36 @@
+
+
+[metrics]
+
+weekly = ["search_content_urlbar_persisted"]
+overall = ["search_content_urlbar_persisted"]
+
+[metrics.search_content_urlbar_persisted]
+data_source = "main"
+select_expression = "COALESCE(SUM(google_tagged_searches) + SUM(bing_tagged_searches) + SUM(ddg_tagged_searches),0)"
+
+[metrics.search_content_urlbar_persisted.statistics.bootstrap_mean]
+
+
+
+[data_sources]
+from_expression = """(
+  SELECT client_id, 
+    submission_date,
+    SUM(google_tagged_searches) AS google_tagged_searches,
+    SUM(bing_tagged_searches) AS bing_tagged_searches,
+    SUM(ddg_tagged_searches) AS ddg_tagged_searches,    
+  FROM (  
+    SELECT *,
+      DATE(submission_timestamp) AS submission_date,
+      CASE WHEN e.key LIKE 'google:tagged%' THEN e.value ELSE 0 END AS google_tagged_searches,
+      CASE WHEN e.key LIKE 'bing:tagged%' THEN e.value ELSE 0 END AS bing_tagged_searches,
+      CASE WHEN e.key LIKE 'duckduckgo:tagged%' THEN e.value ELSE 0 END AS ddg_tagged_searches,  
+    FROM `mozdata.telemetry.main` 
+    CROSS JOIN UNNEST(payload.processes.parent.keyed_scalars.browser_search_content_urlbar_persisted) e
+    WHERE DATE(submission_timestamp) >= '2023-01-01' AND e.key IS NOT NULL)
+  GROUP BY client_id, submission_date
+)"""
+experiments_column_type = "native" # ?????
+friendly_name = "Main"
+description = "Main ping table"
