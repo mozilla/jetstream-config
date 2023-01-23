@@ -2,14 +2,49 @@
 
 [metrics]
 
-weekly = ["search_content_urlbar_persisted"]
-overall = ["search_content_urlbar_persisted"]
+weekly = ["search_content_urlbar_persisted_tagged_search","search_content_urlbar_persisted_tagged_follow_on_search" ,"presisted_adclicks","presisted_search_w_ads","urlbar_persist_navigation_search_enter","urlbar_persist_navigation_search_formhistory","urlbar_persist_navigation_search_suggestion"]
 
-[metrics.search_content_urlbar_persisted]
+overall = ["search_content_urlbar_persisted_tagged_search","search_content_urlbar_persisted_tagged_follow_on_search" ,"presisted_adclicks","presisted_search_w_ads","urlbar_persist_navigation_search_enter","urlbar_persist_navigation_search_formhistory","urlbar_persist_navigation_search_suggestion"]
+
+[metrics.search_content_urlbar_persisted_tagged_search]
 data_source = "main"
 select_expression = "COALESCE(SUM(google_tagged_searches) + SUM(bing_tagged_searches) + SUM(ddg_tagged_searches),0)"
 
-[metrics.search_content_urlbar_persisted.statistics.bootstrap_mean]
+[metrics.search_content_urlbar_persisted_tagged_follow_on_search]
+data_source = "main"
+select_expression = "COALESCE(SUM(google_tagged_follow_on_searches) + SUM(bing_tagged_follow_on_searches) + SUM(ddg_tagged_follow_on_searches),0)"
+
+
+
+[metrics.presisted_adclicks]
+data_source = "main"
+select_expression = "COALESCE(SUM(google_ad_clicks) + SUM(bing_ad_clicks) + SUM(ddg_ad_clicks),0)"
+
+
+[metrics.presisted_search_w_ads]
+data_source = "main"
+select_expression = "COALESCE(SUM(google_search_w_ad) + SUM(bing_search_w_ad) + SUM(ddg_search_w_ad),0)"
+
+[metrics.urlbar_persist_navigation_search_enter]
+data_source = "main"
+select_expression = "COALESCE(SUM(urlbar_navigation_search_enter),0)"
+
+
+[metrics.urlbar_persist_navigation_search_formhistory]
+data_source = "main"
+select_expression = "COALESCE(SUM(urlbar_navigation_search_formhistory),0)"
+
+[metrics.urlbar_persist_navigation_search_suggestion]
+data_source = "main"
+select_expression = "COALESCE(SUM(urlbar_navigation_search_suggestion),0)"
+
+[metrics.search_content_urlbar_persisted_tagged_search.statistics.bootstrap_mean]
+[metrics.search_content_urlbar_persisted_tagged_follow_on_search.statistics.bootstrap_mean]
+[metrics.presisted_adclicks.statistics.bootstrap_mean]
+[metrics.presisted_search_w_ads.statistics.bootstrap_mean]
+[metrics.urlbar_persist_navigation_search_enter.statistics.bootstrap_mean]
+[metrics.urlbar_persist_navigation_search_formhistory.statistics.bootstrap_mean]
+[metrics.urlbar_persist_navigation_search_suggestion.statistics.bootstrap_mean]
 
 #[metrics.my_other_metric]
 #data_source = "my_new_data_source"
@@ -18,19 +53,59 @@ select_expression = "COALESCE(SUM(google_tagged_searches) + SUM(bing_tagged_sear
 
 [data_sources.main]
 from_expression = """(
-  SELECT client_id, 
+ SELECT 
     submission_date,
+    client_id,
     SUM(google_tagged_searches) AS google_tagged_searches,
     SUM(bing_tagged_searches) AS bing_tagged_searches,
-    SUM(ddg_tagged_searches) AS ddg_tagged_searches,    
+    SUM(ddg_tagged_searches) AS ddg_tagged_searches, 
+
+    SUM(google_tagged_follow_on_searches) AS google_tagged_follow_on_searches,
+    SUM(bing_tagged_follow_on_searches) AS bing_tagged_follow_on_searches,
+    SUM(ddg_tagged_follow_on_searches) AS ddg_tagged_follow_on_searches, 
+
+    SUM(urlbar_navigation_search_enter) AS urlbar_navigation_search_enter, 
+    SUM(urlbar_navigation_search_formhistory) AS urlbar_navigation_search_formhistory, 
+    SUM(urlbar_navigation_search_suggestion) AS urlbar_navigation_search_suggestion, 
+
+    SUM(google_ad_clicks) AS google_ad_clicks,
+    SUM(bing_ad_clicks) AS bing_ad_clicks,
+    SUM(ddg_ad_clicks) AS dg_ad_clicks, 
+
+    SUM(google_search_w_ad) AS google_search_w_ad,
+    SUM(bing_search_w_ad) AS bing_search_w_ad,
+    SUM(ddg_search_w_ad) AS dg_search_w_ad, 
+
   FROM (  
-    SELECT *,
+    SELECT client_id,
       DATE(submission_timestamp) AS submission_date,
-      CASE WHEN e.key LIKE 'google:tagged%' THEN e.value ELSE 0 END AS google_tagged_searches,
-      CASE WHEN e.key LIKE 'bing:tagged%' THEN e.value ELSE 0 END AS bing_tagged_searches,
-      CASE WHEN e.key LIKE 'duckduckgo:tagged%' THEN e.value ELSE 0 END AS ddg_tagged_searches,  
+      CASE WHEN e.key LIKE 'google:tagged:%' THEN e.value ELSE 0 END AS google_tagged_searches,
+      CASE WHEN e.key LIKE 'bing:tagged:%' THEN e.value ELSE 0 END AS bing_tagged_searches,
+      CASE WHEN e.key LIKE 'duckduckgo:tagged:%' THEN e.value ELSE 0 END AS ddg_tagged_searches, 
+      CASE WHEN e.key LIKE 'google:tagged-fo%' THEN e.value ELSE 0 END AS google_tagged_follow_on_searches,
+      CASE WHEN e.key LIKE 'bing:tagged-fo%' THEN e.value ELSE 0 END AS bing_tagged_follow_on_searches,
+      CASE WHEN e.key LIKE 'duckduckgo:tagged-fo%' THEN e.value ELSE 0 END AS ddg_tagged_follow_on_searches, 
+      CASE WHEN b.key  = 'search_enter' THEN b.value ELSE 0 END AS urlbar_navigation_search_enter,
+      CASE WHEN b.key  = 'search_formhistory' THEN b.value ELSE 0 END AS urlbar_navigation_search_formhistory,
+      CASE WHEN b.key  = 'search_suggestion' THEN b.value ELSE 0 END AS urlbar_navigation_search_suggestion,
+
+      CASE WHEN a.key LIKE 'google:%' THEN a.value ELSE 0 END AS google_ad_clicks,
+      CASE WHEN a.key LIKE 'bing:%' THEN a.value ELSE 0 END AS bing_ad_clicks,
+      CASE WHEN a.key LIKE 'duckduckgo:%' THEN a.value ELSE 0 END AS ddg_ad_clicks, 
+
+
+      CASE WHEN s.key LIKE 'google:%' THEN s.value ELSE 0 END AS google_search_w_ad,
+      CASE WHEN s.key LIKE 'bing:%' THEN s.value ELSE 0 END AS bing_search_w_ad,
+      CASE WHEN s.key LIKE 'duckduckgo:%' THEN s.value ELSE 0 END AS ddg_search_w_ad
+
+
+
+
     FROM `mozdata.telemetry.main` 
-    CROSS JOIN UNNEST(payload.processes.parent.keyed_scalars.browser_search_content_urlbar_persisted) e
+    CROSS JOIN UNNEST(payload.processes.parent.keyed_scalars.browser_search_content_urlbar_persisted) e,
+    UNNEST(payload.processes.parent.keyed_scalars.browser_engagement_navigation_urlbar_persisted) b,
+    UNNEST(payload.processes.parent.keyed_scalars.browser_search_adclicks_urlbar_persisted) a,
+    UNNEST(payload.processes.parent.keyed_scalars.browser_search_withads_urlbar_persisted) s
     WHERE DATE(submission_timestamp) >= '2023-01-01' AND e.key IS NOT NULL)
   GROUP BY client_id, submission_date
 )"""
