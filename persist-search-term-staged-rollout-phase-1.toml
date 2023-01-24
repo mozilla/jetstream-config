@@ -1,5 +1,9 @@
 
 
+[experiment]
+start_date = "2023-01-17"
+
+
 [metrics]
 
 weekly = ["search_content_urlbar_persisted_tagged_search","search_content_urlbar_persisted_tagged_follow_on_search" ,"presisted_adclicks","presisted_search_w_ads","urlbar_persist_navigation_search_enter","urlbar_persist_navigation_search_formhistory","urlbar_persist_navigation_search_suggestion"]
