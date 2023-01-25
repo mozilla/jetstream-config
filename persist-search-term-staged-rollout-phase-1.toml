@@ -107,7 +107,8 @@ description = "Search counts from main ping table"
 
 [data_sources.showSearchTerms_pref]
 """(
-  SELECT client_id,CASE WHEN e.value = 'true' THEN 1 ELSE 0 END AS showSearchTerms_user_pref,
+  SELECT client_id,
+    CASE WHEN e.value = 'true' THEN 1 ELSE 0 END AS showSearchTerms_user_pref,
     environment.experiments,
   FROM `moz-fx-data-shared-prod.telemetry_stable.main_v4` 
     CROSS JOIN UNNEST(environment.settings.user_prefs) e
