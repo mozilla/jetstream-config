@@ -91,7 +91,7 @@ from_expression = """(
     CASE WHEN a.key LIKE 'duckduckgo:%' THEN a.value ELSE 0 END AS ddg_ad_clicks, 
     CASE WHEN s.key LIKE 'google:%' THEN s.value ELSE 0 END AS google_search_w_ad,
     CASE WHEN s.key LIKE 'bing:%' THEN s.value ELSE 0 END AS bing_search_w_ad,
-    CASE WHEN s.key LIKE 'duckduckgo:%' THEN s.value ELSE 0 END AS ddg_search_w_ad
+    CASE WHEN s.key LIKE 'duckduckgo:%' THEN s.value ELSE 0 END AS ddg_search_w_ad,
     CASE WHEN u.key LIKE 'true' THEN 1 ELSE 0 END AS showSearchTerms_userpref,
   FROM `moz-fx-data-shared-prod.telemetry_stable.main_v4` 
     CROSS JOIN UNNEST(payload.processes.parent.keyed_scalars.browser_search_content_urlbar_persisted) e,
