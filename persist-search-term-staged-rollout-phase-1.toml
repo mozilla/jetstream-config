@@ -106,7 +106,7 @@ friendly_name = "Main Search Counts"
 description = "Search counts from main ping table"
 
 [data_sources.showSearchTerms_pref]
-"""(
+from_expression = """(
   SELECT client_id,
     CASE WHEN e.value = 'true' THEN 1 ELSE 0 END AS showSearchTerms_user_pref,
     environment.experiments,
