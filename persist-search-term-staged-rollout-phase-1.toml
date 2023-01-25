@@ -23,7 +23,8 @@ overall = [
   "persisted_search_w_ads",
   "urlbar_persist_navigation_search_enter",
   "urlbar_persist_navigation_search_formhistory",
-  "urlbar_persist_navigation_search_suggestion"
+  "urlbar_persist_navigation_search_suggestion",
+  "showSearchTerms_user_pref"
 ]
 
 [metrics.search_content_urlbar_persisted_tagged_search]
