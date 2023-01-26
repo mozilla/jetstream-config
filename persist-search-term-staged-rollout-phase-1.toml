@@ -23,7 +23,8 @@ overall = [
   "persisted_search_w_ads",
   "urlbar_persist_navigation_search_enter",
   "urlbar_persist_navigation_search_formhistory",
-  "urlbar_persist_navigation_search_suggestion"
+  "urlbar_persist_navigation_search_suggestion",
+  "showSearchTerms_user_pref"
 ]
 
 [metrics.search_content_urlbar_persisted_tagged_search]
@@ -68,6 +69,7 @@ select_expression = "COALESCE(SUM(showSearchTerms_user_pref),0)"
 [metrics.urlbar_persist_navigation_search_enter.statistics.bootstrap_mean]
 [metrics.urlbar_persist_navigation_search_formhistory.statistics.bootstrap_mean]
 [metrics.urlbar_persist_navigation_search_suggestion.statistics.bootstrap_mean]
+[metrics.showSearchTerms_user_pref.statistics.bootstrap_mean]
 
 
 [data_sources]
@@ -107,10 +109,15 @@ description = "Search counts from main ping table"
 
 [data_sources.showSearchTerms_pref]
 from_expression = """(
-  SELECT client_id,
+  SELECT 
+    client_id,
+    DATE(submission_timestamp) AS submission_date,
     CASE WHEN e.value = 'true' THEN 1 ELSE 0 END AS showSearchTerms_user_pref,
-    environment.experiments,
+    environment.experiments
   FROM `moz-fx-data-shared-prod.telemetry_stable.main_v4` 
     CROSS JOIN UNNEST(environment.settings.user_prefs) e
   WHERE DATE(submission_timestamp) >= '2023-01-01' AND e.key LIKE '%showSearchTerms%'
 )"""
+experiments_column_type = "native"
+friendly_name = "Show search term pref"
+description = "Show search term pref counts from main ping table"
