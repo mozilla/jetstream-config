@@ -18,7 +18,7 @@ jobs:
           jetstream validate_config --config_repos=https://github.com/mozilla/metric-hub --config_repos='.' $changed_files
   rerun:
     docker:
-    - image: google/cloud-sdk
+    - image: google/cloud-sdk:409.0.0
     steps:
     - checkout
     - &skip_forked_pr
