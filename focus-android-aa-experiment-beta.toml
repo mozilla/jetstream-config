@@ -1,0 +1,40 @@
+[experiment]
+
+[metrics]
+weekly = ["trash_button", "shield_button", "settings_customization"]
+overall = ["trash_button", "shield_button", "settings_customization"]
+
+[metrics.trash_button]
+friendly_name = "Trash Button Clicks"
+description = "How many times the erase button has been tapped to close opened sessions."
+select_expression = """
+      COALESCE(COUNTIF(
+          event.category = 'tab_count'
+          AND event.name = 'erase_button_tapped'
+      ),0)
+"""
+data_source = "events" 
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[metrics.settings_customization]
+friendly_name = "Settings customizations"
+description = "How many times the user has tapped on a browser menu item."
+select_expression = """
+      COALESCE(COUNTIF(
+          event.category = 'browser_menu'
+          AND event.name = 'browser_menu_action'
+      ),0)
+"""
+data_source = "events" 
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[metrics.shield_button]
+friendly_name = "Shield Button Clicks"
+description = "How many times a user has opened the tracking protection settings panel from the toolbars."
+select_expression = """   
+    COALESCE(SUM(
+        metrics.counter.tracking_protection_toolbar_shield_clicked
+    ),0)
+"""
+data_source = "metrics" 
+statistics = { bootstrap_mean = {}, deciles = {} }
