@@ -1,0 +1,45 @@
+[experiment]
+[metrics]
+weekly = ["autofill_impressions", "adaptive_autofill_impressions", "autofill_ctr"]
+overall = ["autofill_impressions", "adaptive_autofill_impressions", "autofill_ctr"]
+
+[metrics.autofill_impressions]
+select_expression = """
+  SUM(COALESCE(scalar_parent_urlbar_impression_autofill_adaptive_sum), 0) +
+  SUM(COALESCE(scalar_parent_urlbar_impression_autofill_origin_sum), 0) +
+  SUM(COALESCE(scalar_parent_urlbar_impression_autofill_url_sum), 0)
+"""
+data_source = "clients_daily"
+friendly_name = "Impressions - All Autofill"
+description = "Number of impressions of all autofills, including Adaptive History, Origin and URLs"
+[metrics.autofill_impressions.statistics.bootstrap_mean]
+
+[metrics.adaptive_autofill_impressions]
+select_expression = """
+  SUM(COALESCE(scalar_parent_urlbar_impression_autofill_adaptive_sum), 0)
+"""
+data_source = "clients_daily"
+friendly_name = "Impressions - Adaptive History Autofill"
+description = "Number of Autofill Impressions that are Adaptive History"
+[metrics.adaptive_autofill_impressions.statistics.bootstrap_mean]
+
+[metrics.autofill_ctr]
+select_expression = """
+  SAFE_DIVIDE(
+    (
+      SUM((SELECT COALESCE(x.value, 0) FROM UNNEST(scalar_parent_urlbar_picked_autofill_adaptive_sum) AS x)) +
+      SUM((SELECT COALESCE(x.value, 0) FROM UNNEST(scalar_parent_urlbar_picked_autofill_origin_sum) AS x)) +
+      SUM((SELECT COALESCE(x.value, 0) FROM UNNEST(scalar_parent_urlbar_picked_autofill_url_sum) AS x))
+    ),
+    (
+      SUM(COALESCE(scalar_parent_urlbar_impression_autofill_adaptive_sum), 0) +
+      SUM(COALESCE(scalar_parent_urlbar_impression_autofill_origin_sum), 0) +
+      SUM(COALESCE(scalar_parent_urlbar_impression_autofill_url_sum), 0)
+    )
+  )
+
+"""
+data_source = "clients_daily"
+friendly_name = "Click-through Rate - Autofill"
+description = "Number of Autofill Engagements divided by the number of Auotfill Impressions"
+[metrics.autofill_ctr.statistics.bootstrap_mean]
