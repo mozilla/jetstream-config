@@ -1,0 +1,295 @@
+[experiment]
+
+[metrics]
+daily = ["events_normal_and_private_uri_count", "engine_tab_kills", "crash_count",
+         "cold_main_app_to_first_frame", "cold_view_app_to_first_frame",
+         "geckoview_startup_runtime", "geckoview_content_process_lifetime",
+         "performance_pageload_fcp", "performance_pageload_load_time",
+         "engine_tab_kill_foreground_age", "engine_tab_kill_background_age"]
+
+weekly = ["events_normal_and_private_uri_count", "engine_tab_kills", "crash_count",
+         "cold_main_app_to_first_frame", "cold_view_app_to_first_frame",
+         "geckoview_startup_runtime", "geckoview_content_process_lifetime",
+         "performance_pageload_fcp", "performance_pageload_load_time",
+         "engine_tab_kill_foreground_age", "engine_tab_kill_background_age"]
+
+overall = ["events_normal_and_private_uri_count", "engine_tab_kills", "crash_count",
+         "cold_main_app_to_first_frame", "cold_view_app_to_first_frame",
+         "geckoview_startup_runtime", "geckoview_content_process_lifetime",
+         "performance_pageload_fcp", "performance_pageload_load_time",
+         "engine_tab_kill_foreground_age", "engine_tab_kill_background_age"]
+
+
+## Counters
+
+[metrics.events_normal_and_private_uri_count]
+friendly_name = "Normal and Private URI counts"
+description = "A counter of URIs visited by the user in the current session, including page reloads"
+select_expression = """
+  COALESCE(
+    SUM(metrics.counter.events_normal_and_private_uri_count)
+  ,0)
+"""
+data_source = "metrics" 
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+
+## Labeled Counters
+
+[metrics.engine_tab_kills]
+friendly_name = "Engine Tab Kills"
+description = "How often was the content process of a foreground (selected) or background tab killed"
+select_expression = """
+  COALESCE(
+    SUM(value)
+  ,0)
+"""
+data_source = "engine_tab_kills" 
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[data_sources.engine_tab_kills]
+from_expression = """(
+  SELECT
+    DATE(submission_timestamp) AS submission_date,
+    client_info.client_id,
+    SUM(m.value) as value
+  FROM
+    `mozdata.fenix.metrics`
+  CROSS JOIN
+    UNNEST (metrics.labeled_counter.engine_tab_kills) m
+  WHERE
+    metrics.labeled_counter.engine_tab_kills IS NOT NULL
+  GROUP BY 1, 2
+)"""
+experiments_column_type = "none"
+
+
+[metrics.crash_count]
+friendly_name = "Crash count"
+description = "Counts the number of crashes that occur in the application. Includes: 'uncaught_exception', 'main_proc_native_code_crash', 'fg_proc_native_code_crash', 'bg_proc_native_code_crash'"
+select_expression = """
+  COALESCE(
+    SUM(value)
+  ,0)
+"""
+data_source = "crash_count" 
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[data_sources.crash_count]
+from_expression = """(
+  SELECT
+    DATE(submission_timestamp) AS submission_date,
+    client_info.client_id,
+    SUM(m.value) as value
+  FROM
+    `mozdata.fenix.metrics`
+  CROSS JOIN
+    UNNEST (metrics.labeled_counter.crash_metrics_crash_count) m
+  WHERE
+    metrics.labeled_counter.crash_metrics_crash_count IS NOT NULL
+    AND m.key IN ('uncaught_exception', 'main_proc_native_code_crash', 'fg_proc_native_code_crash', 'bg_proc_native_code_crash')
+  GROUP BY 1, 2
+)"""
+experiments_column_type = "none"
+
+
+## Time Distribution metrics
+
+[metrics.cold_main_app_to_first_frame]
+friendly_name = "Cold Main App to First Frame"
+description = "The duration from application's initializer to the first Android frame being drawn in a COLD MAIN start up"
+select_expression = "1.0 * SUM(metric_sum) / SUM(samples)"
+data_source = "cold_main_app_to_first_frame"   
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[data_sources.cold_main_app_to_first_frame]
+from_expression = """(
+  SELECT
+    DATE(submission_timestamp) AS submission_date,
+    client_info.client_id,
+    AVG(metrics.timing_distribution.perf_startup_cold_main_app_to_first_frame.sum) AS metric_sum,
+    SUM(m.value) AS samples
+  FROM
+    `mozdata.fenix.metrics`
+  CROSS JOIN
+    UNNEST (metrics.timing_distribution.perf_startup_cold_main_app_to_first_frame.values) m
+  WHERE
+    metrics.timing_distribution.perf_startup_cold_main_app_to_first_frame IS NOT NULL
+  GROUP BY 1, 2
+)"""
+experiments_column_type = "none"
+
+
+[metrics.cold_view_app_to_first_frame]
+friendly_name = "Cold View App to First Frame"
+description = "The duration from application's initializer to the first Android frame being drawn in a COLD VIEW start up"
+select_expression = "1.0 * SUM(metric_sum) / SUM(samples)"
+data_source = "cold_view_app_to_first_frame"   
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[data_sources.cold_view_app_to_first_frame]
+from_expression = """(
+  SELECT
+    DATE(submission_timestamp) AS submission_date,
+    client_info.client_id,
+    AVG(metrics.timing_distribution.perf_startup_cold_view_app_to_first_frame.sum) AS metric_sum,
+    SUM(m.value) AS samples
+  FROM
+    `mozdata.fenix.metrics`
+  CROSS JOIN
+    UNNEST (metrics.timing_distribution.perf_startup_cold_view_app_to_first_frame.values) m
+  WHERE
+    metrics.timing_distribution.perf_startup_cold_view_app_to_first_frame IS NOT NULL
+  GROUP BY 1, 2
+)"""
+experiments_column_type = "none"
+
+
+[metrics.geckoview_startup_runtime]
+friendly_name = "Gecko Startup Runtime"
+description = "The time taken to initialize GeckoRuntime."
+select_expression = "1.0 * SUM(metric_sum) / SUM(samples)"
+data_source = "geckoview_startup_runtime"   
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[data_sources.geckoview_startup_runtime]
+from_expression = """(
+  SELECT
+    DATE(submission_timestamp) AS submission_date,
+    client_info.client_id,
+    AVG(metrics.timing_distribution.geckoview_startup_runtime.sum) AS metric_sum,
+    SUM(m.value) AS samples
+  FROM
+    `mozdata.fenix.metrics`
+  CROSS JOIN
+    UNNEST (metrics.timing_distribution.geckoview_startup_runtime.values) m
+  WHERE
+    metrics.timing_distribution.geckoview_startup_runtime IS NOT NULL
+  GROUP BY 1, 2
+)"""
+experiments_column_type = "none"
+
+
+[metrics.geckoview_content_process_lifetime]
+friendly_name = "Content Process Lifetime"
+description = "The uptime of content processes in ms"
+select_expression = "1.0 * SUM(metric_sum) / SUM(samples)"
+data_source = "geckoview_content_process_lifetime"   
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[data_sources.geckoview_content_process_lifetime]
+from_expression = """(
+  SELECT
+    DATE(submission_timestamp) AS submission_date,
+    client_info.client_id,
+    AVG(metrics.timing_distribution.geckoview_content_process_lifetime.sum) AS metric_sum,
+    SUM(m.value) AS samples
+  FROM
+    `mozdata.fenix.metrics`
+  CROSS JOIN
+    UNNEST (metrics.timing_distribution.geckoview_content_process_lifetime.values) m
+  WHERE
+    metrics.timing_distribution.geckoview_content_process_lifetime IS NOT NULL
+  GROUP BY 1, 2
+)"""
+experiments_column_type = "none"
+
+
+[metrics.performance_pageload_fcp]
+friendly_name = "Pageload FCP"
+description = "The time between navigationStart and the first contentful paint of a foreground http or https root content document"
+select_expression = "1.0 * SUM(metric_sum) / SUM(samples)"
+data_source = "performance_pageload_fcp"   
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[data_sources.performance_pageload_fcp]
+from_expression = """(
+  SELECT
+    DATE(submission_timestamp) AS submission_date,
+    client_info.client_id,
+    AVG(metrics.timing_distribution.performance_pageload_fcp.sum) AS metric_sum,
+    SUM(m.value) AS samples
+  FROM
+    `mozdata.fenix.metrics`
+  CROSS JOIN
+    UNNEST (metrics.timing_distribution.performance_pageload_fcp.values) m
+  WHERE
+    metrics.timing_distribution.performance_pageload_fcp IS NOT NULL
+  GROUP BY 1, 2
+)"""
+experiments_column_type = "none"
+
+
+[metrics.performance_pageload_load_time]
+friendly_name = "Pageload Load Time"
+description = "Time in milliseconds from navigationStart to loadEventStart for the foreground http or https root content document."
+select_expression = "1.0 * SUM(metric_sum) / SUM(samples)"
+data_source = "performance_pageload_load_time"   
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[data_sources.performance_pageload_load_time]
+from_expression = """(
+  SELECT
+    DATE(submission_timestamp) AS submission_date,
+    client_info.client_id,
+    AVG(metrics.timing_distribution.performance_pageload_load_time.sum) AS metric_sum,
+    SUM(m.value) AS samples
+  FROM
+    `mozdata.fenix.metrics`
+  CROSS JOIN
+    UNNEST (metrics.timing_distribution.performance_pageload_load_time.values) m
+  WHERE
+    metrics.timing_distribution.performance_pageload_load_time IS NOT NULL
+  GROUP BY 1, 2
+)"""
+experiments_column_type = "none"
+
+
+[metrics.engine_tab_kill_foreground_age]
+friendly_name = "Engine Tab Kill Foreground Age"
+description = "Measures the age of the engine session of a foreground (selected) tab at the time its content process got killed"
+select_expression = "1.0 * SUM(metric_sum) / SUM(samples)"
+data_source = "engine_tab_kill_foreground_age"   
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[data_sources.engine_tab_kill_foreground_age]
+from_expression = """(
+  SELECT
+    DATE(submission_timestamp) AS submission_date,
+    client_info.client_id,
+    AVG(metrics.timing_distribution.engine_tab_kill_foreground_age.sum) AS metric_sum,
+    SUM(m.value) AS samples
+  FROM
+    `mozdata.fenix.metrics`
+  CROSS JOIN
+    UNNEST (metrics.timing_distribution.engine_tab_kill_foreground_age.values) m
+  WHERE
+    metrics.timing_distribution.engine_tab_kill_foreground_age IS NOT NULL
+  GROUP BY 1, 2
+)"""
+experiments_column_type = "none"
+
+
+[metrics.engine_tab_kill_background_age]
+friendly_name = "Engine Tab Kill Background Age"
+description = "Measures the age of the engine session of a background tab at the time its content process got killed"
+select_expression = "1.0 * SUM(metric_sum) / SUM(samples)"
+data_source = "engine_tab_kill_background_age"   
+statistics = { bootstrap_mean = {}, deciles = {} }
+
+[data_sources.engine_tab_kill_background_age]
+from_expression = """(
+  SELECT
+    DATE(submission_timestamp) AS submission_date,
+    client_info.client_id,
+    AVG(metrics.timing_distribution.engine_tab_kill_background_age.sum) AS metric_sum,
+    SUM(m.value) AS samples
+  FROM
+    `mozdata.fenix.metrics`
+  CROSS JOIN
+    UNNEST (metrics.timing_distribution.engine_tab_kill_background_age.values) m
+  WHERE
+    metrics.timing_distribution.engine_tab_kill_background_age IS NOT NULL
+  GROUP BY 1, 2
+)"""
+experiments_column_type = "none"
